@@ -10,7 +10,7 @@ public class steak2023 extends AutoMode {
     
     @Override
     public void addStepsToSequencer(AutoSequencer seq) {
-        driveEvent1 = new AutoEventJSONTrajectory("Steak", 0.7);
+        driveEvent1 = new AutoEventJSONTrajectory("steak2023", 0.7);
         seq.addEvent(driveEvent1);
     }
 
