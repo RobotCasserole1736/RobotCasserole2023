@@ -338,7 +338,7 @@ export class NT4_Client {
             }];
             var txJSON = JSON.stringify(txObj);
 
-            console.log("[NT4] Client Says: " + txJSON);
+            //console.log("[NT4] Client Says: " + txJSON);
 
             this.ws.send(txJSON);
         }
@@ -408,7 +408,7 @@ export class NT4_Client {
 
     ws_onMessage(e) {
         if (typeof e.data === 'string') {
-            console.log("[NT4] Server Says: " + e.data);
+            //console.log("[NT4] Server Says: " + e.data);
             //JSON Message
             var rxArray = JSON.parse(e.data);
 

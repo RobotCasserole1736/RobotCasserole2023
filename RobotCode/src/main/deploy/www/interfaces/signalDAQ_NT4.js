@@ -45,36 +45,32 @@ export class SignalDAQNT4 {
     }
 
     localOnConnect() {
-        this.nt4Client.subscribeTopicNames(["/Signals"]);
+        this.nt4Client.subscribeTopicNames(["/SmartDashboard"]);
         this.onConnect();
     }
 
     topicAnnounceHandler( newTopic ) {
-        if(this.isSignalValueTopic(newTopic)){
-            //If a signal units topic is announced, request what those units value actually is.
-            var sigName = this.valueTopicToSigName(newTopic);
-            var sigUnits = newTopic.properties.units;    
-            this.onSignalAnnounce(sigName, sigUnits); //Announce signal when we know the value of its units
-    
+        //If a signal units topic is announced, request what those units value actually is.
+        var sigName = newTopic.name;
+        var sigUnits = "";    
+        if(newTopic.properties.units){
+            sigUnits = newTopic.properties.units;
         }
+        this.onSignalAnnounce(sigName, sigUnits); //Announce signal when we know the value of its units
     }
 
     topicUnannounceHandler( removedTopic ) {
-        if(this.isSignalValueTopic(removedTopic)){
-            this.onSignalUnAnnounce(this.valueTopicToSigName(removedTopic));
-        } 
+        this.onSignalUnAnnounce(removedTopic.name);
     }
 
     valueUpdateHandler(topic, timestamp, value){
-        if(this.isSignalValueTopic(topic)){
-            // Got a new sample
-            var sigName = this.valueTopicToSigName(topic);
-            this.onNewSampleData(sigName, timestamp - this.timeOffset, value);
-            if(this.daqRunning){
-                this.rxCount++;
-            }
-            this.updateStatusText();
+        // Got a new sample
+        var sigName = topic.name;
+        this.onNewSampleData(sigName, timestamp - this.timeOffset, value);
+        if(this.daqRunning){
+            this.rxCount++;
         }
+        this.updateStatusText();
     }
 
     //Request a signal get added to the DAQ
@@ -95,7 +91,7 @@ export class SignalDAQNT4 {
     startDAQ(){
         this.daqRunning = true;
         this.daqSignalList.forEach(sigName => {
-            this.nt4Client.subscribeAllSamples([this.sigNameToValueTopic(sigName)]);
+            this.nt4Client.subscribeAllSamples([sigName]);
         });
         this.rxCount = 0;
         this.timeOffset = this.nt4Client.getServerTime_us();
@@ -118,20 +114,6 @@ export class SignalDAQNT4 {
         }
         text += " RX Count: " + this.rxCount.toString();
         this.statusTextCallback(text);
-    }
-
-    sigNameToValueTopic(name){
-        return "/Signals/" + name
-    }
-
-    valueTopicToSigName(topic){
-        var tmp = topic.name;
-        tmp = tmp.replace(/^\/Signals\//, '');
-        return tmp;
-    }
-
-    isSignalValueTopic(topic){
-        return topic.name.match(/Signals\/[a-zA-Z0-9\._\/]+/);
     }
 
 

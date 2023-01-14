@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.photonvision.PhotonCamera;
 
@@ -275,6 +276,8 @@ public class Robot extends TimedRobot {
     
 
     stt.end();
+
+    SmartDashboard.putNumber("SDB FPGATime", Timer.getFPGATimestamp());
 
 
   }
