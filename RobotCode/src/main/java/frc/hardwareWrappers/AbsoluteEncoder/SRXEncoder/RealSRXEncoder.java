@@ -1,11 +1,11 @@
-package frc.hardwareWrappers.SwerveAzmthEncoder.SRXEncoder;
+package frc.hardwareWrappers.AbsoluteEncoder.SRXEncoder;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycle;
-import frc.hardwareWrappers.SwerveAzmthEncoder.AbstractSwerveAzmthEncoder;
+import frc.hardwareWrappers.AbsoluteEncoder.AbstractAbsoluteEncoder;
 import frc.lib.Signal.Annotations.Signal;
 
-public class RealSRXEncoder extends AbstractSwerveAzmthEncoder {
+public class RealSRXEncoder extends AbstractAbsoluteEncoder {
 
     DigitalInput m_digitalInput;
     DutyCycle m_dutyCycle;

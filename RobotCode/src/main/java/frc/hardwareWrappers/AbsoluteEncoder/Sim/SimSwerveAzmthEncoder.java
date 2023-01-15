@@ -1,9 +1,9 @@
-package frc.hardwareWrappers.SwerveAzmthEncoder.Sim;
+package frc.hardwareWrappers.AbsoluteEncoder.Sim;
 
 import frc.hardwareWrappers.SimDeviceBanks;
-import frc.hardwareWrappers.SwerveAzmthEncoder.AbstractSwerveAzmthEncoder;
+import frc.hardwareWrappers.AbsoluteEncoder.AbstractAbsoluteEncoder;
 
-public class SimSwerveAzmthEncoder extends AbstractSwerveAzmthEncoder {
+public class SimSwerveAzmthEncoder extends AbstractAbsoluteEncoder {
  
     double curAngle_rad;
 

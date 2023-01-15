@@ -1,20 +1,20 @@
-package frc.hardwareWrappers.SwerveAzmthEncoder;
+package frc.hardwareWrappers.AbsoluteEncoder;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.UnitUtils;
-import frc.hardwareWrappers.SwerveAzmthEncoder.CANCoder.RealCANCoder;
-import frc.hardwareWrappers.SwerveAzmthEncoder.SRXEncoder.RealSRXEncoder;
-import frc.hardwareWrappers.SwerveAzmthEncoder.Sim.SimSwerveAzmthEncoder;
-import frc.hardwareWrappers.SwerveAzmthEncoder.ThriftyEncoder.RealThriftyEncoder;
+import frc.hardwareWrappers.AbsoluteEncoder.CANCoder.RealCANCoder;
+import frc.hardwareWrappers.AbsoluteEncoder.SRXEncoder.RealSRXEncoder;
+import frc.hardwareWrappers.AbsoluteEncoder.Sim.SimSwerveAzmthEncoder;
+import frc.hardwareWrappers.AbsoluteEncoder.ThriftyEncoder.RealThriftyEncoder;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
 import frc.robot.Robot;
 
-public class WrapperedSwerveAzmthEncoder  {
+public class WrapperedAbsoluteEncoder  {
 
-    AbstractSwerveAzmthEncoder enc;
+    AbstractAbsoluteEncoder enc;
 
-    public enum SwerveAzmthEncType {
+    public enum AbsoluteEncType {
         SRXEncoder,
         CANCoder,
         Thrifty
@@ -26,7 +26,7 @@ public class WrapperedSwerveAzmthEncoder  {
     Calibration mountingOffsetCal;
 
 
-    public WrapperedSwerveAzmthEncoder(SwerveAzmthEncType type, String prefix, int id, double dfltMountingOffset_rad){
+    public WrapperedAbsoluteEncoder(AbsoluteEncType type, String prefix, int id, double dfltMountingOffset_rad){
         if(Robot.isReal()){
             switch(type){
                 case SRXEncoder:
