@@ -23,31 +23,9 @@
             <buttonGroup class="outlined">
                 <button id="zoom_full_btn" type="button" onclick="handleZoomFullBtnClick()">Zoom Full</button>
             </buttonGroup>
-            <buttonGroup class="outlined"> 
-                <div class="sliderParts">Live</div>
-                
-                <div class="sliderParts">
-                    <label class="switch">
-                        <input id="modeCheckbox" type="checkbox" onclick="handleModeChange()">
-                        <div class="slider"></div>
-                    </label>
-                </div>
-
-                <div class="sliderParts">File</div>
-            </buttonGroup>
             <buttonGroup class="outlined">
                 <button  id="start_btn" type="button" onclick="handleStartBtnClick()">Start</button>
                 <button  id="stop_btn"  type="button" onclick="handleStopBtnClick()">Stop</button>
-                <div id="fileSelector" class="hidden">
-                    <div class="filePickerGroup">
-                        <div class="filePickerElem">
-                            <button onclick="document.getElementById('filePickerCtrl').click();">Open</button>
-                            <input id="filePickerCtrl" type="file" name="name" style="display: none;" onchange="handleFileSelect(this.files)" accept=".csv" autofocus="autofocus" />
-                        </div>
-                        <div id="filePickerStatus" class="statusDisp filePickerElem"> </div>
-                    </div>
-                    
-                </div>
             </buttonGroup>
             <buttonGroup class="outlined">
                 <div id="daqStatus" class="statusDisp">
