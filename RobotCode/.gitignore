@@ -162,5 +162,5 @@ bin/
 *-window.json
 
 
-log_*.csv
+*.wpilog
 **/buildinfo.html

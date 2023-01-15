@@ -13,11 +13,13 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.lib.Calibration.CalWrangler;
 import frc.lib.LoadMon.RIOLoadMonitor;
 import frc.lib.LoadMon.SegmentTimeTracker;
+import frc.lib.Logging.LogFileWrangler;
 import frc.lib.Signal.SignalWrangler;
 import frc.lib.Signal.Annotations.Signal;
 import frc.lib.Webserver2.Webserver2;
@@ -86,12 +88,15 @@ public class Robot extends TimedRobot {
 
     stt.start();
 
+    
+
     // Disable default behavior of the live-window output manipulation logic
     // We've got our own and never use this anyway.
     LiveWindow.setEnabled(false);
     LiveWindow.disableAllTelemetry();
     stt.mark("LW Disable");
 
+    // Start NT4 with logging
     NetworkTableInstance.getDefault().startServer();
     stt.mark("NT4");
 
@@ -158,7 +163,9 @@ public class Robot extends TimedRobot {
   ///////////////////////////////////////////////////////////////////
   @Override
   public void autonomousInit() {
-    SignalWrangler.getInstance().logger.startLoggingAuto();
+
+    LogFileWrangler.getInstance().syncLogFileNameToMatch();
+
     //Reset sequencer
     auto.reset();
     auto.startSequencer();
@@ -185,8 +192,9 @@ public class Robot extends TimedRobot {
   ///////////////////////////////////////////////////////////////////
   @Override
   public void teleopInit() {
+
+
    
-    SignalWrangler.getInstance().logger.startLoggingTeleop();
   }
 
   @Override
@@ -231,7 +239,7 @@ public class Robot extends TimedRobot {
   ///////////////////////////////////////////////////////////////////
   @Override
   public void disabledInit() {
-    SignalWrangler.getInstance().logger.stopLogging();
+
   }
 
   @Override

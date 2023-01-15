@@ -8,7 +8,6 @@ import java.util.Set;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import frc.lib.Logging.SignalFileLogger;
 
 public class SignalWrangler {
 
@@ -25,11 +24,9 @@ public class SignalWrangler {
     /** Full set of all registered signals on this robot */
     public ArrayList<Signal> registeredSignals = new ArrayList<Signal>(0);
 
-    // File logger for signals
-    public SignalFileLogger logger;
 
     private SignalWrangler() {
-        logger = new SignalFileLogger();
+
     }
 
     public int register(Signal sig_in) {
