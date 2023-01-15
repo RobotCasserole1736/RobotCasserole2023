@@ -20,8 +20,8 @@ public class ForceAtPose2d {
    * Constructs a Force2d with the X and Y components equal to the
    * provided values.
    *
-   * @param x The x component of the force.
-   * @param y The y component of the force.
+   * @param end_effector_x The x component of the force.
+   * @param end_effector_y The y component of the force.
    */
   public ForceAtPose2d ( Force2d force_in, Pose2d pos_in) {
     force = force_in;

@@ -10,6 +10,7 @@ public class RobotModel {
 
     DrivetrainModel dt;
     VisionSystem vs;
+    ArmSim arm;
 
     PDPSim pdp;
 
@@ -29,6 +30,7 @@ public class RobotModel {
     public RobotModel(){
         dt = new DrivetrainModel();
         vs = new VisionSystem();
+        arm = new ArmSim();
         pdp = new PDPSim();
         reset(Constants.DFLT_START_POSE);
     }
@@ -52,6 +54,7 @@ public class RobotModel {
             dt.update(isDisabled, batteryVoltage_V);
             vs.update(dt.dtPoseForTelemetry);
 
+            arm.update(isDisabled);
 
             currentDraw_A = QUIESCENT_CURRENT_DRAW_A + dt.getCurrentDraw();
 

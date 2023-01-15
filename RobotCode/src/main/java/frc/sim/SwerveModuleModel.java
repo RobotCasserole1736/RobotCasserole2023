@@ -2,8 +2,8 @@ package frc.sim;
 
 import frc.Constants;
 import frc.hardwareWrappers.SimDeviceBanks;
+import frc.hardwareWrappers.AbsoluteEncoder.Sim.SimAbsoluteEncoder;
 import frc.hardwareWrappers.MotorCtrl.Sim.SimSmartMotor;
-import frc.hardwareWrappers.SwerveAzmthEncoder.Sim.SimSwerveAzmthEncoder;
 import frc.lib.Signal.Annotations.Signal;
 import frc.lib.Util.MapLookup2D;
 import frc.sim.physics.Force2d;
@@ -19,7 +19,7 @@ class SwerveModuleModel{
     SimSmartMotor wheelMotorCtrl;
     SimSmartMotor azmthMotorCtrl;
 
-    SimSwerveAzmthEncoder angleMotorEncoder;
+    SimAbsoluteEncoder angleMotorEncoder;
 
     double curLinearSpeed_mps = 0; //Positive = in curAngle_deg, Negative = opposite of curAngle_deg
     Rotation2d curAzmthAngle = Rotation2d.fromDegrees(0); //0 = toward front, 90 = toward left, 180 = toward back, 270 = toward right
@@ -63,7 +63,7 @@ class SwerveModuleModel{
         //Model the magnet/housing offset in this encoder
         this.azmthSensorOffsetRad = azmthSensorOffset;
 
-        angleMotorEncoder = (SimSwerveAzmthEncoder) SimDeviceBanks.getDIDevice(azmthEncIdx);
+        angleMotorEncoder = (SimAbsoluteEncoder) SimDeviceBanks.getDIDevice(azmthEncIdx);
 
         // Non-linear kinetic friction model. Helps kinda simulate how
         // carpet pile and rubber on tread can slip past each other a bit

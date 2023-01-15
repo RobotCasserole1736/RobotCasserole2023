@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.UnitUtils;
 import frc.hardwareWrappers.AbsoluteEncoder.CANCoder.RealCANCoder;
 import frc.hardwareWrappers.AbsoluteEncoder.SRXEncoder.RealSRXEncoder;
-import frc.hardwareWrappers.AbsoluteEncoder.Sim.SimSwerveAzmthEncoder;
+import frc.hardwareWrappers.AbsoluteEncoder.Sim.SimAbsoluteEncoder;
 import frc.hardwareWrappers.AbsoluteEncoder.ThriftyEncoder.RealThriftyEncoder;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
@@ -43,7 +43,7 @@ public class WrapperedAbsoluteEncoder  {
                     break;
             }
         } else {
-            enc = new SimSwerveAzmthEncoder(id);
+            enc = new SimAbsoluteEncoder(id);
         }
         mountingOffsetCal = new Calibration(prefix + "MountingOffset", "rad", dfltMountingOffset_rad);
     }

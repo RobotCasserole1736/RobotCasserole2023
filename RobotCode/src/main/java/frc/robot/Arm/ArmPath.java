@@ -17,8 +17,8 @@ public class ArmPath {
     //Time to linear position
     Trajectory traj;
 
-    ArmPosition start; 
-    ArmPosition end;
+    ArmEndEffectorPos start; 
+    ArmEndEffectorPos end;
     double max_vel;
     double max_accel; 
 
@@ -30,7 +30,7 @@ public class ArmPath {
      * @param max_accel_mps2
 
      */
-    public ArmPath(ArmPosition start, ArmPosition end, double max_vel_mps, double max_accel_mps2){
+    public ArmPath(ArmEndEffectorPos start, ArmEndEffectorPos end, double max_vel_mps, double max_accel_mps2){
         this.start = start; 
         this.end = end;
 
@@ -48,10 +48,10 @@ public class ArmPath {
      * @param time_sec
      * @return
      */
-    public ArmPosition sample(double time_sec){
+    public ArmEndEffectorPos sample(double time_sec){
         //TODO - Trajectory State includes velocity and direction information, maybe that needs to be exposed too?
         // Right now this will strip all that away and jsut return x/y position
-        return ArmPosition.fromTrajState(traj.sample(time_sec));
+        return ArmEndEffectorPos.fromTrajState(traj.sample(time_sec));
     }
 
 }

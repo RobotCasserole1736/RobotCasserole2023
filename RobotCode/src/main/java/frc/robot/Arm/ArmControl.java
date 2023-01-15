@@ -1,20 +1,27 @@
 package frc.robot.Arm;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.Constants;
+import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder;
+import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder.AbsoluteEncType;
+import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl;
 import frc.lib.Signal.Annotations.Signal;
+import frc.robot.ArmTelemetry;
 
 public class ArmControl {
+
+    WrapperedCANMotorCtrl upperMotor;
+    WrapperedCANMotorCtrl lowerMotor;
+
+    WrapperedAbsoluteEncoder upperEncoder;
+    WrapperedAbsoluteEncoder lowerEncoder;
+
 
 
     //TODO - define many possible ArmPositions for all the locations we want to place or pickup from
     // These are totally temporary and for test only
-    ArmPosition start = new ArmPosition(0.5, 0.5);
-    ArmPosition end = new ArmPosition(1.5, 0.75);
+    ArmEndEffectorPos start = new ArmEndEffectorPos(0.5, 0.5);
+    ArmEndEffectorPos end = new ArmEndEffectorPos(1.5, 0.75);
 
     double startTime = Timer.getFPGATimestamp();
 
@@ -26,14 +33,14 @@ public class ArmControl {
     @Signal
     double yPos = 0;
 
-    //TODO - make a better visualization of actual joint positions, as well as desired end position
-    Mechanism2d m2d = new Mechanism2d(2, 2);
-    MechanismRoot2d armRoot = m2d.getRoot("Arm", 0, 0);
-    MechanismLigament2d armDesPos = armRoot.append(new MechanismLigament2d(null, xPos, startTime));
-
     public ArmControl(){
-        
-        SmartDashboard.putData("Arm", m2d);
+
+        upperMotor = new WrapperedCANMotorCtrl("Arm Upper Motor", Constants.ARM_UPPER_MOTOR_CANID, WrapperedCANMotorCtrl.CANMotorCtrlType.SPARK_MAX);
+        lowerMotor = new WrapperedCANMotorCtrl("Arm Lower Motor", Constants.ARM_LOWER_MOTOR_CANID, WrapperedCANMotorCtrl.CANMotorCtrlType.SPARK_MAX);
+        upperEncoder = new WrapperedAbsoluteEncoder(AbsoluteEncType.SRXEncoder, "Arm Upper Enc", Constants.ARM_UPPER_ENC_IDX, 0.0); //TODO offsets
+        lowerEncoder = new WrapperedAbsoluteEncoder(AbsoluteEncType.SRXEncoder, "Arm Lower Enc", Constants.ARM_LOWER_ENC_IDX, 0.0); //TODO offsets
+      
+        reset();
     }
 
     //TODO this is jsut for ease of testing, might need to be removed or refactored later
@@ -53,16 +60,9 @@ public class ArmControl {
 
         //TODO - send des position through kinematics to determine desired joint angles and velocities
 
-        updateTelemetry(desPos.x, desPos.y);
-    }
 
-    public void updateTelemetry(double des_x, double des_y){
-        //TODO add telemetry for actual joint positions
 
-        //Annoyingly Ligament2d doesn't have a "set endpoint" method so we manually calulcate the distance and angle.
-        var trans = new Translation2d(des_x, des_y);
-        this.armDesPos.setAngle(trans.getAngle());
-        this.armDesPos.setLength(trans.getNorm());
+        ArmTelemetry.getInstance().setDesired(desPos, 0, 0); //TODO need to put actual desired angles in there
     }
     
 }
