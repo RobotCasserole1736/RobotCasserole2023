@@ -33,6 +33,13 @@ public class DriverInput {
 
     @Signal(units="bool")
     boolean robotRelative;
+
+    @Signal(units="bool")
+    boolean clawEject;
+
+    @Signal(units="bool")
+    boolean clawIntake; 
+
    
     @Signal (units="cmd")
     double fwdRevSlewCmd;
@@ -107,6 +114,9 @@ public class DriverInput {
 
             spinMoveCmd = driverController.getBButton();
             driveToCenterCmd = driverController.getXButton();
+
+            clawEject = driverController.getRightTriggerAxis() > .75;
+            clawIntake = driverController.getLeftTriggerAxis() > .75;
  
            
 
@@ -168,6 +178,14 @@ public class DriverInput {
 
     public boolean getOdoResetCmd(){
         return resetOdometry;
+    }
+
+    public boolean getClawEject(){
+        return clawEject;
+    }
+
+    public boolean getClawIntake(){
+        return clawIntake;
     }
 
     public boolean getSpinMoveCmd(){
