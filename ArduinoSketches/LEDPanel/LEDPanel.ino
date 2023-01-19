@@ -1,14 +1,10 @@
-/// @file    ColorPalette.ino
-/// @brief   Demonstrates how to use @ref ColorPalettes
-/// @example ColorPalette.ino
-
 #include <FastLED.h>
 
 #define LED_PIN     5
-#define NUM_LEDS    16*16
+#define NUM_LEDS    256
 #define BRIGHTNESS  64
 #define LED_TYPE    WS2811
-#define COLOR_ORDER GRB
+#define COLOR_ORDER RGB
 CRGB leds[NUM_LEDS];
 
 #define UPDATES_PER_SECOND 100
@@ -38,6 +34,7 @@ TBlendType    currentBlending;
 extern CRGBPalette16 myRedWhiteBluePalette;
 extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
 
+
 void setup() {
     delay( 3000 ); // power-up safety delay
     FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
@@ -47,18 +44,14 @@ void setup() {
     currentBlending = LINEARBLEND;
 }
 
+
 void loop()
 {
-    //ChangePalettePeriodically();
-    
-    static uint8_t startIndex = 0;
-    startIndex = startIndex + 1; /* motion speed */
 
-    //SetupPurpleAndGreenPalette();
-    //FillLEDsFromPaletteColors(startIndex);
-    currentPalette = CRGB::Purple;
-    currentBlending = NOBLEND;
-    SetAllLEDs();
+    for( int i = 0; i < NUM_LEDS; ++i)
+    {
+        leds[i] = ColorFromPalette( currentPalette, CRGB::Purple, BRIGHTNESS, currentBlending);
+    }
     
     FastLED.show();
     FastLED.delay(1000 / UPDATES_PER_SECOND);
@@ -68,19 +61,9 @@ void FillLEDsFromPaletteColors( uint8_t colorIndex)
 {
     uint8_t brightness = 255;
     
-    for( int i = 0; i < NUM_LEDS; ++i) {
+    for( int i = 0; i < NUM_LEDS; i++) {
         leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
         colorIndex += 3;
-    }
-}
-
-void SetAllLEDs()
-{
-    uint8_t brightness = 255;
-
-    for( int i = 0; i < NUM_LEDS; ++i)
-    {
-        leds[i] = ColorFromPalette( currentPalette, 0, brightness, currentBlending);
     }
 }
 
@@ -117,7 +100,7 @@ void ChangePalettePeriodically()
 // This function fills the palette with totally random colors.
 void SetupTotallyRandomPalette()
 {
-    for( int i = 0; i < 16; ++i) {
+    for( int i = 0; i < 16; i++) {
         currentPalette[i] = CHSV( random8(), 255, random8());
     }
 }
@@ -179,7 +162,9 @@ const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM =
     CRGB::Black
 };
 
-// Additional notes on FastLED compact palettes:
+
+
+// Additionl notes on FastLED compact palettes:
 //
 // Normally, in computer graphics, the palette (or "color lookup table")
 // has 256 entries, each containing a specific 24-bit RGB color.  You can then
