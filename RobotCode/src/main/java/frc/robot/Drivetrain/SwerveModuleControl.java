@@ -49,7 +49,7 @@ class SwerveModuleControl {
 
     public SwerveModuleControl(String modName, int wheelMotorIdx, int azmthMotorIdx, int azmthEncoderIdx, double azmthOffset, boolean invertWheel){
 
-        wheelMotorCtrl = new WrapperedCANMotorCtrl("wheel"+modName, wheelMotorIdx, WrapperedCANMotorCtrl.CANMotorCtrlType.TALON_FX);
+        wheelMotorCtrl = new WrapperedCANMotorCtrl("wheel"+modName, wheelMotorIdx, WrapperedCANMotorCtrl.CANMotorCtrlType.SPARK_MAX);
         azmthMotorCtrl = new WrapperedCANMotorCtrl("azmth"+modName, azmthMotorIdx, WrapperedCANMotorCtrl.CANMotorCtrlType.SPARK_MAX);
         azmth_enc = new WrapperedAbsoluteEncoder(AbsoluteEncType.SRXEncoder, "encoder"+modName, azmthEncoderIdx, azmthOffset);
       
