@@ -1,15 +1,15 @@
-package frc.hardwareWrappers.SwerveAzmthEncoder.Sim;
+package frc.hardwareWrappers.AbsoluteEncoder.Sim;
 
 import frc.hardwareWrappers.SimDeviceBanks;
-import frc.hardwareWrappers.SwerveAzmthEncoder.AbstractSwerveAzmthEncoder;
+import frc.hardwareWrappers.AbsoluteEncoder.AbstractAbsoluteEncoder;
 
-public class SimSwerveAzmthEncoder extends AbstractSwerveAzmthEncoder {
+public class SimAbsoluteEncoder extends AbstractAbsoluteEncoder {
  
     double curAngle_rad;
 
     double STEPS_PER_REV = 4096.0; //Simulate quantization
 
-    public SimSwerveAzmthEncoder(int port){
+    public SimAbsoluteEncoder(int port){
         SimDeviceBanks.addDIDevice(this, port);
     }
 

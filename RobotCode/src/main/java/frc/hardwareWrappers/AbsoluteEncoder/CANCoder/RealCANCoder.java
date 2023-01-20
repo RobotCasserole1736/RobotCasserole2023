@@ -1,14 +1,14 @@
-package frc.hardwareWrappers.SwerveAzmthEncoder.CANCoder;
+package frc.hardwareWrappers.AbsoluteEncoder.CANCoder;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.MagnetFieldStrength;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 
-import frc.hardwareWrappers.SwerveAzmthEncoder.AbstractSwerveAzmthEncoder;
+import frc.hardwareWrappers.AbsoluteEncoder.AbstractAbsoluteEncoder;
 import frc.lib.Signal.Annotations.Signal;
 
-public class RealCANCoder extends AbstractSwerveAzmthEncoder {
+public class RealCANCoder extends AbstractAbsoluteEncoder {
 
     CANCoder cancoder;
 

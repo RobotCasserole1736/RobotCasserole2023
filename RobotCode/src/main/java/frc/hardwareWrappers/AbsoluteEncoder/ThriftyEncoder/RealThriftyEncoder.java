@@ -1,11 +1,11 @@
-package frc.hardwareWrappers.SwerveAzmthEncoder.ThriftyEncoder;
+package frc.hardwareWrappers.AbsoluteEncoder.ThriftyEncoder;
 
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.AnalogInput;
-import frc.hardwareWrappers.SwerveAzmthEncoder.AbstractSwerveAzmthEncoder;
+import frc.hardwareWrappers.AbsoluteEncoder.AbstractAbsoluteEncoder;
 import frc.lib.Signal.Annotations.Signal;
 
-public class RealThriftyEncoder extends AbstractSwerveAzmthEncoder {
+public class RealThriftyEncoder extends AbstractAbsoluteEncoder {
 
     AnalogInput m_input;
     AnalogEncoder m_encoder;
