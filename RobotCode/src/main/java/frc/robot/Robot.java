@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -52,6 +53,7 @@ public class Robot extends TimedRobot {
   RIOLoadMonitor loadMon;
   BatteryMonitor batMan;
   ArmControl ac;
+  clawControl cc;
 
   // Main Driver
   DriverInput di;
@@ -116,6 +118,8 @@ public class Robot extends TimedRobot {
 
     //bcd = new Ballcolordetector();
     stt.mark("Ball Color Detector");
+
+    cc = new clawControl();
 
     di = new DriverInput(0);
     stt.mark("Driver IO");
@@ -224,6 +228,9 @@ public class Robot extends TimedRobot {
       Pose2d newPose = new Pose2d(dt.getCurEstPose().getTranslation(), new Rotation2d(0.0));
       dt.setKnownPose(newPose);
     }
+    cc.setIntake(di.getClawIntake());
+    cc.setEject(di.getClawEject());
+
 
 
     stt.mark("Human Input Mapping");
@@ -274,6 +281,7 @@ public class Robot extends TimedRobot {
     ac.update();
 
     cw.update();
+    cc.update();
     stt.mark("Cal Wrangler");
     db.updateDriverView();
     stt.mark("Dashboard");
