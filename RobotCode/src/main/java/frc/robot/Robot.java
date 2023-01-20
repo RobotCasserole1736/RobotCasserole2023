@@ -204,7 +204,6 @@ public class Robot extends TimedRobot {
 
 
    
-    SignalWrangler.getInstance().logger.startLoggingTeleop();
     ac.reset();
   }
 
