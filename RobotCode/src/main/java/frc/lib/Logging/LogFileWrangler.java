@@ -1,10 +1,15 @@
 package frc.lib.Logging;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Robot;
 
 public class LogFileWrangler {
@@ -34,6 +39,25 @@ public class LogFileWrangler {
         } else {
             logFilePath = Path.of(OUTPUT_DIR_LOCAL);
         }
+
+        try {
+            Files.createDirectories(logFilePath);
+        } catch (IOException e) {
+            DriverStation.reportError("Could not create logging directory " + logFilePath.toString(), false);
+        }
+
+        DataLogManager.start(logFilePath.toString());
+        DriverStation.startDataLog(DataLogManager.getLog());
+    }
+
+    public void syncLogFileNameToMatch(){
+        if(DriverStation.isFMSAttached()){
+           var filename = "FRC_" + DriverStation.getEventName() + "_"
+            + DriverStation.getMatchType() + "_"
+            + Integer.toString(DriverStation.getMatchNumber()) + ".wpilog";
+            DataLogManager.getLog().setFilename(filename);
+        }
+
     }
 
     /**

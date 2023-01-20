@@ -7,7 +7,6 @@ import { SignalSelector } from './signalSelector.js';
 import { Signal } from './signal.js';
 import { Sample } from './sample.js';
 import { SignalDAQNT4 } from '../interfaces/signalDAQ_NT4.js';
-import { SignalDAQLocalFile } from '../interfaces/signalDAQ_localFile.js';
 
 var plotsContainer = document.getElementById("plotsContainer");
 var plotList = [];
@@ -29,34 +28,9 @@ var recordingEndTime = null;
 var recordingRunning = false;
 
 var vars = getUrlVars();
-if("fname" in vars){
-    var fname = vars["fname"]
-    //User specified the file argument in the URL, so load it in.
-    goFiles();
-    var url = "http://" + window.location.hostname + ":" + window.location.port + "/" + fname;
 
-    setFileStatusText("Downloading file...");
-    var request = new XMLHttpRequest();
-    request.open('GET', url, true);
-    request.send(null);
-    request.onreadystatechange = function () {
-        if (request.readyState === 4 && request.status === 200) {
-            var type = request.getResponseHeader('Content-Type');
-            if (type.indexOf("text") !== 1) {
-                setFileStatusText("Parsing File...");
-                mainDAQ.parseFileContents(request.responseText);
-                handleZoomFullBtnClick();
-                setFileStatusText(fname);
-            } else {
-                setFileStatusText("Error on download!");
-            }
-        }
-    }
+goLive();
 
-} else {
-    //Default to showing live data
-    goLive();
-}
 
 
 //Add our first plot
@@ -160,26 +134,6 @@ function filterChangeHandler(filterSpec_in){
     signalSelector.setFilterSpec(filterSpec_in);
 }
 
-window.handleModeChange = handleModeChange;
-function handleModeChange(){
-    var checkbox = document.getElementById("modeCheckbox");
-    if(checkbox.checked){
-        goFiles();
-    } else {
-        goLive();
-    }
-}
-
-window.handleFileSelect = handleFileSelect;
-function handleFileSelect(files_in){
-    var fileobj = files_in[0];
-    goFiles();
-    mainDAQ.load(fileobj);
-    setFileStatusText(fileobj.name);
-    
-}
-
-
 var isVisible = false;
 window.handleSignalShowHide = handleSignalShowHide;
 function handleSignalShowHide(){
@@ -191,15 +145,11 @@ function handleSignalShowHide(){
 // DAQ Source Change Handlers
 
 function goLive(){
-    document.getElementById("modeCheckbox").checked = false;
-    document.getElementById("start_btn").classList.remove("hidden");
-    document.getElementById("stop_btn").classList.remove("hidden");
-    document.getElementById("fileSelector").classList.add("hidden");
+
     stopRecording();
     allSignalsMap.clear();
     signalSelector.clearSignalList();
 
-    setFileStatusText("");
     setDAQStatusText("");
     mainDAQ = new SignalDAQNT4(onSignalAnnounce,onSignalUnAnnounce,onNewSampleData,onConnect,onDisconnect, setDAQStatusText);
 
@@ -208,23 +158,6 @@ function goLive(){
     recordingRunning = false;
 }
 
-function goFiles(){
-    document.getElementById("modeCheckbox").checked = true;
-    document.getElementById("start_btn").classList.add("hidden");
-    document.getElementById("stop_btn").classList.add("hidden");
-    document.getElementById("fileSelector").classList.remove("hidden");
-    stopRecording();
-    allSignalsMap.clear();
-    signalSelector.clearSignalList();
-
-    setFileStatusText("No File Loaded");
-    setDAQStatusText("");
-    mainDAQ = new SignalDAQLocalFile(onSignalAnnounce,onSignalUnAnnounce,onNewSampleData,onConnect,onDisconnect,setDAQStatusText);
-
-    recordingStartTime = null;
-    recordingEndTime = null;
-    recordingRunning = false;
-}
 
 /////////////////////////////////////////////////////////////
 //Data Event Handlers
@@ -334,10 +267,6 @@ function keypressHandler(e){
 
 ///////////////////////////
 // Status Display Updaters
-
-function setFileStatusText(in_text){
-    document.getElementById("filePickerStatus").innerHTML = in_text;
-}
 
 function setDAQStatusText(in_text){
     document.getElementById("daqStatus").innerHTML = in_text;

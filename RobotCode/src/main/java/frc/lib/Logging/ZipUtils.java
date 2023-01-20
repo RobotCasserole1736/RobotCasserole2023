@@ -66,7 +66,7 @@ public class ZipUtils {
 
     public void generateFileList(File node) {
         // add file only if it's a .csv
-        if (node.isFile() && isCSV(node.toString())) {
+        if (node.isFile() && isLog(node.toString())) {
             fileList.add(generateZipEntry(node.toString()));
         }
 
@@ -82,7 +82,7 @@ public class ZipUtils {
         return file.substring(sourceFolder.length() + 1, file.length());
     }
 
-    private boolean isCSV(String filename) {
-        return filename.endsWith((".csv"));
+    private boolean isLog(String filename) {
+        return filename.endsWith((".wpilog"));
     }
 }

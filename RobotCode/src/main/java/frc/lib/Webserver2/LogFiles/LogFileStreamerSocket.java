@@ -34,7 +34,6 @@ import org.json.JSONObject;
 
 import frc.lib.Logging.LogFile;
 import frc.lib.Logging.LogFileWrangler;
-import frc.lib.Logging.SignalFileLogger;
 import frc.lib.Signal.SignalWrangler;
 
 /**
@@ -162,19 +161,8 @@ public class LogFileStreamerSocket extends WebSocketAdapter {
 
         @Override
         public void run() {
-            String curStatus = "Idle";
-            SignalFileLogger logger = SignalWrangler.getInstance().logger;
-            Path curLogFile = logger.curLogFile;
-            if(curLogFile != null && logger.loggingActive){
-                curStatus = "Writing to " + curLogFile.getFileName().toString();
-                wasLogging = true;
-            } else {
-                if(wasLogging){
-                    sendCurrentLogFileList();
-                    wasLogging = false;
-                }
-            }
-            sendStatusString(curStatus);
+            sendCurrentLogFileList();
+            sendStatusString("Logging Active");
         }
         
     }

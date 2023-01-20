@@ -61,7 +61,6 @@ public class Signal {
      * @param value_in
      */
     public void addSample(double time_in_sec, double value_in) {
-        SignalWrangler.getInstance().logger.addSample(new DataSample(time_in_sec, value_in, this));
         nt4ValPublisher.set(value_in, Math.round(time_in_sec*1000000l));
     }
 
