@@ -1,12 +1,17 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 
 public class clawControl {
     Spark intakeWheels;
     boolean curEjectcmd;
     boolean curIntakecmd;
+    Solenoid clampSolenoid; // todo is this actually a solenoid?
+
+    //todo is this claw or intake pick a name don't leave your babies unnamed
+
+    // todo add open/close stuff
 
     public clawControl() {
         intakeWheels = new Spark(0);

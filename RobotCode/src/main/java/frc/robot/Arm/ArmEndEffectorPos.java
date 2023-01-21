@@ -7,6 +7,11 @@ import edu.wpi.first.math.trajectory.Trajectory.State;
 public class ArmEndEffectorPos {
     double x;
     double y;
+    boolean isReflex;
+
+    //TODO - we just added isReflex and haven't used it at all yet
+
+    // TODO - how do we handle reflex transitions? Do we need double reflexFrac that sweeps smoothly from 0 to 1
 
     // TODO - allow configuraiton of a "safe height" - minimum Y value the end affector must travel to before traveling in the X direction
 

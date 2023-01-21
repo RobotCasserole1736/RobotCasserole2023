@@ -25,7 +25,6 @@ import frc.lib.Logging.LogFileWrangler;
 import frc.lib.Signal.SignalWrangler;
 import frc.lib.Signal.Annotations.Signal;
 import frc.lib.Webserver2.Webserver2;
-import frc.robot.Arm.ArmControl;
 import frc.robot.AutoDrive.AutoDrive;
 import frc.robot.AutoDrive.AutoDrive.AutoDriveCmdState;
 import frc.robot.Autonomous.Autonomous;
@@ -54,7 +53,7 @@ public class Robot extends TimedRobot {
   // Things
   RIOLoadMonitor loadMon;
   BatteryMonitor batMan;
-  ArmControl ac;
+  //ArmControl ac;
   clawControl cc;
 
   // Main Driver
@@ -93,6 +92,7 @@ public class Robot extends TimedRobot {
 
     stt.start();
 
+
     
 
     // Disable default behavior of the live-window output manipulation logic
@@ -119,7 +119,7 @@ public class Robot extends TimedRobot {
     batMan = BatteryMonitor.getInstance();
     stt.mark("Battery Monitor");
 
-    ac = new ArmControl();
+    //ac = new ArmControl();
 
     //bcd = new Ballcolordetector();
     stt.mark("Ball Color Detector");
@@ -204,7 +204,7 @@ public class Robot extends TimedRobot {
 
 
    
-    ac.reset();
+    //ac.reset();
   }
 
   @Override
@@ -286,7 +286,7 @@ public class Robot extends TimedRobot {
     }
     stt.mark("Drivetrain");
 
-    ac.update();
+    //ac.update();
 
     cw.update();
     cc.update();
