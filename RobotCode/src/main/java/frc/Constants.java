@@ -18,6 +18,7 @@ public class Constants {
     // Drivetrain Physical
     //////////////////////////////////////////////////////////////////
     static public final double WHEEL_BASE_HALF_WIDTH_M = Units.inchesToMeters(23.75/2.0);
+    static public final double WHEEL_BASE_LENGTH_WIDTH_M = Units.inchesToMeters(23.75/2.0);
     static public final double ROBOT_MASS_kg = UnitUtils.lbsToKg(140);
     static public final double ROBOT_MOI_KGM2 = 1.0/12.0 * ROBOT_MASS_kg * Math.pow((WHEEL_BASE_HALF_WIDTH_M*2.2),2) * 2; //Model moment of intertia as a square slab slightly bigger than wheelbase with axis through center
 
@@ -48,9 +49,10 @@ public class Constants {
     static public final double BL_ENCODER_MOUNT_OFFSET_RAD = -2.180;
     static public final double BR_ENCODER_MOUNT_OFFSET_RAD = -0.803;
 
-    // Location of vision cameras relative to robot center - currently front and back
-    static public final Transform3d robotToFrontCameraTrans = new Transform3d(new Translation3d(WHEEL_BASE_HALF_WIDTH_M, 0, 1.0), new Rotation3d(0.0,0.0,0.0));
-    static public final Transform3d robotToRearCameraTrans  = new Transform3d(new Translation3d(-1.0*WHEEL_BASE_HALF_WIDTH_M, 0, 1.0), new Rotation3d(0.0,0.0,Math.PI));
+    // Location of vision cameras relative to robot center - currently two in front at 45 degrees, one in back center
+    static public final Transform3d robotToFrontRightCameraTrans = new Transform3d(new Translation3d(WHEEL_BASE_LENGTH_WIDTH_M, -1.0*WHEEL_BASE_HALF_WIDTH_M, 0.25), new Rotation3d(0.0,0.0,-1.0*Math.PI/4.0));
+    static public final Transform3d robotToFrontLeftCameraTrans = new Transform3d(new Translation3d(WHEEL_BASE_LENGTH_WIDTH_M, WHEEL_BASE_HALF_WIDTH_M, 0.25), new Rotation3d(0.0,0.0,Math.PI/4.0));
+    static public final Transform3d robotToRearCameraTrans  = new Transform3d(new Translation3d(-1.0*WHEEL_BASE_LENGTH_WIDTH_M, 0, 0.25), new Rotation3d(0.0,0.0,Math.PI));
 
     //////////////////////////////////////////////////////////////////
     // Arm Physical
@@ -176,11 +178,6 @@ public class Constants {
     static public final Translation2d MIN_ROBOT_TRANSLATION = new Translation2d(0.0,0.0);
     // Assumed starting location of the robot. Auto routines will pick their own location and update this.
     public static final Pose2d DFLT_START_POSE = new Pose2d(3, 3, new Rotation2d(0));
-    // Expected vision target locations on the field
-    // TODO - Use Actual Poses
-    static public final Transform3d VISION_FAR_TGT_LOCATION   = new Transform3d( new Translation3d(FIELD_LENGTH_M, Units.feetToMeters(9.8541), 1.0), new Rotation3d(0,0,0));
-    static public final Transform3d VISION_NEAR_TGT_LOCATION  = new Transform3d( new Translation3d(Units.feetToMeters(0), Units.feetToMeters(17.14), 1.0), new Rotation3d(0, 0, Math.PI));
-
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////

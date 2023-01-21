@@ -36,8 +36,6 @@ public class DrivetrainPoseEstimator {
 
     WrapperedGyro gyro;
 
-    //SwerveDrivePoseEstimator<N7, N7, N5> m_poseEstimator;
-
     SwerveDrivePoseEstimator m_poseEstimator;
 
     List<PhotonCamWrapper> cams = new ArrayList<PhotonCamWrapper>();
@@ -57,9 +55,9 @@ public class DrivetrainPoseEstimator {
 
     private DrivetrainPoseEstimator(){
 
-        cams.add(new PhotonCamWrapper("FRONT_CAM", Constants.robotToFrontCameraTrans)); 
+        cams.add(new PhotonCamWrapper("FRONT_LEFT_CAM", Constants.robotToFrontLeftCameraTrans)); 
+        cams.add(new PhotonCamWrapper("FRONT_RIGHT_CAM", Constants.robotToFrontRightCameraTrans)); 
         cams.add(new PhotonCamWrapper("REAR_CAM", Constants.robotToRearCameraTrans)); 
-        //TODO add more cameras here
 
         gyro = new WrapperedGyro(GyroType.ADXRS453);
 
@@ -107,7 +105,7 @@ public class DrivetrainPoseEstimator {
         curSpeed = Units.metersToFeet(deltaPose.getTranslation().getNorm()) / Constants.Ts;
 
         for(var cam : cams){
-            cam.update();
+            cam.update(getEstPose());
             for(var obs : cam.getCurObservations()){
                 m_poseEstimator.addVisionMeasurement(obs.estFieldPose, obs.time, visionMeasurementStdDevs.times(1.0/obs.trustworthiness));
             }
