@@ -18,6 +18,13 @@ public class clawControl {
        
     }
 
+    //TODO - some way of indicating cube mode vs cone mode
+
+
+    //TODO - use cube and code mode to change the meaning of eject and intake
+    // cone = clamp and spin motors to intake, unclamp to eject
+    // cube = spin motors for both, unclamped always.
+
     public void setEject(boolean eject) {
         curEjectcmd = eject;
     }

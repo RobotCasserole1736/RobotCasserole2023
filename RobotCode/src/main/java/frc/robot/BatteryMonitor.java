@@ -53,7 +53,7 @@ public class BatteryMonitor {
 	}
 
 	private BatteryMonitor() {
-		pd = new PowerDistribution(1,ModuleType.kRev);
+		pd = new PowerDistribution(0,ModuleType.kCTRE);
 		
 		// Kick off monitor in brand new thread.
 	    // Thanks to Team 254 for an example of how to do this!

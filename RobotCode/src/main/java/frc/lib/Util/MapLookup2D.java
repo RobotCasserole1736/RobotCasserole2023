@@ -61,6 +61,12 @@ public class MapLookup2D {
      * @return Value of the map function at req_x_val
      */
     public double lookupVal(double req_x_val) {
+
+        //Case intput wasn't a number
+        if(!Double.isFinite(req_x_val)){
+            return 0;
+        }
+
         if (xAxis.size() == 0) {
             // Case, no array defined yet. Just return zero.
             return 0;

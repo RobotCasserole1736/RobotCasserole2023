@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,6 +18,8 @@ public class PoseTelemetry {
     }
     
     public static Field2d field = new Field2d();
+
+    ArrayList<Pose2d> visionPoses = new ArrayList<Pose2d>();
     
     //Desired Position says where path planning logic wants the
     // robot to be at any given time. 
@@ -59,6 +63,14 @@ public class PoseTelemetry {
 
     }
 
+    public void clearVisionPoses(){
+        visionPoses.clear();;
+    }
+
+    public void addVisionPose(String title, Pose2d visionPose){
+        visionPoses.add(visionPose);
+    }
+
     public void setActualPose(Pose2d act){
         actualPose = act;
     }
@@ -85,6 +97,7 @@ public class PoseTelemetry {
         field.getObject("DesPose").setPose(desiredPose);
         field.getObject("Robot").setPose(actualPose);
         field.getObject("EstPose").setPose(estimatedPose);
+        field.getObject("VisionPose").setPoses(visionPoses);
     }
 
 }
