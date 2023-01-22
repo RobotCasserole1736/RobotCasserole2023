@@ -7,6 +7,7 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.Constants;
 import frc.lib.Calibration.Calibration;
+import frc.lib.Faults.Fault;
 import frc.lib.Signal.Annotations.Signal;
 
 public class DriverInput {
@@ -59,6 +60,8 @@ public class DriverInput {
     boolean isConnected;
 
     Debouncer resetOdoDbnc = new Debouncer(0.5, DebounceType.kRising);
+
+    Fault disconFault = new Fault("Driver Controller", "Unplugged");
 
     String getName(int idx){
         return "Driver Ctrl " + Integer.toString(idx) + " ";
@@ -128,6 +131,8 @@ public class DriverInput {
             robotRelative = false;
             resetOdometry = false;
         }
+
+        disconFault.set(isConnected);
 
         
         if(fwdRevSlewRate.isChanged() ||

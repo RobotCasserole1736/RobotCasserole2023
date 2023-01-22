@@ -88,8 +88,8 @@ public class Constants {
     static public final int FR_AZMTH_ENC_IDX = 1;
     static public final int BL_AZMTH_ENC_IDX = 2;
     static public final int BR_AZMTH_ENC_IDX = 3;
-    static public final int ARM_UPPER_ENC_IDX = 4;
-    static public final int ARM_LOWER_ENC_IDX = 5;
+    static public final int ARM_BOOM_ENC_IDX = 4;
+    static public final int ARM_STICK_ENC_IDX = 5;
     //static public final int UNUSED = 6;
     //static public final int UNUSED = 7;
     //static public final int UNUSED = 8;
@@ -113,8 +113,8 @@ public class Constants {
     static public final int BL_AZMTH_MOTOR_CANID = 7;
     static public final int BR_WHEEL_MOTOR_CANID = 8;
     static public final int BR_AZMTH_MOTOR_CANID = 9;
-    static public final int ARM_UPPER_MOTOR_CANID = 10;
-    static public final int ARM_LOWER_MOTOR_CANID = 11;
+    static public final int ARM_BOOM_MOTOR_CANID = 10;
+    static public final int ARM_STICK_MOTOR_CANID = 11;
     //static public final int UNUSED = 12;
     //static public final int UNUSED = 13;
     //static public final int UNUSED = 14;

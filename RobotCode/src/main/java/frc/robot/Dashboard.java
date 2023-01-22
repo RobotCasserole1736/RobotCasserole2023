@@ -1,5 +1,6 @@
 package frc.robot;
 
+import frc.lib.Faults.FaultWrangler;
 import frc.lib.Signal.SignalUtils;
 import frc.lib.Signal.Annotations.Signal;
 import frc.lib.Webserver2.Webserver2;
@@ -16,11 +17,6 @@ public class Dashboard {
 
     @Signal(name = "db_visionTargetVisible")
     boolean visionTargetVisible;
-
-
-    @Signal(name = "db_masterCaution")
-    boolean masterCaution;
-    String masterCautionTxt;
 
     @Signal(name="db_shooterSpeed")
     double shooterSpeed;
@@ -40,8 +36,6 @@ public class Dashboard {
     @Signal(name="db_clmberExtend")
     boolean climberExtend;
 
-    boolean pneumaticPressureLow = false; //TODO?
-
     DashboardConfig d;
 
     public Dashboard (Webserver2 ws_in) {
@@ -55,6 +49,7 @@ public class Dashboard {
         final double ROW2 = 45;
         final double ROW3 = 55;
         final double ROW4 = 68;
+        final double ROW5 = 80;
 
         //d.addCamera("cam1", "http://10.17.36.10:1181/stream.mjpg", LEFT_COL, ROW2, 0.25);
         //d.addCamera("cam2", "http://10.17.36.10:1182/stream.mjpg", RIGHT_COL, ROW2, 0.75);
@@ -75,7 +70,7 @@ public class Dashboard {
         d.addAutoChooser(Autonomous.getInstance().mainModeList, CENTER_COL, ROW3, 1.0);
 
 
-        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_masterCaution"),"Master Caution", "#FF0000", "icons/alert.svg", CENTER_COL-6, ROW4, 1.0);
+        d.addIcon(FaultWrangler.getInstance().getFaultActiveTopic(), "Faults", "#FF0000", "icons/alert.svg", CENTER_COL-6, ROW4, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_visionTargetVisible"),"Vision Target Visible", "#00FF00", "icons/vision.svg", CENTER_COL, ROW4, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_hopperFull"),"Hopper Full", "#00FF00", "icons/intake.svg", CENTER_COL+12, ROW4, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_clmberExtend"),"Climber Extend", "#FFFF00", "icons/climb.svg", CENTER_COL+6, ROW4, 1.0);
@@ -83,24 +78,14 @@ public class Dashboard {
         d.addSound( SignalUtils.nameToNT4ValueTopic("db_Yeet"), "YEET", "sfx/YEET.mp3", false);
        
 
+        d.addText(FaultWrangler.getInstance().getFaultDescriptionTopic(),"Fault Description", CENTER_COL, ROW5, 1.0);
+
+
       }
     
       public void updateDriverView() {
 
         visionTargetVisible = DrivetrainPoseEstimator.getInstance().getVisionTargetsVisible();
-
-
-        //master caution handling
-        if ( pnuemPressure < 80.0 ) {
-          masterCautionTxt = "Low Pneumatic Pressure";
-          masterCaution = true;
-        //}else if( !Vision.getInstance().getCamOnline() ) {
-        //  masterCautionTxt = "Vision Camera Disconnected";
-        //  masterCaution = true;
-        } else {
-          masterCautionTxt = "";
-          masterCaution = false;
-        }
 
         
       }

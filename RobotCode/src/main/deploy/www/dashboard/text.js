@@ -45,7 +45,7 @@ export class Text {
     //////////////////////////////////////
 
     updateFontSize(){
-        this.drawDiv.style.fontSize = (this.drawElem.clientHeight * 0.4).toString() + "px";
+        this.drawDiv.style.fontSize = (this.drawElem.clientHeight * 0.1).toString() + "px";
     }
 
   }

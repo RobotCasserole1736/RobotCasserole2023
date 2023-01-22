@@ -33,11 +33,11 @@ public class ArmSim {
     private final DCMotor m_armLowerGearbox = DCMotor.getNEO(1);
 
     public ArmSim(){
-        upperMotorCtrl = (SimSmartMotor) SimDeviceBanks.getCANDevice(Constants.ARM_UPPER_MOTOR_CANID);
-        lowerMotorCtrl = (SimSmartMotor) SimDeviceBanks.getCANDevice(Constants.ARM_LOWER_MOTOR_CANID);
+        upperMotorCtrl = (SimSmartMotor) SimDeviceBanks.getCANDevice(Constants.ARM_BOOM_MOTOR_CANID);
+        lowerMotorCtrl = (SimSmartMotor) SimDeviceBanks.getCANDevice(Constants.ARM_STICK_MOTOR_CANID);
 
-        upperAbsEnc = (SimAbsoluteEncoder) SimDeviceBanks.getDIDevice(Constants.ARM_UPPER_ENC_IDX);
-        lowerAbsEnc = (SimAbsoluteEncoder) SimDeviceBanks.getDIDevice(Constants.ARM_LOWER_ENC_IDX);
+        upperAbsEnc = (SimAbsoluteEncoder) SimDeviceBanks.getDIDevice(Constants.ARM_BOOM_ENC_IDX);
+        lowerAbsEnc = (SimAbsoluteEncoder) SimDeviceBanks.getDIDevice(Constants.ARM_STICK_ENC_IDX);
 
 
         m_arm_upper_sim = new SingleJointedArmSim(

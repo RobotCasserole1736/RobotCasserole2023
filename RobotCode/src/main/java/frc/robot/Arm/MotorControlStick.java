@@ -1,10 +1,12 @@
 package frc.robot.Arm;
 
+import frc.Constants;
 import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl;
+import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl.CANMotorCtrlType;
 
 public class MotorControlStick {
 
-    WrapperedCANMotorCtrl motorCtrl;
+    WrapperedCANMotorCtrl motorCtrl = new WrapperedCANMotorCtrl("Stick", Constants.ARM_STICK_MOTOR_CANID, CANMotorCtrlType.SPARK_MAX);
 
     public void setCmd(ArmState in){
         //todo - save off the right angles and velocities for this motor

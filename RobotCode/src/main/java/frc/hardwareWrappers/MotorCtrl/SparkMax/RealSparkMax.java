@@ -13,6 +13,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.UnitUtils;
 import frc.hardwareWrappers.MotorCtrl.AbstractSimmableMotorController;
+import frc.lib.Faults.Fault;
 
 
 public class RealSparkMax extends AbstractSimmableMotorController {
@@ -24,11 +25,15 @@ public class RealSparkMax extends AbstractSimmableMotorController {
     private final int MAX_RETRIES = 10;
     boolean connected = false;
 
+    Fault disconnFault;
+
     public RealSparkMax(int can_id){
         m_motor = new CANSparkMax(can_id, MotorType.kBrushless);
 
         boolean success = false;
         int retryCount = 0;
+
+        disconnFault = new Fault("Spark Max ID " + Integer.toString(can_id), "Disconnected");
 
         while(!success && retryCount < MAX_RETRIES){    
             var err0 = m_motor.restoreFactoryDefaults();
@@ -61,6 +66,8 @@ public class RealSparkMax extends AbstractSimmableMotorController {
             m_pidController = m_motor.getPIDController();
             m_encoder = m_motor.getEncoder();
         }
+
+        disconnFault.set(!connected);
         
     }
 

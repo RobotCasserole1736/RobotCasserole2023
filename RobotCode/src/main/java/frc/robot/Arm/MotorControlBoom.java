@@ -1,12 +1,14 @@
 package frc.robot.Arm;
 
 import edu.wpi.first.wpilibj.Solenoid;
+import frc.Constants;
 import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl;
+import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl.CANMotorCtrlType;
 
 public class MotorControlBoom {
 
 
-    WrapperedCANMotorCtrl motorCtrl;
+    WrapperedCANMotorCtrl motorCtrl = new WrapperedCANMotorCtrl("Boom", Constants.ARM_BOOM_MOTOR_CANID, CANMotorCtrlType.SPARK_MAX);
 
     Solenoid brakeSol;
 
