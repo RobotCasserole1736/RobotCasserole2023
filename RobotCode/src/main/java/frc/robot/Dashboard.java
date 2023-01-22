@@ -54,7 +54,6 @@ public class Dashboard {
         //d.addCamera("cam1", "http://10.17.36.10:1181/stream.mjpg", LEFT_COL, ROW2, 0.25);
         //d.addCamera("cam2", "http://10.17.36.10:1182/stream.mjpg", RIGHT_COL, ROW2, 0.75);
 
-        d.addFieldPose("pose", "Field", LEFT_COL, ROW1, 0.75);
         SwerveStateTopicSet[] topicList = new SwerveStateTopicSet[4];
         topicList[0] = new SwerveStateTopicSet("FL",0);
         topicList[1] = new SwerveStateTopicSet("FR",1);
@@ -62,13 +61,11 @@ public class Dashboard {
         topicList[3] = new SwerveStateTopicSet("BR",3);
         d.addSwerveState(topicList, "SwerveState", RIGHT_COL+3.5, ROW1, 0.8);
 
-        d.addCircularGauge(SignalUtils.nameToNT4ValueTopic("db_shooterSpeed"), "Shooter", "RPM", 0, 5000, 1500, 4000, CENTER_COL-7, ROW1, 1.0);
-        d.addCircularGauge(SignalUtils.nameToNT4ValueTopic("db_pneumaticsPressure"), "Pressure", "psi", 0, 140, 80, 130, CENTER_COL+13, ROW1, 1.0);
+        d.addCircularGauge(SignalUtils.nameToNT4ValueTopic("db_shooterSpeed"), "Shooter", "RPM", 0, 5000, 1500, 4000, CENTER_COL-10, ROW1, 1.0);
+        d.addCircularGauge(SignalUtils.nameToNT4ValueTopic("db_pneumaticsPressure"), "Pressure", "psi", 0, 140, 80, 130, CENTER_COL+10, ROW1, 1.0);
 
-        
         d.addAutoChooser(Autonomous.getInstance().delayModeList, CENTER_COL, ROW2, 1.0);
         d.addAutoChooser(Autonomous.getInstance().mainModeList, CENTER_COL, ROW3, 1.0);
-
 
         d.addIcon(FaultWrangler.getInstance().getFaultActiveTopic(), "Faults", "#FF0000", "icons/alert.svg", CENTER_COL-6, ROW4, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_visionTargetVisible"),"Vision Target Visible", "#00FF00", "icons/vision.svg", CENTER_COL, ROW4, 1.0);
@@ -77,9 +74,7 @@ public class Dashboard {
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_shooterSpoolup"),"Shooter Spoolup", "#FFFF00", "icons/speed.svg", CENTER_COL-12, ROW4, 1.0);
         d.addSound( SignalUtils.nameToNT4ValueTopic("db_Yeet"), "YEET", "sfx/YEET.mp3", false);
        
-
         d.addText(FaultWrangler.getInstance().getFaultDescriptionTopic(),"Fault Description", CENTER_COL, ROW5, 1.0);
-
 
       }
     

@@ -44,8 +44,6 @@ public class PoseTelemetry {
     Pose2d desiredPose = new Pose2d();
     Pose2d estimatedPose = new Pose2d();
 
-
-
     private PoseTelemetry(){
         xPosDesFtSig     = new Signal("pose_DES_x", "m");
         yPosDesFtSig     = new Signal("pose_DES_y", "m");
@@ -64,7 +62,7 @@ public class PoseTelemetry {
     }
 
     public void clearVisionPoses(){
-        visionPoses.clear();;
+        visionPoses.clear();
     }
 
     public void addVisionPose(String title, Pose2d visionPose){
