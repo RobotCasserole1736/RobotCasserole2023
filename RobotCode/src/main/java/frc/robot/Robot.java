@@ -203,7 +203,7 @@ public class Robot extends TimedRobot {
 
 
    
-    //ac.reset();
+
   }
 
   @Override
@@ -285,7 +285,7 @@ public class Robot extends TimedRobot {
     }
     stt.mark("Drivetrain");
 
-    //ac.update();
+    ac.update();
 
     cw.update();
     cc.update();

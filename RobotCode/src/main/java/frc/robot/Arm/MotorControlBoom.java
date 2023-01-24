@@ -27,6 +27,7 @@ public class MotorControlBoom {
         //todo closed loop calcualtion
 
         //todo send stuff to the motor
+        motorCtrl.setVoltageCmd(1.0); //TODO - this is just for test
 
         //TODO send stuff to the brake
     }

@@ -8,58 +8,55 @@ import frc.Constants;
 import frc.hardwareWrappers.SimDeviceBanks;
 import frc.hardwareWrappers.AbsoluteEncoder.Sim.SimAbsoluteEncoder;
 import frc.hardwareWrappers.MotorCtrl.Sim.SimSmartMotor;
+import frc.lib.Signal.Annotations.Signal;
 import frc.robot.ArmTelemetry;
 
 public class ArmSim {
 
 
-    private final SingleJointedArmSim m_arm_upper_sim;
-    private final SingleJointedArmSim m_arm_lower_sim;
+    private final SingleJointedArmSim m_boom_sim;
+    private final SingleJointedArmSim m_stick_sim;
 
-    
-    private final int m_arm_upper_min_angle = -180; 
-    private final int m_arm_upper_max_angle = 260; 
-    private final int m_arm_lower_min_angle = -90; 
-    private final int m_arm_lower_max_angle = 190; 
+    private final double ARM_STICK_MASS = Units.lbsToKilograms(5);
+    private final double ARM_BOOM_MASS = Units.lbsToKilograms(5);
 
-
-    SimSmartMotor upperMotorCtrl;
-    SimSmartMotor lowerMotorCtrl;
-    SimAbsoluteEncoder upperAbsEnc;
-    SimAbsoluteEncoder lowerAbsEnc;
+    SimSmartMotor boomMotorCtrl;
+    SimSmartMotor stickMotorCtrl;
+    SimAbsoluteEncoder boomAbsEnc;
+    SimAbsoluteEncoder stickAbsEnc;
 
     // driven by one neo
-    private final DCMotor m_armUpperGearbox = DCMotor.getNEO(1);
-    private final DCMotor m_armLowerGearbox = DCMotor.getNEO(1);
+    private final DCMotor m_boomGearbox = DCMotor.getNEO(1);
+    private final DCMotor m_stickGearbox = DCMotor.getNEO(1);
 
     public ArmSim(){
-        upperMotorCtrl = (SimSmartMotor) SimDeviceBanks.getCANDevice(Constants.ARM_BOOM_MOTOR_CANID);
-        lowerMotorCtrl = (SimSmartMotor) SimDeviceBanks.getCANDevice(Constants.ARM_STICK_MOTOR_CANID);
+        boomMotorCtrl = (SimSmartMotor) SimDeviceBanks.getCANDevice(Constants.ARM_BOOM_MOTOR_CANID);
+        stickMotorCtrl = (SimSmartMotor) SimDeviceBanks.getCANDevice(Constants.ARM_STICK_MOTOR_CANID);
 
-        upperAbsEnc = (SimAbsoluteEncoder) SimDeviceBanks.getDIDevice(Constants.ARM_BOOM_ENC_IDX);
-        lowerAbsEnc = (SimAbsoluteEncoder) SimDeviceBanks.getDIDevice(Constants.ARM_STICK_ENC_IDX);
+        boomAbsEnc = (SimAbsoluteEncoder) SimDeviceBanks.getDIDevice(Constants.ARM_BOOM_ENC_IDX);
+        stickAbsEnc = (SimAbsoluteEncoder) SimDeviceBanks.getDIDevice(Constants.ARM_STICK_ENC_IDX);
 
 
-        m_arm_upper_sim = new SingleJointedArmSim(
-            m_armUpperGearbox,
-            Constants.ARM_UPPER_GEAR_RATIO,
-            SingleJointedArmSim.estimateMOI(Constants.ARM_UPPER_LENGTH, Constants.ARM_UPPER_MASS),
-            Constants.ARM_UPPER_LENGTH,
-            Units.degreesToRadians(m_arm_upper_min_angle),
-            Units.degreesToRadians(m_arm_upper_max_angle),
-            Constants.ARM_UPPER_MASS,
-            false,
+        m_boom_sim = new SingleJointedArmSim(
+            m_boomGearbox,
+            Constants.ARM_BOOM_GEAR_RATIO,
+            SingleJointedArmSim.estimateMOI(Constants.ARM_BOOM_LENGTH, ARM_BOOM_MASS),
+            Constants.ARM_BOOM_LENGTH,
+            Units.degreesToRadians(-180),
+            Units.degreesToRadians(180),
+            ARM_BOOM_MASS,
+            true,
             VecBuilder.fill(0) // no noise
             );
 
-        m_arm_lower_sim = new SingleJointedArmSim(
-                m_armLowerGearbox,
-                Constants.ARM_LOWER_GEAR_RATIO,
-                SingleJointedArmSim.estimateMOI(Constants.ARM_LOWER_LENGTH, Constants.ARM_UPPER_MASS),
-                Constants.ARM_LOWER_LENGTH,
-                Units.degreesToRadians(m_arm_lower_min_angle),
-                Units.degreesToRadians(m_arm_lower_max_angle),
-                Constants.ARM_LOWER_MASS,
+        m_stick_sim = new SingleJointedArmSim(
+                m_stickGearbox,
+                Constants.ARM_STICK_GEAR_RATIO,
+                SingleJointedArmSim.estimateMOI(Constants.ARM_STICK_LENGTH, ARM_STICK_MASS),
+                Constants.ARM_STICK_LENGTH,
+                Units.degreesToRadians(-180),
+                Units.degreesToRadians(180),
+                ARM_STICK_MASS,
                 true,
                 VecBuilder.fill(0) //no noise
                 );
@@ -68,21 +65,21 @@ public class ArmSim {
     public void update(boolean isDisabled){
         // In this method, we update our simulation of what our arm is doing
         // First, we set our "inputs" (voltages)
-        m_arm_upper_sim.setInput(isDisabled ? 0.0 : upperMotorCtrl.getAppliedVoltage_V());
-        m_arm_lower_sim.setInput(isDisabled ? 0.0 : lowerMotorCtrl.getAppliedVoltage_V());
+        m_boom_sim.setInput(isDisabled ? 0.0 : boomMotorCtrl.getAppliedVoltage_V());
+        m_stick_sim.setInput(isDisabled ? 0.0 : stickMotorCtrl.getAppliedVoltage_V());
 
         // Next, we update it. The standard loop time is 20ms.
-        m_arm_upper_sim.update(Constants.SIM_SAMPLE_RATE_SEC);
-        m_arm_lower_sim.update(Constants.SIM_SAMPLE_RATE_SEC);
+        m_boom_sim.update(Constants.SIM_SAMPLE_RATE_SEC);
+        m_stick_sim.update(Constants.SIM_SAMPLE_RATE_SEC);
 
         // Finally, we set our simulated encoder's readings and simulated battery voltage
-        upperAbsEnc.setRawAngle(m_arm_upper_sim.getAngleRads());
-        lowerAbsEnc.setRawAngle(m_arm_lower_sim.getAngleRads());
+        boomAbsEnc.setRawAngle(m_boom_sim.getAngleRads());
+        stickAbsEnc.setRawAngle(m_stick_sim.getAngleRads());
 
         // Update the Mechanism Arm angle based on the simulated arm angle
-        var upperAngle = Units.radiansToDegrees(m_arm_upper_sim.getAngleRads());
-        var lowerAngle = Units.radiansToDegrees(m_arm_lower_sim.getAngleRads());
-        ArmTelemetry.getInstance().setActual(upperAngle, lowerAngle);
+        var boomAngle = Units.radiansToDegrees(m_boom_sim.getAngleRads());
+        var stickAngle = Units.radiansToDegrees(m_stick_sim.getAngleRads());
+        ArmTelemetry.getInstance().setActual(boomAngle, stickAngle);
     }
         
 }
