@@ -20,6 +20,7 @@ public class MotorControlStick {
         //todo closed loop calcualtion
 
         //todo send stuff to the motor
+        motorCtrl.setVoltageCmd(5.0); // TODO don't do this arm go zoooom
 
     }
     

@@ -33,7 +33,7 @@ public class ArmTelemetry {
 
     private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", LEFT_MARGIN, Constants.ARM_BOOM_MOUNT_HIEGHT);
     private final MechanismLigament2d m_arm_tower =
-        m_armPivot.append(new MechanismLigament2d("ArmTower", Constants.ARM_BOOM_MOUNT_HIEGHT, -90, 10, new Color8Bit(Color.kSilver)));
+        m_armPivot.append(new MechanismLigament2d("ArmTower", Constants.ARM_BOOM_MOUNT_HIEGHT, -90, 5, new Color8Bit(Color.kSilver)));
   
     private final MechanismRoot2d midNodeHome = m_mech2d.getRoot("Mid Node", MID_GOAL, 0);
     private final MechanismLigament2d MidNode = midNodeHome.append(new MechanismLigament2d("Mid Cone Node", MID_GOAL_HEIGHT, 90, 10, new Color8Bit(Color.kWhite)));
