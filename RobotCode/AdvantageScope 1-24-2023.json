@@ -1,0 +1,59 @@
+{
+  "version": "2.1.0",
+  "layout": [
+    {
+      "type": 1,
+      "legends": {
+        "left": {
+          "lockedRange": null,
+          "unitConversion": {
+            "type": null,
+            "factor": 1
+          },
+          "fields": []
+        },
+        "discrete": {
+          "fields": []
+        },
+        "right": {
+          "lockedRange": null,
+          "unitConversion": {
+            "type": null,
+            "factor": 1
+          },
+          "fields": []
+        }
+      },
+      "title": "Line Graph"
+    },
+    {
+      "type": 6,
+      "fields": [],
+      "listFields": [
+        [],
+        [
+          {
+            "type": "Robot",
+            "key": "/SmartDashboard/Field/Robot"
+          },
+          {
+            "type": "Ghost",
+            "key": "/SmartDashboard/Field/EstPose"
+          },
+          {
+            "type": "Trajectory",
+            "key": "/SmartDashboard/Field/DesPose"
+          }
+        ]
+      ],
+      "options": {
+        "field": "2023",
+        "alliance": "blue",
+        "robot": "KitBot",
+        "unitDistance": "meters",
+        "unitRotation": "degrees"
+      },
+      "title": "3D Field"
+    }
+  ]
+}
