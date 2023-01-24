@@ -36,6 +36,12 @@ public class Dashboard {
     @Signal(name="db_clmberExtend")
     boolean climberExtend;
 
+    @Signal(name="db_cubeShape")
+    double cubeShape;
+
+    @Signal(name="db_triangleShape")
+    double triangleShape;
+
     DashboardConfig d;
 
     public Dashboard (Webserver2 ws_in) {
@@ -73,7 +79,9 @@ public class Dashboard {
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_clmberExtend"),"Climber Extend", "#FFFF00", "icons/climb.svg", CENTER_COL+6, ROW4, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_shooterSpoolup"),"Shooter Spoolup", "#FFFF00", "icons/speed.svg", CENTER_COL-12, ROW4, 1.0);
         d.addSound( SignalUtils.nameToNT4ValueTopic("db_Yeet"), "YEET", "sfx/YEET.mp3", false);
-       
+        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_cubeShape"),"Cube", "#b515ef", "icons/cube.svg", LEFT_COL+5, ROW1, 2.0);
+        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_triangleShape"),"Triangle", "#FFFF00", "icons/triangle.svg", LEFT_COL-10, ROW1, 2.0);
+        
         d.addText(FaultWrangler.getInstance().getFaultDescriptionTopic(),"Fault Description", CENTER_COL, ROW5, 1.0);
 
       }

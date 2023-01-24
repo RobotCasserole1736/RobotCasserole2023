@@ -46,7 +46,7 @@
               "autoFit": true
             }
           ],
-          "height": 136,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -87,7 +87,7 @@
               "autoFit": true
             }
           ],
-          "height": 385,
+          "height": 0,
           "series": [
             {
               "color": [
