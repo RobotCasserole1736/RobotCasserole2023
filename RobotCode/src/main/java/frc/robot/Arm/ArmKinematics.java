@@ -5,7 +5,6 @@ public class ArmKinematics {
     //TODO - write some docs here somehow to describe the coordinate system we put on the board
     
     static ArmEndEffectorPos forward( ArmState in){
-        //TODO - do forward kinematics
         return null;//TODO - return a real thing
     }   
         double InitialAngle_1 = (Math.PI*5)/3;
@@ -20,7 +19,6 @@ public class ArmKinematics {
         } else {
             StickAngle = InitialAngle_2 + BoomAngle;
         }
-        // Will work out StickAngle later
 
         double InitialHeight = 60;
         //Starting height of the Boom-Stick system
