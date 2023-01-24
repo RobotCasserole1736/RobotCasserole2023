@@ -43,23 +43,24 @@ public class ArmSim {
     }
 
     public void update(boolean isDisabled){
-        var boomMotorTorque  = 0.0;
-        var stickMotorTorque = 0.0;
+
+        var boomVoltage = 0.0;
+        var stickVoltage = 0.0;
+
         if(!isDisabled){
-            var boomVoltage  = boomMotorCtrl.getAppliedVoltage_V();
-            var stickVoltage = stickMotorCtrl.getAppliedVoltage_V();
-    
-            //Using the last speed, get our motor currents
-            var boomCurrent = m_boomGearbox.getCurrent(curBoomAngSpd_radpersec, boomVoltage);
-            var stickCurrent = m_stickGearbox.getCurrent(curStickAngSpd_radpersec, stickVoltage);
-    
-            //Using current, find the applied motor torque
-            boomMotorTorque  = m_boomGearbox.getTorque(boomCurrent);
-            stickMotorTorque = m_stickGearbox.getTorque(stickCurrent);
-        } else {
-            // Disabeld. Assume torques are 0 with coast mode
-            // Brake mode would force voltage to zero.
-        }
+            boomVoltage  = boomMotorCtrl.getAppliedVoltage_V();
+            stickVoltage = stickMotorCtrl.getAppliedVoltage_V();
+        } 
+
+        //Using the last speed, get our motor currents
+        var boomCurrent = m_boomGearbox.getCurrent(curBoomAngSpd_radpersec, boomVoltage);
+        var stickCurrent = m_stickGearbox.getCurrent(curStickAngSpd_radpersec, stickVoltage);
+
+        //Using current, find the applied motor torque
+        var boomMotorTorque  = m_boomGearbox.getTorque(boomCurrent);
+        var stickMotorTorque = m_stickGearbox.getTorque(stickCurrent);
+
+        var boomBrakeEngaged = false; //TODO - populate this from sim devices somewhow?
 
 
 
@@ -95,12 +96,21 @@ public class ArmSim {
         var boomAlpha_radpersec2 = (boomGravTorque + boomMotorTorque + boomFricTorque) / boom_moi;
         var stickAlpha_radpersec2 = (stickGravTorque + stickMotorTorque + stickFricTorque) / stick_moi;
 
+
+        // Boom can only rotate if brake is released
+        if(boomBrakeEngaged){
+            // Presume no slip, static friciton. Force is whatever it needs to be to counter out
+            // all other incoming forces, making acceleration zero.
+            boomAlpha_radpersec2 = 0;
+        } 
+
         // Integrate the silly way. Listen to tyler and oblarg sob quietly from afar, unsure of where these
         // voodoo doll like pains are coming from.
-        curBoomAngSpd_radpersec += boomAlpha_radpersec2 * Constants.SIM_SAMPLE_RATE_SEC;
+        // Stick can always freely rotate
         curStickAngSpd_radpersec += stickAlpha_radpersec2 * Constants.SIM_SAMPLE_RATE_SEC;
-        curBoomAngle_rad += curBoomAngSpd_radpersec * Constants.SIM_SAMPLE_RATE_SEC;
         curStickAngle_rad += curStickAngSpd_radpersec * Constants.SIM_SAMPLE_RATE_SEC;
+        curBoomAngSpd_radpersec += boomAlpha_radpersec2 * Constants.SIM_SAMPLE_RATE_SEC;
+        curBoomAngle_rad += curBoomAngSpd_radpersec * Constants.SIM_SAMPLE_RATE_SEC;
 
         // Finally, we set our simulated encoder's readings and simulated battery voltage
         boomAbsEnc.setRawAngle(curBoomAngle_rad);
