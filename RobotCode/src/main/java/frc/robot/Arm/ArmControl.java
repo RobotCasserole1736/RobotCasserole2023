@@ -3,6 +3,7 @@ package frc.robot.Arm;
 import frc.Constants;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder.AbsoluteEncType;
+import frc.robot.ArmTelemetry;
 
 public class ArmControl {
 
@@ -34,6 +35,19 @@ public class ArmControl {
 
         mb.update();
         ms.update();
+
+        // TODO - put meas/des things into telemetery, rather than tehse test values
+
+        ArmState des = new ArmState();
+        des.boomAngleDeg = 30;
+        des.stickAngleDeg = -45;
+
+        ArmState meas = new ArmState();
+        meas.boomAngleDeg = 22;
+        meas.stickAngleDeg = -57;
+
+        ArmTelemetry.getInstance().setDesired(new ArmEndEffectorPos(0.7, 0.6), des);
+        ArmTelemetry.getInstance().setMeasured(meas);
     }
     
 }

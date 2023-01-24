@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.Constants;
 import frc.robot.Arm.ArmEndEffectorPos;
+import frc.robot.Arm.ArmState;
 
 public class ArmTelemetry {
 
@@ -19,7 +20,6 @@ public class ArmTelemetry {
             inst = new ArmTelemetry();
         return inst;
     }
-
     //All Dimensions in meters
     // https://firstfrc.blob.core.windows.net/frc2023/FieldAssets/2023FieldDrawings-CHARGEDUPSpecific.pdf page 10 for most of these
     private final double LEFT_MARGIN = Units.inchesToMeters(15);
@@ -46,42 +46,87 @@ public class ArmTelemetry {
     private final MechanismLigament2d nodeBase = bumpers.append(new MechanismLigament2d("Node Base", HIGH_GOAL - LOW_GOAL, 0, 100, new Color8Bit(Color.kWhite)));
 
     private final MechanismRoot2d desEndPosRoot = m_mech2d.getRoot("DesEndEffPos", 1, 1);
-    private final MechanismLigament2d desEndPosMarker1 = desEndPosRoot.append(new MechanismLigament2d("EndPosMarker1", 0.02, 0, 20, new Color8Bit(Color.kYellowGreen)));
-    private final MechanismLigament2d desEndPosMarker2 = desEndPosRoot.append(new MechanismLigament2d("EndPosMarker2", 0.02, 180, 20, new Color8Bit(Color.kYellowGreen)));
+    private final MechanismLigament2d desEndPosMarker1 = desEndPosRoot.append(new MechanismLigament2d("EndPosMarker1", 0.02, 0, 20, new Color8Bit(Color.kLimeGreen)));
+    private final MechanismLigament2d desEndPosMarker2 = desEndPosRoot.append(new MechanismLigament2d("EndPosMarker2", 0.02, 180, 20, new Color8Bit(Color.kLimeGreen)));
 
 
-    private final MechanismLigament2d m_boom_ligament =
+    private final MechanismLigament2d m_boom_ligament_act =
         m_armPivot.append(
               new MechanismLigament2d(
-                "Arm Boom",
+                "Arm Boom Act",
                 Constants.ARM_BOOM_LENGTH, 
                 -90, 
-                10, 
-                new Color8Bit(Color.kSkyBlue)));
+                3, 
+                new Color8Bit(Color.kSteelBlue)));
 
-    private final MechanismLigament2d m_stick_ligament =
-        m_boom_ligament.append(
+    private final MechanismLigament2d m_stick_ligament_act =
+        m_boom_ligament_act.append(
             new MechanismLigament2d(
-                "Arm Stick",
+                "Arm Stick Act",
                 Constants.ARM_STICK_LENGTH,
                 Units.radiansToDegrees(0.0),
+                3,
+                new Color8Bit(Color.kSteelBlue)));
+
+    private final MechanismLigament2d m_boom_ligament_meas =
+        m_armPivot.append(
+                new MechanismLigament2d(
+                "Arm Boom Meas",
+                Constants.ARM_BOOM_LENGTH, 
+                -90, 
+                5, 
+                new Color8Bit(Color.kRed)));
+        
+    private final MechanismLigament2d m_stick_ligament_meas =
+        m_boom_ligament_meas.append(
+            new MechanismLigament2d(
+                "Arm Stick Meas",
+                Constants.ARM_STICK_LENGTH,
+                Units.radiansToDegrees(0.0),
+                5,
+                new Color8Bit(Color.kRed)));
+
+    private final MechanismLigament2d m_boom_ligament_des =
+    m_armPivot.append(
+            new MechanismLigament2d(
+            "Arm Boom Des",
+            Constants.ARM_BOOM_LENGTH/3.0, 
+            -90, 
+            10, 
+            new Color8Bit(Color.kLimeGreen)));
+        
+    private final MechanismLigament2d m_stick_ligament_des =
+        m_boom_ligament_meas.append(
+            new MechanismLigament2d(
+                "Arm Stick Des",
+                Constants.ARM_STICK_LENGTH/3.0,
+                Units.radiansToDegrees(0.0),
                 10,
-                new Color8Bit(Color.kBlue)));
+                new Color8Bit(Color.kLimeGreen)));
 
     private ArmTelemetry(){
         // Put Mechanism 2d to SmartDashboard
         SmartDashboard.putData("Arm", m_mech2d);
+
+        if(Robot.isReal()){
+            //Effectively hid the Act ligament if we're on a real robot
+            m_boom_ligament_act.setLength(0);
+            m_stick_ligament_act.setLength(0);
+        }
     }
 
     public void setActual(double boomAngleDeg, double stickAngleDeg){
-        m_boom_ligament.setAngle(boomAngleDeg);
-        m_stick_ligament.setAngle(stickAngleDeg);
+        m_boom_ligament_act.setAngle(boomAngleDeg);
+        m_stick_ligament_act.setAngle(stickAngleDeg);
     }
-    public void setDesired(ArmEndEffectorPos des, double upperAngleDeg, double lowerAngleDeg){
-        desEndPosRoot.setPosition(des.x, des.y);
+    public void setDesired(ArmEndEffectorPos desPos, ArmState desArmState){
+        desEndPosRoot.setPosition(desPos.x + LEFT_MARGIN, desPos.y);
+        m_boom_ligament_des.setAngle(desArmState.boomAngleDeg);
+        m_stick_ligament_des.setAngle(desArmState.stickAngleDeg);
     }
-    public void setMeasured(double upperAngleDeg, double lowerAngleDeg){
-
+    public void setMeasured(ArmState in){
+        m_boom_ligament_meas.setAngle(in.boomAngleDeg);
+        m_stick_ligament_meas.setAngle(in.stickAngleDeg);
     }
     
 }
