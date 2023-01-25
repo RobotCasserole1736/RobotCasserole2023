@@ -2,10 +2,10 @@ package frc.robot.Arm;
 
 public class ArmState {
     //used for angles of arms
-    double boomAngle;
-    double boomAnglularVel;
-    double stickAngle;
-    double stickAngularVel;
+    public double boomAngleDeg;
+    public double boomAnglularVel;
+    public double stickAngleDeg;
+    public double stickAngularVel;
 
     //TODO - make consntructor
 

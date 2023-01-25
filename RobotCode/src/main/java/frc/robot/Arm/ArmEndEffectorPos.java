@@ -5,9 +5,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 
 public class ArmEndEffectorPos {
-    double x;
-    double y;
-    boolean isReflex;
+    public double x;
+    public double y;
+    public boolean isReflex;
 
     //TODO - we just added isReflex and haven't used it at all yet
 

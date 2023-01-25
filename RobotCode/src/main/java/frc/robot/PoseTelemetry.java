@@ -3,7 +3,9 @@ package frc.robot;
 import java.util.ArrayList;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.Signal.Signal;
 
@@ -18,6 +20,7 @@ public class PoseTelemetry {
     }
     
     public static Field2d field = new Field2d();
+    public static Field3d field3d = new Field3d();
 
     ArrayList<Pose2d> visionPoses = new ArrayList<Pose2d>();
     
@@ -58,7 +61,12 @@ public class PoseTelemetry {
         tRotActDegSig    = new Signal("pose_ACT_rot", "rad");
 
         SmartDashboard.putData("Field", field);
+        SmartDashboard.putData("Field3d", field3d);
 
+    }
+
+    public void setCamPose(String camName, Pose3d pose){
+        field3d.getObject(camName).setPose(pose);
     }
 
     public void clearVisionPoses(){
@@ -96,6 +104,7 @@ public class PoseTelemetry {
         field.getObject("Robot").setPose(actualPose);
         field.getObject("EstPose").setPose(estimatedPose);
         field.getObject("VisionPose").setPoses(visionPoses);
+
     }
 
 }
