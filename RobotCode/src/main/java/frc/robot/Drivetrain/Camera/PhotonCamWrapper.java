@@ -12,7 +12,9 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.Signal.Annotations.Signal;
+import frc.robot.PoseTelemetry;
 
 public class PhotonCamWrapper {
 
@@ -22,8 +24,6 @@ public class PhotonCamWrapper {
     boolean isConnected;
 
     List<CameraPoseObservation> observations;
-
-    final Pose3d fieldPose = new Pose3d(); //Field-referenced orign
 
     final Transform3d robotToCam;
 
@@ -38,6 +38,8 @@ public class PhotonCamWrapper {
 
         var res = cam.getLatestResult();
         double observationTime = Timer.getFPGATimestamp() - res.getLatencyMillis();
+
+        PoseTelemetry.getInstance().setCamPose(this.cam.getName(), new Pose3d(lastEstimate).transformBy(robotToCam));
 
         List<PhotonTrackedTarget> tgtList = res.getTargets();
 
