@@ -64,7 +64,6 @@ public class Constants {
     static public final double ARM_LOWER_MASS = Units.lbsToKilograms(5);
     static public final double ARM_LOWER_LENGTH = Units.inchesToMeters(27);
 
-
     
 
     //////////////////////////////////////////////////////////////////

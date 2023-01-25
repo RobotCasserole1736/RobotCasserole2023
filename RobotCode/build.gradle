@@ -109,6 +109,11 @@ tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
 
+//Test support
+test {
+    useJUnitPlatform()
+    systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
