@@ -4,7 +4,7 @@ package frc.robot.Arm;
 
 public class ArmSoftLimits {
 
-    static ArmEndEffectorPos [] ArmLim = new ArmEndEffectorPos[4];
+    static ArmEndEffectorPos [] ArmLim = new ArmEndEffectorPos[] {};
 
     ArmLim[0].x = 0;
     ArmLim[0].y = 0;
@@ -51,15 +51,19 @@ public class ArmSoftLimits {
                         // crosses this line
                         crossCount++;
                         // get the crossing point
+
                     } else if(p0.y > p1.y && in.y < p0.y && in.y >= p1.y){
                         // does not cross this line
                         // find closest point (perpendicular bisect or end point)
                     }
-                } else {
-                    // not horizontal and not vertical
-                    // check x range
-                    // find x crossing
+                } else if(((p0.y < p1.y && in.y > p0.y && in.y <= p1.y) ||
+                          (p0.y > p1.y && in.y < p0.y && in.y >= p1.y)) &&
+                          in.x < max(p0.x,p1.x)){
+                    // crosses not horizontal and not vertical
+                    crossCount++;
 
+                } else {
+                    // does not cross
                 }
             }
         }
