@@ -21,6 +21,6 @@ class KinematicsTest {
   @Test // marks this method as a test
   void test1() {
 
-  }
+}
 
 }
