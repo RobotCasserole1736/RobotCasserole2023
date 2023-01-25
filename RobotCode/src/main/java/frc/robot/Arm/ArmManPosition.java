@@ -1,6 +1,11 @@
 package frc.robot.Arm;
 
+import frc.lib.Calibration.Calibration;
+
 public class ArmManPosition {
+
+    //Calibration desArmPos;?
+    //Calibration actArmPos;?
 
     public void setOpVelCmds(boolean isActive, double x_vel, double y_vel){
         //TODO - save incoming commands
