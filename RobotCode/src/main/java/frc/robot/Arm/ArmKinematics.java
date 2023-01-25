@@ -5,7 +5,7 @@ public class ArmKinematics {
     // TODO - write some docs here somehow to describe the coordinate system we put
     // on the board
 
-    static ArmEndEffectorPos forward(ArmState in) {
+    public static ArmEndEffectorPos forward(ArmState in) {
 
         double InitialAngle_1 = (Math.PI * 5) / 3;
         double InitialAngle_2 = (Math.PI) / 3;
@@ -47,7 +47,7 @@ public class ArmKinematics {
                                     StickHeight + BoomHeight); // TODO - for the given input, what is the end effector position? is this right?
     }
 
-    static ArmState reverse(ArmEndEffectorPos in) {
+    public static ArmState reverse(ArmEndEffectorPos in) {
         // TODO - do reverse kinematics
         return null;// TODO - return a real thing which is the inverse of above
     }
