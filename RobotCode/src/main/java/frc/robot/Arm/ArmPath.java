@@ -54,4 +54,8 @@ public class ArmPath {
         return ArmEndEffectorPos.fromTrajState(traj.sample(time_sec));
     }
 
+    public double getDurationSec(){
+        return traj.getTotalTimeSeconds();
+    }
+
 }

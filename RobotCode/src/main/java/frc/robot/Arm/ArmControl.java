@@ -1,5 +1,6 @@
 package frc.robot.Arm;
 
+import edu.wpi.first.math.util.Units;
 import frc.Constants;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder.AbsoluteEncType;
@@ -17,7 +18,10 @@ public class ArmControl {
     MotorControlBoom mb;
     MotorControlStick ms;
 
-    //TODO - add other control components for the arm
+    ArmState curMeasState;
+
+    ArmPathPlanner pp;
+    ArmManPosition mp;
 
     //TODO put offsets in for this
     WrapperedAbsoluteEncoder boomEncoder = new WrapperedAbsoluteEncoder(AbsoluteEncType.SRXEncoder, "Boom", Constants.ARM_BOOM_ENC_IDX, 0);
@@ -26,28 +30,41 @@ public class ArmControl {
     private ArmControl(){
         mb = new MotorControlBoom();
         ms = new MotorControlStick();
-
+        pp = new ArmPathPlanner();
+        mp = new ArmManPosition();
+        curMeasState = new ArmState(0,0,null);
     }
 
     public void update(){
 
-        //TODO - add other updates for control compoennts for the arm
+        // Meas state and end effector position
+        var boomAngleDeg = Units.radiansToDegrees(boomEncoder.getAngle_rad());
+        var stickAngleDeg = Units.radiansToDegrees(stickEncoder.getAngle_rad());
+        curMeasState = new ArmState(boomAngleDeg, stickAngleDeg, curMeasState);
+        ArmEndEffectorPos curMeasPos = ArmKinematics.forward(curMeasState);
 
+        mp.update(curMeasPos);
+        pp.update(curMeasPos);
+
+        // Arbitrate to desired position from manual and pathplanned commands
+        var curDesPosRaw = ArmPosCmdArbitration.arbitrate(mp.getCurDesPos(), pp.getCurDesPos());
+
+        //Apply soft limits
+        var curDesPosLimited = ArmSoftLimits.applyLimit(curDesPosRaw);
+
+        // Apply kinematics to get linkge positions
+        var curDesState = ArmKinematics.reverse(curDesPosLimited);
+
+        // Send desired state to the motor control
+        mb.setCmd(curDesState);
         mb.update();
+
+        ms.setCmd(curDesState);
         ms.update();
 
-        // TODO - put meas/des things into telemetery, rather than tehse test values
-
-        ArmState des = new ArmState();
-        des.boomAngleDeg = 30;
-        des.stickAngleDeg = -45;
-
-        ArmState meas = new ArmState();
-        meas.boomAngleDeg = 22;
-        meas.stickAngleDeg = -57;
-
-        ArmTelemetry.getInstance().setDesired(new ArmEndEffectorPos(0.7, 0.6), des);
-        ArmTelemetry.getInstance().setMeasured(meas);
+        // Update telemetry
+        ArmTelemetry.getInstance().setDesired(curDesPosLimited, curDesState);
+        ArmTelemetry.getInstance().setMeasured(curMeasState);
     }
     
 }

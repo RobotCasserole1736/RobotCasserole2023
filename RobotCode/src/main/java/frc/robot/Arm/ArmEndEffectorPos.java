@@ -53,4 +53,8 @@ public class ArmEndEffectorPos {
         var tmp = in.poseMeters;
         return new ArmEndEffectorPos(tmp.getX(), tmp.getY());
     }
+
+    public boolean isEqualTo(ArmEndEffectorPos other){
+        return this.x == other.x && this.y == other.y && this.isReflex == other.isReflex;
+    }
 }

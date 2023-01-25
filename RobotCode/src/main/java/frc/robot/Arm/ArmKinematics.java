@@ -49,7 +49,7 @@ public class ArmKinematics {
 
     public static ArmState reverse(ArmEndEffectorPos in) {
         // TODO - do reverse kinematics
-        return null;// TODO - return a real thing which is the inverse of above
+        return new ArmState(0.0,0.0,null);// TODO - return a real thing which is the inverse of above
     }
 
 }
