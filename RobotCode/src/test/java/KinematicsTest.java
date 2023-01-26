@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 
 import frc.Constants;
+import frc.robot.Arm.ArmEndEffectorPos;
 import frc.robot.Arm.ArmKinematics;
 import frc.robot.Arm.ArmState;
 
@@ -103,6 +104,28 @@ class KinematicsTest {
         var actual = ArmKinematics.inverse(intRes);
         assertEquals(expected.boomAngleDeg, actual.boomAngleDeg, DELTA);
         assertEquals(expected.stickAngleDeg, actual.stickAngleDeg, DELTA);
+      }
+    }
+
+  }
+
+  @Test 
+  void testInverseForward() {
+    //Test values chosen to not request arm positions which are not physically possible
+    double testVals[] = {0.3, 0.4, 0.5, 0.49999, -0.3, -0.45, -0.24, -0.3542 };
+    boolean testReflexVals[] = {true, false};
+
+    for(double x : testVals){
+      for(double y : testVals){
+        for(boolean reflex: testReflexVals){
+          var y_adj = y + Constants.ARM_BOOM_MOUNT_HIEGHT; // adjust our refernce frame to be about the boom mount point
+          var expected = new ArmEndEffectorPos(x, y_adj, reflex);
+          var intRes = ArmKinematics.inverse(expected);
+          var actual = ArmKinematics.forward(intRes);
+          assertEquals(expected.x, actual.x, DELTA);
+          assertEquals(expected.y, actual.y, DELTA);
+          assertEquals(expected.isReflex, actual.isReflex);
+        }
       }
     }
 

@@ -33,10 +33,19 @@ public class ArmKinematics {
         //Ensure the input point is "reachable" by scaling it back
         // inside the unit circle of the max extension of the arm.
         double maxRadius = Constants.ARM_BOOM_LENGTH + Constants.ARM_STICK_LENGTH;
+        double minRadius = Math.abs(Constants.ARM_BOOM_LENGTH - Constants.ARM_STICK_LENGTH);
         double reqRadius = Math.sqrt(x*x + y*y);
 
-        if(reqRadius >= maxRadius){
+        if(reqRadius == 0.0){
+            // user was silly, give up
+            x = minRadius;
+            y = 0.0;
+        } else if(reqRadius >= maxRadius){
             var factor = maxRadius/reqRadius;
+            x *= factor;
+            y *= factor;
+        } else if( reqRadius <= minRadius){
+            var factor = minRadius/reqRadius;
             x *= factor;
             y *= factor;
         }
