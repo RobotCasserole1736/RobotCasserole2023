@@ -48,6 +48,8 @@ public class ArmControl {
     public void update(){
 
         // Meas state and end effector position
+        boomEncoder.update();
+        stickEncoder.update();
         var boomAngleDeg = Units.radiansToDegrees(boomEncoder.getAngle_rad());
         var stickAngleDeg = Units.radiansToDegrees(stickEncoder.getAngle_rad());
         curMeasState = new ArmState(boomAngleDeg, stickAngleDeg); //TODO - add velocities here?
@@ -67,10 +69,10 @@ public class ArmControl {
 
         // Send desired state to the motor control
         mb.setCmd(curDesState);
-        mb.update();
+        mb.update(curMeasState);
 
         ms.setCmd(curDesState);
-        ms.update();
+        ms.update(curMeasState);
 
         // Update telemetry
         ArmTelemetry.getInstance().setDesired(curDesPosLimited, curDesState);

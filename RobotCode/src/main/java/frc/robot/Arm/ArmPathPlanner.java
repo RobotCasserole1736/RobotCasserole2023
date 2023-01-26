@@ -51,6 +51,7 @@ public class ArmPathPlanner {
         }
 
         shouldRunPrev = shouldRun;
+        prevTargetPos = curTargetPos;
 
     }
 

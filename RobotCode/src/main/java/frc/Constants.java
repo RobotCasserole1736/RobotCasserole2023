@@ -59,9 +59,9 @@ public class Constants {
     //////////////////////////////////////////////////////////////////
     static public final double ARM_BOOM_GEAR_RATIO = 300;
     static public final double ARM_STICK_GEAR_RATIO = 300;
-    static public final double ARM_BOOM_MOUNT_HIEGHT = Units.inchesToMeters(38.5);
-    static public final double ARM_BOOM_LENGTH = Units.inchesToMeters(25);
-    static public final double ARM_STICK_LENGTH = Units.inchesToMeters(15);
+    static public final double ARM_BOOM_MOUNT_HIEGHT = Units.inchesToMeters(40);
+    static public final double ARM_BOOM_LENGTH = Units.inchesToMeters(30.25);
+    static public final double ARM_STICK_LENGTH = Units.inchesToMeters(32.5);
     static public final double ARM_END_EFF_MAX_VEL_MPS = 1.0;
     static public final double ARM_END_EFF_MAX_ACCEL_MPS2 = 0.75;
     

@@ -23,7 +23,7 @@ public class ArmTelemetry {
     //All Dimensions in meters
     // https://firstfrc.blob.core.windows.net/frc2023/FieldAssets/2023FieldDrawings-CHARGEDUPSpecific.pdf page 10 for most of these
     private final double LEFT_MARGIN = Units.inchesToMeters(15);
-    private final double LOW_GOAL = LEFT_MARGIN + Constants.WHEEL_BASE_HALF_LENGTH_M + Units.inchesToMeters(5.0); // account for bumpers & frame
+    private final double LOW_GOAL = LEFT_MARGIN + 0.45; // account for bumpers & frame
     private final double MID_GOAL  = LOW_GOAL + Units.inchesToMeters(22.7);
     private final double MID_GOAL_HEIGHT = Units.inchesToMeters(34.0);
     private final double HIGH_GOAL =  LOW_GOAL + Units.inchesToMeters(39.37);
