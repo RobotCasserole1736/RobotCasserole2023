@@ -2,11 +2,11 @@ package frc.robot.Arm;
 
 public class ArmSoftLimits {
 
-    public ArmEndEffectorPos applyLimit(ArmEndEffectorPos in) {
-        return null;// TODO - apply limits to the incoming position to fence it in
+    public static ArmEndEffectorPos applyLimit(ArmEndEffectorPos in) {
+        return in;// TODO - apply limits to the incoming position to fence it in
     }
 
-    public boolean isLimited() {
+    private static boolean isLimited() {
         // TODO - return whether we're at alimit or not
         // We will need to set the restriction variables to points on the limit lines -
         // Kyle

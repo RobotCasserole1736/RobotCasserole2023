@@ -65,7 +65,8 @@ public class Constants {
     static public final double ARM_STICK_LENGTH = Units.inchesToMeters(15);
     static public final double SAMPLE_RATE = 0.02; // equal to 20 milliseconds
 
-
+    static public final double ARM_END_EFF_MAX_VEL_MPS = 1.0;
+    static public final double ARM_END_EFF_MAX_ACCEL_MPS2 = 0.75;
     
 
     //////////////////////////////////////////////////////////////////
