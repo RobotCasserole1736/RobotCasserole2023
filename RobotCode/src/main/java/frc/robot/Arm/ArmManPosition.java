@@ -8,13 +8,16 @@ public class ArmManPosition {
     double des_x_vel;
     double des_y_vel;
     boolean isActive;
+    boolean isActive_prev; //stores previous value of isActive state
+    ArmEndEffectorPos new_des_pos;
 
     ArmManPosition(){
         
         des_x_vel = 0;
         des_y_vel = 0;
         isActive = false;
-
+        isActive_prev = false;
+        new_des_pos = new ArmEndEffectorPos(0,0,false);
     }
 
 
@@ -22,6 +25,9 @@ public class ArmManPosition {
 
         des_x_vel = x_vel;
         des_y_vel = y_vel;
+
+        //isActive_prev copies that state of isActive to compare if it has changed (later on)
+        isActive_prev = this.isActive;
         this.isActive = isActive;
 
     }
