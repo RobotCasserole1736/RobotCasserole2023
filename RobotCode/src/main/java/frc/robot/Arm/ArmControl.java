@@ -35,6 +35,16 @@ public class ArmControl {
         curMeasState = new ArmState(0,0);
     }
 
+    public void setInactive(){
+        this.setOpCmds(0.0, 0.0, ArmNamedPosition.STOW, false);
+    }
+
+    public void setOpCmds(double desXVel, double desYVel, ArmNamedPosition posCmd, boolean posCmdActive){
+        var manVelCmd = (desXVel != 0.0 || desYVel != 0.0);
+        mp.setOpVelCmds(manVelCmd, desXVel, desYVel);
+        pp.setCommand(posCmdActive, posCmd.pos);
+    }
+
     public void update(){
 
         // Meas state and end effector position

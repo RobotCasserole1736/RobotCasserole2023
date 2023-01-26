@@ -50,6 +50,8 @@ public class ArmPathPlanner {
             curPositionCmd = curPos;
         }
 
+        shouldRunPrev = shouldRun;
+
     }
 
     public ArmEndEffectorPos getCurDesPos(){

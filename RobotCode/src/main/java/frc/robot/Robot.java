@@ -24,6 +24,7 @@ import frc.lib.Signal.SignalWrangler;
 import frc.lib.Signal.Annotations.Signal;
 import frc.lib.Webserver2.Webserver2;
 import frc.robot.Arm.ArmControl;
+import frc.robot.Arm.ArmNamedPosition;
 import frc.robot.AutoDrive.AutoDrive;
 import frc.robot.AutoDrive.AutoDrive.AutoDriveCmdState;
 import frc.robot.Autonomous.Autonomous;
@@ -229,6 +230,9 @@ public class Robot extends TimedRobot {
 
     ad.update();
 
+    //Temp - these should eventaully com from the operator
+    ac.setOpCmds(0.0, 0.0, ArmNamedPosition.SHELF, true);
+
 
     if(di.getOdoResetCmd()){
       //Reset pose estimate to angle 0, but at the same translation we're at
@@ -259,6 +263,7 @@ public class Robot extends TimedRobot {
     stt.start();
     loopStartTime = Timer.getFPGATimestamp();
 
+    ac.setInactive();
     
     dt.calUpdate(false);
     stt.mark("Cal Updates");

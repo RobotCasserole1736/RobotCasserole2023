@@ -1,8 +1,18 @@
 package frc.robot.Arm;
 
 public enum ArmNamedPosition {
-    //TODO - add all possible positions
-    SAMPLE_NAME(new ArmEndEffectorPos(0,5,false));
+    //TODO - add actual numbers for the positions
+    CUBE_LOW(new ArmEndEffectorPos(0.2,0.1,true)),
+    CUBE_MID(new ArmEndEffectorPos(0.2,0.3,true)),
+    CUBE_HIGH(new ArmEndEffectorPos(0.2,0.5,true)),
+    CONE_LOW(new ArmEndEffectorPos(0.2,0.1,true)),
+    CONE_MID(new ArmEndEffectorPos(0.2,0.3,true)),
+    CONE_HIGH(new ArmEndEffectorPos(0.2,0.5,true)),
+    SHELF(new ArmEndEffectorPos(0.2,0.3,true)),
+    FLOOR(new ArmEndEffectorPos(0.5,0.05,false)),
+    FLOOR_TIPPED_CONE(new ArmEndEffectorPos(0.5,0.05,true)),
+    STOW(new ArmEndEffectorPos(0.1,0.2,false)),
+    ;
 
     ArmEndEffectorPos pos;
     
