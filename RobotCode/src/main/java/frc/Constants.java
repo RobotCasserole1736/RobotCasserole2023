@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Constants {
     //////////////////////////////////////////////////////////////////
@@ -62,6 +63,8 @@ public class Constants {
     static public final double ARM_BOOM_MOUNT_HIEGHT = Units.inchesToMeters(38.5);
     static public final double ARM_BOOM_LENGTH = Units.inchesToMeters(25);
     static public final double ARM_STICK_LENGTH = Units.inchesToMeters(15);
+    static public final double SAMPLE_RATE = 0.02; // equal to 20 milliseconds
+
 
 
     
