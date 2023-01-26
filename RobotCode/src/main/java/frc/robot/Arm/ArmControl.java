@@ -32,7 +32,7 @@ public class ArmControl {
         ms = new MotorControlStick();
         pp = new ArmPathPlanner();
         mp = new ArmManPosition();
-        curMeasState = new ArmState(0,0,null);
+        curMeasState = new ArmState(0,0);
     }
 
     public void update(){
@@ -53,7 +53,7 @@ public class ArmControl {
         var curDesPosLimited = ArmSoftLimits.applyLimit(curDesPosRaw);
 
         // Apply kinematics to get linkge positions
-        var curDesState = ArmKinematics.reverse(curDesPosLimited);
+        var curDesState = ArmKinematics.inverse(curDesPosLimited);
 
         // Send desired state to the motor control
         mb.setCmd(curDesState);

@@ -14,6 +14,10 @@ public class ArmState {
         commonConstructor(boomAngleDeg, stickAngleDeg, prev);
     }
 
+    public ArmState(double boomAngleDeg, double stickAngleDeg){
+        commonConstructor(boomAngleDeg, stickAngleDeg,null);
+    }
+
     public ArmState(){
         commonConstructor(0,0,null);
     }
