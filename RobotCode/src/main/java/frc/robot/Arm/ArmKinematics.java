@@ -1,55 +1,48 @@
 package frc.robot.Arm;
 
-public class ArmKinematics {
+import edu.wpi.first.math.util.Units;
+import frc.Constants;
 
-    // TODO - write some docs here somehow to describe the coordinate system we put
-    // on the board
+public class ArmKinematics {
 
     public static ArmEndEffectorPos forward(ArmState in) {
 
-        double InitialAngle_1 = (Math.PI * 5) / 3;
-        double InitialAngle_2 = (Math.PI) / 3;
+        var boomRad = Units.degreesToRadians(in.boomAngleDeg);
+        var stickRad = Units.degreesToRadians(in.stickAngleDeg);
 
-        double BoomAngle = (Math.PI * 2) - InitialAngle_1;
-        double StickAngle;
+        double armX = Constants.ARM_BOOM_LENGTH * Math.cos(boomRad) + 
+                      Constants.ARM_STICK_LENGTH * Math.cos(boomRad + stickRad);
 
-        // Possible fix needed?
-        if (InitialAngle_2 <= Math.PI) {
-            StickAngle = InitialAngle_2 - BoomAngle;
-        } else {
-            StickAngle = InitialAngle_2 + BoomAngle;
-        }
+        double armY = Constants.ARM_BOOM_MOUNT_HIEGHT + 
+                     Constants.ARM_BOOM_LENGTH * Math.sin(boomRad) + 
+                     Constants.ARM_STICK_LENGTH * Math.sin(boomRad + stickRad);
 
-        double InitialHeight = 60;
-        // Starting height of the Boom-Stick system
-        double BoomActual = 30.25;
-        // Constant length of the Boom
-        double StickActual = 32.5;
-        // Same as above but for the Stick
-        double BoomDisplacement = BoomActual * (Math.cos(BoomAngle));
-        // X-Coordinate for the joining point between the Boom and the Stick
-        double StickDisplacement = StickActual * (Math.sin(StickAngle));
-        // Same as above but for the end of the Intake
+        boolean isReflex = (stickRad < 0);
 
-        double ExBoom = Math.sqrt((BoomActual * BoomActual) - (BoomDisplacement * BoomDisplacement));
-        // Pythagorean thereom but written in a weird way
-        double BoomHeight = InitialHeight - ExBoom;
-        // Gives the Y-coordinate for the Boom
-        double StickHeight;
-        double ExStick = StickActual * (Math.sin(StickAngle));
-        if (StickAngle <= Math.PI) {
-            StickHeight = BoomHeight + ExStick;
-        } else {
-            StickHeight = BoomHeight - ExStick;
-        }
-
-        return new ArmEndEffectorPos(BoomDisplacement + StickDisplacement, 
-                                    StickHeight + BoomHeight); // TODO - for the given input, what is the end effector position? is this right?
+        return new ArmEndEffectorPos(armX, armY, isReflex);
     }
 
     public static ArmState reverse(ArmEndEffectorPos in) {
-        // TODO - do reverse kinematics
-        return new ArmState(0.0,0.0,null);// TODO - return a real thing which is the inverse of above
+        // from https://robotacademy.net.au/lesson/inverse-kinematics-for-a-2-joint-robot-arm-using-geometry/
+
+        var stickDenom = 2 * Constants.ARM_BOOM_LENGTH * Constants.ARM_STICK_LENGTH;
+        var stickNumerator = Math.pow(in.x, 2) +
+                             Math.pow(in.y, 2) -
+                             Math.pow(Constants.ARM_BOOM_LENGTH , 2) -
+                             Math.pow(Constants.ARM_STICK_LENGTH, 2);
+
+        var stickAngleRad = Math.acos(stickNumerator/stickDenom) * (in.isReflex?-1.0:1.0);
+
+        var boomTerm1 = Math.atan(in.y/in.x);
+
+        var boomTerm2Num = Constants.ARM_STICK_LENGTH * Math.sin(stickAngleRad);
+        var boomTerm2Denom = Constants.ARM_BOOM_LENGTH + Constants.ARM_STICK_LENGTH * Math.cos(stickAngleRad);
+
+        var boomTerm2 = Math.atan(boomTerm2Num/boomTerm2Denom) * (in.isReflex?-1.0:1.0);;
+
+        var boomAngleRad = boomTerm1 + boomTerm2;
+        
+        return new ArmState(boomAngleRad,stickAngleRad,null);
     }
 
 }

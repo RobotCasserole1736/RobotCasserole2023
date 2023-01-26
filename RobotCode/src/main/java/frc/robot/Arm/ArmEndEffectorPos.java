@@ -17,9 +17,10 @@ public class ArmEndEffectorPos {
 
     //TODO - add something here to fiture out if we should attempt to achieve the solution through a "concave" or "convex" joint solution
 
-    ArmEndEffectorPos(double x, double y){
+    ArmEndEffectorPos(double x, double y, boolean isReflex){
         this.x = x;
         this.y = y;
+        this.isReflex = isReflex;
     }
 
     double distTo(ArmEndEffectorPos other){
@@ -32,7 +33,7 @@ public class ArmEndEffectorPos {
         double fracInv = (1.0 - frac);
         double x = other.x * frac + this.x * fracInv;
         double y = other.y * frac + this.y * fracInv;
-        return new ArmEndEffectorPos(x, y);
+        return new ArmEndEffectorPos(x, y, this.isReflex);
     }
 
     //TODO - refine these 
@@ -51,7 +52,7 @@ public class ArmEndEffectorPos {
 
     static ArmEndEffectorPos fromTrajState(State in){
         var tmp = in.poseMeters;
-        return new ArmEndEffectorPos(tmp.getX(), tmp.getY());
+        return new ArmEndEffectorPos(tmp.getX(), tmp.getY(), true);
     }
 
     public boolean isEqualTo(ArmEndEffectorPos other){

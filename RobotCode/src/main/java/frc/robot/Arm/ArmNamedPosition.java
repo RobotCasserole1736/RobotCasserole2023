@@ -2,7 +2,7 @@ package frc.robot.Arm;
 
 public enum ArmNamedPosition {
     //TODO - add all possible positions
-    SAMPLE_NAME(new ArmEndEffectorPos(0,5));
+    SAMPLE_NAME(new ArmEndEffectorPos(0,5,false));
 
     ArmEndEffectorPos pos;
     
