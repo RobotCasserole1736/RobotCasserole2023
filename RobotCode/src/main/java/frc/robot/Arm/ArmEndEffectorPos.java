@@ -17,7 +17,7 @@ public class ArmEndEffectorPos {
 
     //TODO - add something here to fiture out if we should attempt to achieve the solution through a "concave" or "convex" joint solution
 
-    ArmEndEffectorPos(double x, double y, boolean isReflex){
+    public ArmEndEffectorPos(double x, double y, boolean isReflex){
         this.x = x;
         this.y = y;
         this.isReflex = isReflex;

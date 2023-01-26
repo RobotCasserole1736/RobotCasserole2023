@@ -2,8 +2,6 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-
 import frc.Constants;
 import frc.robot.Arm.ArmEndEffectorPos;
 import frc.robot.Arm.ArmKinematics;

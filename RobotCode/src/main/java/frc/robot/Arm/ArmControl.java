@@ -40,7 +40,7 @@ public class ArmControl {
         // Meas state and end effector position
         var boomAngleDeg = Units.radiansToDegrees(boomEncoder.getAngle_rad());
         var stickAngleDeg = Units.radiansToDegrees(stickEncoder.getAngle_rad());
-        curMeasState = new ArmState(boomAngleDeg, stickAngleDeg, curMeasState);
+        curMeasState = new ArmState(boomAngleDeg, stickAngleDeg); //TODO - add velocities here?
         ArmEndEffectorPos curMeasPos = ArmKinematics.forward(curMeasState);
 
         mp.update(curMeasPos);
