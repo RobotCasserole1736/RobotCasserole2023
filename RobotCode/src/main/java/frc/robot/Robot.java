@@ -235,7 +235,7 @@ public class Robot extends TimedRobot {
     ad.update();
 
     //Temp - these should eventaully com from the operator
-    ac.setOpCmds(0.0, 0.0, ArmNamedPosition.SHELF, true);
+    ac.setOpCmds(0.0, 0.0, ArmNamedPosition.STOW, true);
 
 
     if(di.getOdoResetCmd()){

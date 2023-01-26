@@ -50,9 +50,9 @@ public class ArmEndEffectorPos {
         return new Pose2d(this.x, this.y, Rotation2d.fromDegrees(270.0));
     }
 
-    static ArmEndEffectorPos fromTrajState(State in){
+    static ArmEndEffectorPos fromTrajState(State in, boolean isReflex){
         var tmp = in.poseMeters;
-        return new ArmEndEffectorPos(tmp.getX(), tmp.getY(), true);
+        return new ArmEndEffectorPos(tmp.getX(), tmp.getY(), isReflex);
     }
 
     public boolean isEqualTo(ArmEndEffectorPos other){

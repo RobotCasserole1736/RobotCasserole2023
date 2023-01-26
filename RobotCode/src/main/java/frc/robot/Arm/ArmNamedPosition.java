@@ -11,7 +11,7 @@ public enum ArmNamedPosition {
     SHELF(new ArmEndEffectorPos(0.2,0.3,true)),
     FLOOR(new ArmEndEffectorPos(0.5,0.05,false)),
     FLOOR_TIPPED_CONE(new ArmEndEffectorPos(0.5,0.05,true)),
-    STOW(new ArmEndEffectorPos(0.1,0.2,false)),
+    STOW(new ArmEndEffectorPos(0.3, 0.7,false)),
     ;
 
     ArmEndEffectorPos pos;
