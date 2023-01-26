@@ -1,20 +1,36 @@
 package frc.robot.Arm;
 
 import frc.lib.Calibration.Calibration;
+import frc.lib.Signal.Annotations.Signal;
 
 public class ArmManPosition {
 
-    //Calibration desArmPos;?
-    //Calibration actArmPos;?
+    double des_x_vel;
+    double des_y_vel;
+    boolean isActive;
+
+    ArmManPosition(){
+        
+        des_x_vel = 0;
+        des_y_vel = 0;
+        isActive = false;
+
+    }
+
 
     public void setOpVelCmds(boolean isActive, double x_vel, double y_vel){
-        //TODO - save incoming commands
+
+        des_x_vel = x_vel;
+        des_y_vel = y_vel;
+        this.isActive = isActive;
+
     }
 
     public void update(){
         //TODO - if we just went from inactive to active, reset the desired position to actual
 
         //Todo - calcuate the new desired position based on incoming velocity comands
+
     }
 
     public ArmEndEffectorPos getCurDesPos(){
