@@ -22,6 +22,11 @@ public class ArmEndEffectorPos {
         this.y = y;
     }
 
+    ArmEndEffectorPos(){
+        this.x = 0;
+        this.y = 0;
+    }
+
     double distTo(ArmEndEffectorPos other){
         double x2 = Math.pow(this.x - other.x, 2);
         double y2 = Math.pow(this.y - other.y, 2);
