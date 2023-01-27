@@ -9,7 +9,7 @@ public class ArmManPosition {
     double des_y_vel;
     boolean isActive;
     boolean isActive_prev; //stores previous value of isActive state
-    ArmEndEffectorPos new_des_pos;
+    ArmEndEffectorPos newDesPos;
 
     ArmManPosition(){
         
@@ -17,7 +17,7 @@ public class ArmManPosition {
         des_y_vel = 0;
         isActive = false;
         isActive_prev = false;
-        new_des_pos = new ArmEndEffectorPos(0,0,false);
+        newDesPos = new ArmEndEffectorPos(0,0,false);
     }
 
 
@@ -33,18 +33,28 @@ public class ArmManPosition {
     }
 
     public void update(ArmEndEffectorPos curMeasPos){
-        //TODO - if we just went from inactive to active, reset the desired position to actual
+        //If we just went from inactive to active, reset the desired position to actual
 
-        //Todo - calcuate the new desired position based on incoming velocity comands
+        if(isActive_prev == false && isActive){
+            newDesPos = curMeasPos;
+        }
+
+    
+        //Calcuate the new desired position based on incoming velocity commands
+        newDesPos.x = curMeasPos.x + des_x_vel;
+        newDesPos.y = curMeasPos.y + des_y_vel;
 
     }
 
     public ArmEndEffectorPos getCurDesPos(){
-        return null; //TODO - return the actual current desired position
+        return newDesPos;
+        
+        //Return the actual current desired position
     }
 
     public boolean cmdActive(){
-        return false; //TODO return true when the operator is actively commanding motion
+        return isActive;
+
+        //Return true when the operator is actively commanding motion
     }
-    
 }
