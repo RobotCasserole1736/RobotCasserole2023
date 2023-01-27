@@ -29,9 +29,16 @@ public class ArmEndEffectorPos {
         this.reflexFrac = reflexFrac;
     }
 
+    public ArmEndEffectorPos(double x, double y){
+        this.x = x;
+        this.y = y;
+        this.reflexFrac = 0.0;
+    }
+
     ArmEndEffectorPos(){
         this.x = 0;
         this.y = 0;
+        this.reflexFrac = 0;
     }
 
     double distTo(ArmEndEffectorPos other){
@@ -67,7 +74,12 @@ public class ArmEndEffectorPos {
         return new ArmEndEffectorPos(tmp.getX(), tmp.getY(), reflexFrac);
     }
 
-    public boolean isEqualTo(ArmEndEffectorPos other){
+
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ArmEndEffectorPos other = (ArmEndEffectorPos)o;
         return this.x == other.x && this.y == other.y && this.reflexFrac == other.reflexFrac;
     }
 }

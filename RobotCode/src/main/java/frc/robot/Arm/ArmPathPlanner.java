@@ -22,7 +22,7 @@ public class ArmPathPlanner {
     public void update(ArmEndEffectorPos curPos){
         // calculate if we need a new path
         boolean shouldRunRisingEdge = (shouldRun == true && shouldRunPrev == false);
-        boolean targetPosChanged = (curTargetPos != null && prevTargetPos != null && !curTargetPos.isEqualTo(prevTargetPos));
+        boolean targetPosChanged = (curTargetPos != null && prevTargetPos != null && !curTargetPos.equals(prevTargetPos));
         boolean newPathNeeded = shouldRunRisingEdge || targetPosChanged;
 
         //If so, make a new path
