@@ -1,7 +1,30 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "SPARK MAX [16]": {
+        "header": {
+          "open": true
+        }
+      },
+      "SPARK MAX [2]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[4]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[6]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[7]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[8]": "PIDController",
+      "/LiveWindow/Ungrouped/Spark[0]": "Motor Controller",
       "/SmartDashboard/Arm": "Mechanism2d",
       "/SmartDashboard/Field": "Field2d"
     },
@@ -46,7 +69,7 @@
               "autoFit": true
             }
           ],
-          "height": 0,
+          "height": 66,
           "series": [
             {
               "color": [
@@ -87,7 +110,7 @@
               "autoFit": true
             }
           ],
-          "height": 0,
+          "height": 52,
           "series": [
             {
               "color": [
