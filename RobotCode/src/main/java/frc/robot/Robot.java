@@ -194,7 +194,7 @@ public class Robot extends TimedRobot {
     stt.mark("Auto Update");
 
     //Temp - these should eventaully com from the operator
-    ac.setOpCmds(0.0, 0.0, ArmNamedPosition.CONE_HIGH, true);
+    ac.setOpCmds(0.0, 0.0, ArmNamedPosition.CONE_MID, true);
 
 
   }
