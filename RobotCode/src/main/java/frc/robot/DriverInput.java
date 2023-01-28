@@ -82,7 +82,6 @@ public class DriverInput {
         fwdRevSlewLimiter = new SlewRateLimiter(fwdRevSlewRate.get());
         rotSlewLimiter = new SlewRateLimiter(rotSlewRate.get());
         sideToSideSlewLimiter = new SlewRateLimiter(sideToSideSlewRate.get());
-
     }
 
     public void update(){

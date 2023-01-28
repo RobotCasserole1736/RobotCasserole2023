@@ -1,11 +1,5 @@
 package frc.robot;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.Constants;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
 
@@ -19,13 +13,15 @@ public class OperatorInput {
     double stickMotor;
     
     XboxController operatorController;
+    Calibration stickDeadband;
 
-
+    String getName(int idx){
+        return "Driver Ctrl " + Integer.toString(idx) + " ";
+    }
 
     public OperatorInput(int controllerIdx){
-
         operatorController = new XboxController(controllerIdx);
-
+        stickDeadband = new Calibration(getName(controllerIdx) + "StickDeadBand", "", 0.1);
     }
     
     public void update(){
