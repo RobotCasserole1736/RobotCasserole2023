@@ -18,6 +18,7 @@ public class Constants {
     // Drivetrain Physical
     //////////////////////////////////////////////////////////////////
     static public final double WHEEL_BASE_HALF_WIDTH_M = Units.inchesToMeters(23.75/2.0);
+    static public final double WHEEL_BASE_HALF_LENGTH_M = Units.inchesToMeters(23.75/2.0);
     static public final double ROBOT_MASS_kg = UnitUtils.lbsToKg(140);
     static public final double ROBOT_MOI_KGM2 = 1.0/12.0 * ROBOT_MASS_kg * Math.pow((WHEEL_BASE_HALF_WIDTH_M*2.2),2) * 2; //Model moment of intertia as a square slab slightly bigger than wheelbase with axis through center
 
@@ -42,27 +43,27 @@ public class Constants {
     // 2 - Pull up dashboard with encoder readings (in radians)
     // 3 - Using a square, twist the modules by hand until they are aligned with the robot's chassis
     // 4 - Read out the encoder readings for each module, put them here
-    // 5 - Redeploy code, verify that hte encoder readings are correct as each module is manually rotated
+    // 5 - Redeploy code, verify that the  encoder readings are correct as each module is manually rotated
     static public final double FL_ENCODER_MOUNT_OFFSET_RAD = -2.157;
     static public final double FR_ENCODER_MOUNT_OFFSET_RAD = -1.575;
     static public final double BL_ENCODER_MOUNT_OFFSET_RAD = -2.180;
     static public final double BR_ENCODER_MOUNT_OFFSET_RAD = -0.803;
 
-    // Location of vision cameras relative to robot center - currently front and back
-    static public final Transform3d robotToFrontCameraTrans = new Transform3d(new Translation3d(WHEEL_BASE_HALF_WIDTH_M, 0, 1.0), new Rotation3d(0.0,0.0,0.0));
-    static public final Transform3d robotToRearCameraTrans  = new Transform3d(new Translation3d(-1.0*WHEEL_BASE_HALF_WIDTH_M, 0, 1.0), new Rotation3d(0.0,0.0,Math.PI));
+    // Location of vision cameras relative to robot center - currently two in front at 45 degrees, one in back center
+    static public final Transform3d robotToFrontRightCameraTrans = new Transform3d(new Translation3d(WHEEL_BASE_HALF_LENGTH_M, -1.0*WHEEL_BASE_HALF_WIDTH_M, 0.25), new Rotation3d(0.0,0.0,-1.0*Math.PI/4.0));
+    static public final Transform3d robotToFrontLeftCameraTrans = new Transform3d(new Translation3d(WHEEL_BASE_HALF_LENGTH_M, WHEEL_BASE_HALF_WIDTH_M, 0.25), new Rotation3d(0.0,0.0,Math.PI/4.0));
+    static public final Transform3d robotToRearCameraTrans  = new Transform3d(new Translation3d(-1.0*WHEEL_BASE_HALF_LENGTH_M, 0, 0.25), new Rotation3d(0.0,0.0,Math.PI));
 
     //////////////////////////////////////////////////////////////////
     // Arm Physical
     //////////////////////////////////////////////////////////////////
-    static public final double ARM_UPPER_GEAR_RATIO = 600;
-    static public final double ARM_LOWER_GEAR_RATIO = 600;
-    static public final double ARM_UPPER_MASS = Units.lbsToKilograms(5);
-    static public final double ARM_UPPER_LENGTH = Units.inchesToMeters(38.5);
-    static public final double ARM_LOWER_MASS = Units.lbsToKilograms(5);
-    static public final double ARM_LOWER_LENGTH = Units.inchesToMeters(27);
-
-
+    static public final double ARM_BOOM_GEAR_RATIO = 300;
+    static public final double ARM_STICK_GEAR_RATIO = 300;
+    static public final double ARM_BOOM_MOUNT_HIEGHT = Units.inchesToMeters(40);
+    static public final double ARM_BOOM_LENGTH = Units.inchesToMeters(30.25);
+    static public final double ARM_STICK_LENGTH = Units.inchesToMeters(32.5);
+    static public final double ARM_END_EFF_MAX_VEL_MPS = 1.0;
+    static public final double ARM_END_EFF_MAX_ACCEL_MPS2 = 0.75;
     
 
     //////////////////////////////////////////////////////////////////
@@ -86,8 +87,8 @@ public class Constants {
     static public final int FR_AZMTH_ENC_IDX = 1;
     static public final int BL_AZMTH_ENC_IDX = 2;
     static public final int BR_AZMTH_ENC_IDX = 3;
-    static public final int ARM_UPPER_ENC_IDX = 4;
-    static public final int ARM_LOWER_ENC_IDX = 5;
+    static public final int ARM_BOOM_ENC_IDX = 4;
+    static public final int ARM_STICK_ENC_IDX = 5;
     //static public final int UNUSED = 6;
     //static public final int UNUSED = 7;
     //static public final int UNUSED = 8;
@@ -111,8 +112,8 @@ public class Constants {
     static public final int BL_AZMTH_MOTOR_CANID = 7;
     static public final int BR_WHEEL_MOTOR_CANID = 8;
     static public final int BR_AZMTH_MOTOR_CANID = 9;
-    static public final int ARM_UPPER_MOTOR_CANID = 10;
-    static public final int ARM_LOWER_MOTOR_CANID = 11;
+    static public final int ARM_BOOM_MOTOR_CANID = 10;
+    static public final int ARM_STICK_MOTOR_CANID = 11;
     //static public final int UNUSED = 12;
     //static public final int UNUSED = 13;
     //static public final int UNUSED = 14;
@@ -176,11 +177,6 @@ public class Constants {
     static public final Translation2d MIN_ROBOT_TRANSLATION = new Translation2d(0.0,0.0);
     // Assumed starting location of the robot. Auto routines will pick their own location and update this.
     public static final Pose2d DFLT_START_POSE = new Pose2d(3, 3, new Rotation2d(0));
-    // Expected vision target locations on the field
-    // TODO - Use Actual Poses
-    static public final Transform3d VISION_FAR_TGT_LOCATION   = new Transform3d( new Translation3d(FIELD_LENGTH_M, Units.feetToMeters(9.8541), 1.0), new Rotation3d(0,0,0));
-    static public final Transform3d VISION_NEAR_TGT_LOCATION  = new Transform3d( new Translation3d(Units.feetToMeters(0), Units.feetToMeters(17.14), 1.0), new Rotation3d(0, 0, Math.PI));
-
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////

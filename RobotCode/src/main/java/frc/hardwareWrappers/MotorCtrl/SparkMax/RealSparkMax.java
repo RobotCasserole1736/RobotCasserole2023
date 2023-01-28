@@ -10,8 +10,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.UnitUtils;
 import frc.hardwareWrappers.MotorCtrl.AbstractSimmableMotorController;
+import frc.lib.Faults.Fault;
 
 
 public class RealSparkMax extends AbstractSimmableMotorController {
@@ -20,13 +22,20 @@ public class RealSparkMax extends AbstractSimmableMotorController {
     private SparkMaxPIDController m_pidController;
     private RelativeEncoder m_encoder;
 
+    private final int MAX_RETRIES = 10;
+    boolean connected = false;
+
+    Fault disconnFault;
 
     public RealSparkMax(int can_id){
         m_motor = new CANSparkMax(can_id, MotorType.kBrushless);
 
         boolean success = false;
+        int retryCount = 0;
 
-        while(!success){    
+        disconnFault = new Fault("Spark Max ID " + Integer.toString(can_id), "Disconnected");
+
+        while(!success && retryCount < MAX_RETRIES){    
             var err0 = m_motor.restoreFactoryDefaults();
             var err1 = m_motor.setIdleMode(IdleMode.kCoast);
             var err2 = m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 19);// Status 0 = Motor output and Faults
@@ -43,18 +52,31 @@ public class RealSparkMax extends AbstractSimmableMotorController {
                        err6 == REVLibError.kOk );
         
             if(!success){
-                System.out.println("Configuration Failed, retrying....");
+                System.out.println("Configuration Failed for CAN ID " + Integer.toString(can_id) + ", retrying....");
+                retryCount++;
             }
         }
-        m_pidController = m_motor.getPIDController();
-        m_encoder = m_motor.getEncoder();
+
+        //we're only connected if we were successful.
+        connected = success;
+
+        if(!connected) {
+            DriverStation.reportError("Failed to configure motor CAN ID " + Integer.toString(can_id), false);
+        } else {
+            m_pidController = m_motor.getPIDController();
+            m_encoder = m_motor.getEncoder();
+        }
+
+        disconnFault.set(!connected);
         
     }
 
 
     @Override
     public void setInverted(boolean invert) {
-        m_motor.setInverted(invert);
+        if(connected){
+            m_motor.setInverted(invert);
+        }
     }
 
 
@@ -69,39 +91,53 @@ public class RealSparkMax extends AbstractSimmableMotorController {
         i = Units.radiansPerSecondToRotationsPerMinute(i);
         d = Units.radiansPerSecondToRotationsPerMinute(d);
 
-        m_pidController.setP(p);
-        m_pidController.setI(i);
-        m_pidController.setD(d);
-        m_pidController.setOutputRange(-1.0, 1.0);
+        if(connected){
+            m_pidController.setP(p);
+            m_pidController.setI(i);
+            m_pidController.setD(d);
+            m_pidController.setOutputRange(-1.0, 1.0);
+        }
     }
 
 
     @Override
     public void setClosedLoopCmd(double velocityCmd_radpersec, double arbFF_V) {
+        if(connected){
 
-        m_pidController.setReference(Units.radiansPerSecondToRotationsPerMinute(velocityCmd_radpersec), 
-                                     CANSparkMax.ControlType.kVelocity,
-                                     0,
-                                     arbFF_V,
-                                     SparkMaxPIDController.ArbFFUnits.kVoltage);
+            m_pidController.setReference(Units.radiansPerSecondToRotationsPerMinute(velocityCmd_radpersec), 
+                                        CANSparkMax.ControlType.kVelocity,
+                                        0,
+                                        arbFF_V,
+                                        SparkMaxPIDController.ArbFFUnits.kVoltage);
+        }
     }
 
 
     @Override
     public void setVoltageCmd(double cmd_v) {
-        m_motor.setVoltage(cmd_v);
+        if(connected){
+            m_motor.setVoltage(cmd_v);
+        }
     }
 
 
     @Override
     public double getCurrent_A() {
-        return m_motor.getOutputCurrent();
+        if(connected){
+            return m_motor.getOutputCurrent();
+        } else {
+            return 0;
+        }
     }
 
 
     @Override
     public double getVelocity_radpersec() {
-        return  Units.degreesToRadians(UnitUtils.RPMtoDegPerSec(m_encoder.getVelocity()));
+        if(connected){
+            return  Units.degreesToRadians(UnitUtils.RPMtoDegPerSec(m_encoder.getVelocity()));
+        } else {
+            return 0;
+        }
     }
 
 
@@ -117,18 +153,28 @@ public class RealSparkMax extends AbstractSimmableMotorController {
 
     @Override
     public double getPosition_rad() {
-        return Units.rotationsToRadians(m_encoder.getPosition());
+        if(connected){
+            return Units.rotationsToRadians(m_encoder.getPosition());
+        } else {
+            return 0;
+        }
     }
 
 
     @Override
     public double getAppliedVoltage_V() {
-        return m_motor.getAppliedOutput() * m_motor.getBusVoltage();
+        if(connected){
+            return m_motor.getAppliedOutput() * m_motor.getBusVoltage();
+        } else {
+            return 0;
+        }
     }
 
     @Override
     public void resetDistance() {
-        m_encoder.setPosition(0.0);
+        if(connected){
+            m_encoder.setPosition(0.0);
+        }
     }
 
 

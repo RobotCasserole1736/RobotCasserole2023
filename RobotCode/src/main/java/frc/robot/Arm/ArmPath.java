@@ -49,9 +49,17 @@ public class ArmPath {
      * @return
      */
     public ArmEndEffectorPos sample(double time_sec){
+        // Calculate interpolated reflex
+        var timeFrac = time_sec/this.getDurationSec();
+        var curReflex = start.reflexFrac * (1.0 - timeFrac) + end.reflexFrac * timeFrac;
+        
         //TODO - Trajectory State includes velocity and direction information, maybe that needs to be exposed too?
         // Right now this will strip all that away and jsut return x/y position
-        return ArmEndEffectorPos.fromTrajState(traj.sample(time_sec));
+        return ArmEndEffectorPos.fromTrajState(traj.sample(time_sec), curReflex);
+    }
+
+    public double getDurationSec(){
+        return traj.getTotalTimeSeconds();
     }
 
 }

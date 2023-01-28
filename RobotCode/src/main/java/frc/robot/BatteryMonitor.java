@@ -5,6 +5,7 @@ import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import frc.lib.Faults.Fault;
 import frc.lib.Signal.Annotations.Signal;
 
 public class BatteryMonitor {
@@ -41,6 +42,11 @@ public class BatteryMonitor {
 	@Signal(units="pct")
 	double canBusLoad;
 
+	Fault brownoutFault = new Fault("Battery Monitor", "Brownout");
+	Fault rio5vRailFault = new Fault("Battery Monitor", "RIO 5V Rail Faulted");
+	Fault rio6vRailFault = new Fault("Battery Monitor", "RIO 6V Rail Faulted");
+	Fault rio3v3RailFault = new Fault("Battery Monitor", "RIO 3.3V Rail Faulted");
+
 	final int UPDATE_RATE_MS = 100;
 
 	LinearFilter canBusLoadFilter = LinearFilter.movingAverage(40);
@@ -53,7 +59,7 @@ public class BatteryMonitor {
 	}
 
 	private BatteryMonitor() {
-		pd = new PowerDistribution(1,ModuleType.kRev);
+		pd = new PowerDistribution(0,ModuleType.kCTRE);
 		
 		// Kick off monitor in brand new thread.
 	    // Thanks to Team 254 for an example of how to do this!
@@ -95,6 +101,11 @@ public class BatteryMonitor {
 		canRXErrors = tmp.receiveErrorCount;
 		canTXErrors = tmp.transmitErrorCount;
 		canBusLoad = canBusLoadFilter.calculate(100.0 * tmp.percentBusUtilization);
+
+		brownoutFault.set(rioBrownOutStatus);
+		rio3v3RailFault.set(!RobotController.getEnabled3V3() && !rioBrownOutStatus);
+		rio5vRailFault.set(!RobotController.getEnabled5V() && !rioBrownOutStatus);
+		rio6vRailFault.set(!RobotController.getEnabled6V() && !rioBrownOutStatus);
 	}
 
 }

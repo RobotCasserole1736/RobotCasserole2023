@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -15,7 +14,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.lib.Calibration.CalWrangler;
@@ -25,6 +23,8 @@ import frc.lib.Logging.LogFileWrangler;
 import frc.lib.Signal.SignalWrangler;
 import frc.lib.Signal.Annotations.Signal;
 import frc.lib.Webserver2.Webserver2;
+import frc.robot.Arm.ArmControl;
+import frc.robot.Arm.ArmNamedPosition;
 import frc.robot.AutoDrive.AutoDrive;
 import frc.robot.AutoDrive.AutoDrive.AutoDriveCmdState;
 import frc.robot.Autonomous.Autonomous;
@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
   // Things
   RIOLoadMonitor loadMon;
   BatteryMonitor batMan;
-  //ArmControl ac;
+  ArmControl ac;
   clawControl cc;
 
   // Main Driver
@@ -119,7 +119,7 @@ public class Robot extends TimedRobot {
     batMan = BatteryMonitor.getInstance();
     stt.mark("Battery Monitor");
 
-    //ac = new ArmControl();
+    ac = ArmControl.getInstance();
 
     //bcd = new Ballcolordetector();
     stt.mark("Ball Color Detector");
@@ -193,6 +193,10 @@ public class Robot extends TimedRobot {
     auto.update();
     stt.mark("Auto Update");
 
+    //Temp - these should eventaully com from the operator
+    ac.setOpCmds(0.0, 0.0, ArmNamedPosition.CONE_HIGH, true);
+
+
   }
 
   
@@ -204,7 +208,7 @@ public class Robot extends TimedRobot {
 
 
    
-    //ac.reset();
+
   }
 
   @Override
@@ -229,6 +233,9 @@ public class Robot extends TimedRobot {
     ad.setManualCommands(di.getFwdRevCmd_mps(), di.getSideToSideCmd_mps(), di.getRotateCmd_rps(), !di.getRobotRelative());
 
     ad.update();
+
+    //Temp - these should eventaully com from the operator
+    ac.setOpCmds(0.0, 0.0, ArmNamedPosition.STOW, true);
 
 
     if(di.getOdoResetCmd()){
@@ -260,6 +267,7 @@ public class Robot extends TimedRobot {
     stt.start();
     loopStartTime = Timer.getFPGATimestamp();
 
+    ac.setInactive();
     
     dt.calUpdate(false);
     stt.mark("Cal Updates");
@@ -286,7 +294,7 @@ public class Robot extends TimedRobot {
     }
     stt.mark("Drivetrain");
 
-    //ac.update();
+    ac.update();
 
     cw.update();
     cc.update();

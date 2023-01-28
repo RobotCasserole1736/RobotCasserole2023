@@ -4,8 +4,8 @@ public class TextConfig extends VisibleWidgetConfig {
 
     public TextConfig(){
         super();
-        this.nominalHeight = 5;
-        this.nominalWidth = 20;
+        this.nominalHeight = 3;
+        this.nominalWidth = 40;
     }
 
     @Override

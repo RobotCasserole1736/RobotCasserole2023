@@ -1,7 +1,11 @@
 package frc.robot;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.Signal.Signal;
 
@@ -16,6 +20,9 @@ public class PoseTelemetry {
     }
     
     public static Field2d field = new Field2d();
+    public static Field3d field3d = new Field3d();
+
+    ArrayList<Pose2d> visionPoses = new ArrayList<Pose2d>();
     
     //Desired Position says where path planning logic wants the
     // robot to be at any given time. 
@@ -40,8 +47,6 @@ public class PoseTelemetry {
     Pose2d desiredPose = new Pose2d();
     Pose2d estimatedPose = new Pose2d();
 
-
-
     private PoseTelemetry(){
         xPosDesFtSig     = new Signal("pose_DES_x", "m");
         yPosDesFtSig     = new Signal("pose_DES_y", "m");
@@ -56,7 +61,20 @@ public class PoseTelemetry {
         tRotActDegSig    = new Signal("pose_ACT_rot", "rad");
 
         SmartDashboard.putData("Field", field);
+        SmartDashboard.putData("Field3d", field3d);
 
+    }
+
+    public void setCamPose(String camName, Pose3d pose){
+        field3d.getObject(camName).setPose(pose);
+    }
+
+    public void clearVisionPoses(){
+        visionPoses.clear();
+    }
+
+    public void addVisionPose(String title, Pose2d visionPose){
+        visionPoses.add(visionPose);
     }
 
     public void setActualPose(Pose2d act){
@@ -85,6 +103,8 @@ public class PoseTelemetry {
         field.getObject("DesPose").setPose(desiredPose);
         field.getObject("Robot").setPose(actualPose);
         field.getObject("EstPose").setPose(estimatedPose);
+        field.getObject("VisionPose").setPoses(visionPoses);
+
     }
 
 }

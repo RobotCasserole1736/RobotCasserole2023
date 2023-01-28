@@ -7,7 +7,9 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import frc.Constants;
 import frc.robot.Arm.ArmEndEffectorPos;
+import frc.robot.Arm.ArmState;
 
 public class ArmTelemetry {
 
@@ -18,58 +20,113 @@ public class ArmTelemetry {
             inst = new ArmTelemetry();
         return inst;
     }
+    //All Dimensions in meters
+    // https://firstfrc.blob.core.windows.net/frc2023/FieldAssets/2023FieldDrawings-CHARGEDUPSpecific.pdf page 10 for most of these
+    private final double LEFT_MARGIN = Units.inchesToMeters(15);
+    private final double LOW_GOAL = LEFT_MARGIN + 0.45; // account for bumpers & frame
+    private final double MID_GOAL  = LOW_GOAL + Units.inchesToMeters(22.7);
+    private final double MID_GOAL_HEIGHT = Units.inchesToMeters(34.0);
+    private final double HIGH_GOAL =  LOW_GOAL + Units.inchesToMeters(39.37);
+    private final double HIGH_GOAL_HEIGHT = Units.inchesToMeters(46.0);
 
-    private final Mechanism2d m_mech2d = new Mechanism2d(90, 90);
-    private final MechanismRoot2d midNodeHome = m_mech2d.getRoot("Mid Node", 27.83, 0);
-    private final MechanismLigament2d MidNode = midNodeHome.append(new MechanismLigament2d("Mid Cone Node", 34, 90, 10, new Color8Bit(Color.kWhite)));
-    private final MechanismRoot2d highNodeHome = m_mech2d.getRoot("High Node", 10.58, 0);
-    private final MechanismLigament2d HighNode = highNodeHome.append(new MechanismLigament2d("High Cone Node", 46, 90, 10, new Color8Bit(Color.kWhite)));
-    private final MechanismRoot2d gridHome = m_mech2d.getRoot("Grid Home", 49.75, 0);
-    private final MechanismLigament2d GridNode = gridHome.append(new MechanismLigament2d("Grid Wall", 49.75, 180, 50, new Color8Bit(Color.kWhite)));
-    private final MechanismRoot2d dsHome = m_mech2d.getRoot("Double Substation Home", 49.75, 37);
-    private final MechanismLigament2d DSRamp = dsHome.append(new MechanismLigament2d("Double Substation Ramp", 13.75, 180, 10, new Color8Bit(Color.kWhite)));
-    private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 65, 21.75);
+    private final Mechanism2d m_mech2d = new Mechanism2d(HIGH_GOAL + LEFT_MARGIN, Units.feetToMeters(6.0));
 
-    
-    private final MechanismLigament2d m_arm_upper =
+    private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", LEFT_MARGIN, Constants.ARM_BOOM_MOUNT_HIEGHT);
+    private final MechanismLigament2d m_arm_tower =
+        m_armPivot.append(new MechanismLigament2d("ArmTower", Constants.ARM_BOOM_MOUNT_HIEGHT, -90, 5, new Color8Bit(Color.kSilver)));
+  
+    private final MechanismRoot2d midNodeHome = m_mech2d.getRoot("Mid Node", MID_GOAL, 0);
+    private final MechanismLigament2d MidNode = midNodeHome.append(new MechanismLigament2d("Mid Cone Node", MID_GOAL_HEIGHT, 90, 10, new Color8Bit(Color.kWhite)));
+
+    private final MechanismRoot2d highNodeHome = m_mech2d.getRoot("High Node", HIGH_GOAL, 0);
+    private final MechanismLigament2d HighNode = highNodeHome.append(new MechanismLigament2d("High Cone Node", HIGH_GOAL_HEIGHT, 90, 10, new Color8Bit(Color.kWhite)));
+
+    private final MechanismRoot2d bumperRoot = m_mech2d.getRoot("BumperRoot", 0, 0.01);
+    private final MechanismLigament2d bumpers = bumperRoot.append(new MechanismLigament2d("Bumpers", LOW_GOAL, 0, 50, new Color8Bit(Color.kRed)));
+    private final MechanismLigament2d nodeBase = bumpers.append(new MechanismLigament2d("Node Base", HIGH_GOAL - LOW_GOAL, 0, 100, new Color8Bit(Color.kWhite)));
+
+    private final MechanismRoot2d desEndPosRoot = m_mech2d.getRoot("DesEndEffPos", 1, 1);
+    private final MechanismLigament2d desEndPosMarker1 = desEndPosRoot.append(new MechanismLigament2d("EndPosMarker1", 0.02, 0, 20, new Color8Bit(Color.kLimeGreen)));
+    private final MechanismLigament2d desEndPosMarker2 = desEndPosRoot.append(new MechanismLigament2d("EndPosMarker2", 0.02, 180, 20, new Color8Bit(Color.kLimeGreen)));
+
+
+    private final MechanismLigament2d m_boom_ligament_act =
         m_armPivot.append(
               new MechanismLigament2d(
-                "Arm Upper",
-                27, 
+                "Arm Boom Act",
+                Constants.ARM_BOOM_LENGTH, 
                 -90, 
-                10, 
-                new Color8Bit(Color.kSkyBlue)));
-    private final MechanismLigament2d m_arm_tower =
-        m_armPivot.append(new MechanismLigament2d("ArmTower", 18, -90, 10, new Color8Bit(Color.kSilver)));
-  
-    private final MechanismLigament2d m_aframe_1 =
-        m_armPivot.append(new MechanismLigament2d("aframe1", 24, -50, 10, new Color8Bit(Color.kSilver)));
-    private final MechanismLigament2d m_bumper =
-        gridHome.append(new MechanismLigament2d("Bumper", 30.5, 0, 60, new Color8Bit(Color.kRed)));
-    private final MechanismLigament2d m_arm_lower =
-        m_arm_upper.append(
+                3, 
+                new Color8Bit(Color.kSteelBlue)));
+
+    private final MechanismLigament2d m_stick_ligament_act =
+        m_boom_ligament_act.append(
             new MechanismLigament2d(
-                "Arm Lower",
-                28.5,
+                "Arm Stick Act",
+                Constants.ARM_STICK_LENGTH,
+                Units.radiansToDegrees(0.0),
+                3,
+                new Color8Bit(Color.kSteelBlue)));
+
+    private final MechanismLigament2d m_boom_ligament_meas =
+        m_armPivot.append(
+                new MechanismLigament2d(
+                "Arm Boom Meas",
+                Constants.ARM_BOOM_LENGTH, 
+                -90, 
+                5, 
+                new Color8Bit(Color.kRed)));
+        
+    private final MechanismLigament2d m_stick_ligament_meas =
+        m_boom_ligament_meas.append(
+            new MechanismLigament2d(
+                "Arm Stick Meas",
+                Constants.ARM_STICK_LENGTH,
+                Units.radiansToDegrees(0.0),
+                5,
+                new Color8Bit(Color.kRed)));
+
+    private final MechanismLigament2d m_boom_ligament_des =
+    m_armPivot.append(
+            new MechanismLigament2d(
+            "Arm Boom Des",
+            Constants.ARM_BOOM_LENGTH/3.0, 
+            -90, 
+            10, 
+            new Color8Bit(Color.kLimeGreen)));
+        
+    private final MechanismLigament2d m_stick_ligament_des =
+        m_boom_ligament_meas.append(
+            new MechanismLigament2d(
+                "Arm Stick Des",
+                Constants.ARM_STICK_LENGTH/3.0,
                 Units.radiansToDegrees(0.0),
                 10,
-                new Color8Bit(Color.kBlue)));
+                new Color8Bit(Color.kLimeGreen)));
 
     private ArmTelemetry(){
         // Put Mechanism 2d to SmartDashboard
         SmartDashboard.putData("Arm", m_mech2d);
+
+        if(Robot.isReal()){
+            //Effectively hid the Act ligament if we're on a real robot
+            m_boom_ligament_act.setLength(0);
+            m_stick_ligament_act.setLength(0);
+        }
     }
 
-    //TODO - add more ligaments for desired/measured visualization
-    public void setActual(double upperAngleDeg, double lowerAngleDeg){
-        m_arm_upper.setAngle(upperAngleDeg);
-        m_arm_lower.setAngle(lowerAngleDeg);
+    public void setActual(double boomAngleDeg, double stickAngleDeg){
+        m_boom_ligament_act.setAngle(boomAngleDeg);
+        m_stick_ligament_act.setAngle(stickAngleDeg);
     }
-    public void setDesired(ArmEndEffectorPos des, double upperAngleDeg, double lowerAngleDeg){
-
+    public void setDesired(ArmEndEffectorPos desPos, ArmState desArmState){
+        desEndPosRoot.setPosition(desPos.x + LEFT_MARGIN, desPos.y);
+        m_boom_ligament_des.setAngle(desArmState.boomAngleDeg);
+        m_stick_ligament_des.setAngle(desArmState.stickAngleDeg);
     }
-    public void setMeasured(double upperAngleDeg, double lowerAngleDeg){
-
+    public void setMeasured(ArmState in){
+        m_boom_ligament_meas.setAngle(in.boomAngleDeg);
+        m_stick_ligament_meas.setAngle(in.stickAngleDeg);
     }
     
 }

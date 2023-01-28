@@ -19,6 +19,8 @@ import frc.Constants;
 import frc.hardwareWrappers.Gyro.WrapperedGyro;
 import frc.hardwareWrappers.Gyro.WrapperedGyro.GyroType;
 import frc.lib.Signal.Annotations.Signal;
+import frc.robot.PoseTelemetry;
+import frc.robot.Drivetrain.Camera.FieldTags;
 import frc.robot.Drivetrain.Camera.PhotonCamWrapper;
 
 public class DrivetrainPoseEstimator {
@@ -35,8 +37,6 @@ public class DrivetrainPoseEstimator {
     Pose2d curEstPose = new Pose2d(Constants.DFLT_START_POSE.getTranslation(), Constants.DFLT_START_POSE.getRotation());
 
     WrapperedGyro gyro;
-
-    //SwerveDrivePoseEstimator<N7, N7, N5> m_poseEstimator;
 
     SwerveDrivePoseEstimator m_poseEstimator;
 
@@ -57,9 +57,11 @@ public class DrivetrainPoseEstimator {
 
     private DrivetrainPoseEstimator(){
 
-        cams.add(new PhotonCamWrapper("FRONT_CAM", Constants.robotToFrontCameraTrans)); 
+        FieldTags.getInstance();//ensure files get loaded
+
+        cams.add(new PhotonCamWrapper("FRONT_LEFT_CAM", Constants.robotToFrontLeftCameraTrans)); 
+        cams.add(new PhotonCamWrapper("FRONT_RIGHT_CAM", Constants.robotToFrontRightCameraTrans)); 
         cams.add(new PhotonCamWrapper("REAR_CAM", Constants.robotToRearCameraTrans)); 
-        //TODO add more cameras here
 
         gyro = new WrapperedGyro(GyroType.ADXRS453);
 
@@ -106,10 +108,13 @@ public class DrivetrainPoseEstimator {
         Transform2d deltaPose = new Transform2d(prevEstPose, curEstPose);
         curSpeed = Units.metersToFeet(deltaPose.getTranslation().getNorm()) / Constants.Ts;
 
+        PoseTelemetry.getInstance().clearVisionPoses();
+
         for(var cam : cams){
-            cam.update();
+            cam.update(getEstPose());
             for(var obs : cam.getCurObservations()){
                 m_poseEstimator.addVisionMeasurement(obs.estFieldPose, obs.time, visionMeasurementStdDevs.times(1.0/obs.trustworthiness));
+                PoseTelemetry.getInstance().addVisionPose("Tmp", obs.estFieldPose);
             }
         }
 

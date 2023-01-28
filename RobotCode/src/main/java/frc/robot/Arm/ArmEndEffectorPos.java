@@ -5,9 +5,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 
 public class ArmEndEffectorPos {
-    double x;
-    double y;
-    boolean isReflex;
+    public double x;
+    public double y;
+    public double reflexFrac; //1.0 is fully reflex, 0.0 is fully non-reflex
 
     //TODO - we just added isReflex and haven't used it at all yet
 
@@ -17,9 +17,16 @@ public class ArmEndEffectorPos {
 
     //TODO - add something here to fiture out if we should attempt to achieve the solution through a "concave" or "convex" joint solution
 
-    ArmEndEffectorPos(double x, double y){
+    public ArmEndEffectorPos(double x, double y, boolean isReflex){
         this.x = x;
         this.y = y;
+        this.reflexFrac = isReflex ? 1.0 : 0.0;
+    }
+
+    public ArmEndEffectorPos(double x, double y, double reflexFrac){
+        this.x = x;
+        this.y = y;
+        this.reflexFrac = reflexFrac;
     }
 
     double distTo(ArmEndEffectorPos other){
@@ -32,7 +39,8 @@ public class ArmEndEffectorPos {
         double fracInv = (1.0 - frac);
         double x = other.x * frac + this.x * fracInv;
         double y = other.y * frac + this.y * fracInv;
-        return new ArmEndEffectorPos(x, y);
+        double reflexFrac = other.reflexFrac * frac + this.reflexFrac * fracInv;
+        return new ArmEndEffectorPos(x, y, reflexFrac);
     }
 
     //TODO - refine these 
@@ -49,8 +57,12 @@ public class ArmEndEffectorPos {
         return new Pose2d(this.x, this.y, Rotation2d.fromDegrees(270.0));
     }
 
-    static ArmEndEffectorPos fromTrajState(State in){
+    static ArmEndEffectorPos fromTrajState(State in, double reflexFrac){
         var tmp = in.poseMeters;
-        return new ArmEndEffectorPos(tmp.getX(), tmp.getY());
+        return new ArmEndEffectorPos(tmp.getX(), tmp.getY(), reflexFrac);
+    }
+
+    public boolean isEqualTo(ArmEndEffectorPos other){
+        return this.x == other.x && this.y == other.y && this.reflexFrac == other.reflexFrac;
     }
 }
