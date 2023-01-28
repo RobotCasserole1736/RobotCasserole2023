@@ -7,15 +7,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import org.photonvision.PhotonCamera;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl;
 import frc.lib.Calibration.CalWrangler;
 import frc.lib.LoadMon.RIOLoadMonitor;
 import frc.lib.LoadMon.SegmentTimeTracker;
@@ -30,7 +29,9 @@ import frc.robot.AutoDrive.AutoDrive.AutoDriveCmdState;
 import frc.robot.Autonomous.Autonomous;
 import frc.robot.Drivetrain.DrivetrainControl;
 import frc.sim.RobotModel;
-
+//Temporary arm stuff
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -77,6 +78,15 @@ public class Robot extends TimedRobot {
   final double ANGULAR_P = 0.1;
   final double ANGULAR_D = 0.0;
   PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
+
+  // Temporary arm control thing
+  private CANSparkMax b_motor;
+  WrapperedCANMotorCtrl b_motorCtrl;
+  // private Joystick b_stick;
+
+  private CANSparkMax s_motor;
+  WrapperedCANMotorCtrl s_motorCtrl;
+  private OperatorInput o_controller; 
   // ... 
   // But before here
   ///////////////////////////////////////////////////////////////////
@@ -91,9 +101,6 @@ public class Robot extends TimedRobot {
     stt = new SegmentTimeTracker("Robot.java", 0.25);
 
     stt.start();
-
-
-    
 
     // Disable default behavior of the live-window output manipulation logic
     // We've got our own and never use this anyway.
@@ -205,14 +212,26 @@ public class Robot extends TimedRobot {
   ///////////////////////////////////////////////////////////////////
   @Override
   public void teleopInit() {
-
-
-   
-
+    //Temporary arm stuff
+    b_motor = new CANSparkMax(2, MotorType.kBrushless);
+    b_motor.restoreFactoryDefaults();
+    s_motor = new CANSparkMax(16, MotorType.kBrushless);
+    s_motor.restoreFactoryDefaults();
+    o_controller = new OperatorInput(1);
+  
+   // b_motorCtrl = new WrapperedCANMotorCtrl("b_stick", 10, WrapperedCANMotorCtrl.CANMotorCtrlType.SPARK_MAX);
+   // s_motorCtrl = new WrapperedCANMotorCtrl("s_stick", 11, WrapperedCANMotorCtrl.CANMotorCtrlType.SPARK_MAX);
   }
 
   @Override
   public void teleopPeriodic() {
+
+    //Temporary arm stuff start
+    o_controller.update();
+    b_motor.setVoltage(o_controller.boomMotor);
+    s_motor.setVoltage(o_controller.stickMotor);
+    //Temporary arm stuff end
+    
     stt.start();
     loopStartTime = Timer.getFPGATimestamp();
 
@@ -246,13 +265,9 @@ public class Robot extends TimedRobot {
     cc.setIntake(di.getClawIntake());
     cc.setEject(di.getClawEject());
 
-
-
     stt.mark("Human Input Mapping");
 
   }
-
-
 
   ///////////////////////////////////////////////////////////////////
   // Disabled-Specific
@@ -274,19 +289,14 @@ public class Robot extends TimedRobot {
 
     auto.sampleDashboardSelector();
     stt.mark("Auto Mode Update");
-
   }
-
-
-
   
   ///////////////////////////////////////////////////////////////////
   // Common Periodic updates
   ///////////////////////////////////////////////////////////////////
   @Override
-  public void robotPeriodic() {
-
-
+  public void robotPeriodic() 
+  {
     if(DriverStation.isTest() && !DriverStation.isDisabled()){
       dt.testUpdate();
     } else {
@@ -295,7 +305,6 @@ public class Robot extends TimedRobot {
     stt.mark("Drivetrain");
 
     ac.update();
-
     cw.update();
     cc.update();
     stt.mark("Cal Wrangler");
@@ -303,13 +312,9 @@ public class Robot extends TimedRobot {
     stt.mark("Dashboard");
     telemetryUpdate();
     stt.mark("Telemetry");
-    
-
     stt.end();
 
     SmartDashboard.putNumber("SDB FPGATime", Timer.getFPGATimestamp());
-
-
   }
 
   private void telemetryUpdate(){
@@ -342,8 +347,6 @@ public class Robot extends TimedRobot {
   public void testPeriodic(){
     stt.start();
     loopStartTime = Timer.getFPGATimestamp();
-
-
     // Nothing special here, yet
   }
 
@@ -369,6 +372,4 @@ public class Robot extends TimedRobot {
     plant.update(this.isDisabled());
     pt.setActualPose(plant.getCurActPose());
   }
-
-
 }
