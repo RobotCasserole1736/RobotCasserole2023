@@ -62,7 +62,8 @@ public class ArmControl {
         var curDesPosRaw = ArmPosCmdArbitration.arbitrate(mp.getCurDesPos(), pp.getCurDesPos());
 
         //Apply soft limits
-        var curDesPosLimited = ArmSoftLimits.applyLimit(curDesPosRaw);
+        //var curDesPosLimited = ArmSoftLimits.applyLimit(curDesPosRaw);
+        var curDesPosLimited = curDesPosRaw;
 
         // Apply kinematics to get linkge positions
         var curDesState = ArmKinematics.inverse(curDesPosLimited);
