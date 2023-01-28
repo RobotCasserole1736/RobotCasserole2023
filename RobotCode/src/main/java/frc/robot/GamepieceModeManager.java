@@ -1,9 +1,25 @@
 package frc.robot;
+import edu.wpi.first.wpilibj.PWM;
+import frc.Constants;
 
 public class GamepieceModeManager {
 
     /* Singleton infratructure*/
     private static GamepieceModeManager inst = null;
+    public enum GamepieceMode{
+        CUBE,
+        CONE;
+    }
+    
+    // Mignt not need this
+    public enum LEDGameModePatterns{
+        purpleCube,
+        yellowCone;
+    }
+
+    private GamepieceMode curMode;
+    PWM LEDPanelModeCtrl;
+
     public static synchronized GamepieceModeManager getInstance() {
         if (inst == null)
             inst = new GamepieceModeManager();
@@ -11,14 +27,8 @@ public class GamepieceModeManager {
     }
 
     private GamepieceModeManager(){
-        curMode = GamepieceMode.CONE;//pick a default
-    }
-    
-    private GamepieceMode curMode;
-
-    public enum GamepieceMode{
-        CUBE,
-        CONE;
+        curMode = GamepieceMode.CONE; //pick a default
+        LEDPanelModeCtrl = new PWM(Constants.LED_MODE_PORT);
     }
 
     public void setCurMode(GamepieceMode in){

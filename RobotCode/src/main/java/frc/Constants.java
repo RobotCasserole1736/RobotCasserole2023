@@ -71,6 +71,8 @@ public class Constants {
     //////////////////////////////////////////////////////////////////
 
     // PWM Bank
+    public static final int LED_MODE_PORT = 1;
+    public static final int LED_DECORATIVE_PORT = 2;
     //static public final int UNUSED = 0;
     //static public final int UNUSED = 1;
     //static public final int UNUSED = 2;
@@ -93,7 +95,6 @@ public class Constants {
     //static public final int UNUSED = 7;
     //static public final int UNUSED = 8;
     //static public final int UNUSED = 9;
-
 
     // Analog Bank
     //static public final int UNUSED = 0;
@@ -162,7 +163,7 @@ public class Constants {
     public static final double TAXI_DRIVE_TIME_S = 2.2;
     public static final double TAXI_DRIVE_SPEED_MPS = 1.75;
 
-    //////////////////////////////////////////////////////////////////W
+    //////////////////////////////////////////////////////////////////
     // Nominal Sample Times
     //////////////////////////////////////////////////////////////////
     public static final double Ts = 0.02;
