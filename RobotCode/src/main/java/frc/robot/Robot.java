@@ -96,7 +96,12 @@ public class Robot extends TimedRobot {
   ///////////////////////////////////////////////////////////////////
   @Override
   public void robotInit() {
-
+    //Temporary arm stuff
+    b_motor = new CANSparkMax(2, MotorType.kBrushless);
+    b_motor.restoreFactoryDefaults();
+    s_motor = new CANSparkMax(16, MotorType.kBrushless);
+    s_motor.restoreFactoryDefaults();
+    o_controller = new OperatorInput(1);
     stt = new SegmentTimeTracker("Robot.java", 0.25);
 
     stt.start();
@@ -200,9 +205,7 @@ public class Robot extends TimedRobot {
     stt.mark("Auto Update");
 
     //Temp - these should eventaully com from the operator
-    ac.setOpCmds(0.0, 0.0, ArmNamedPosition.CONE_MID, true);
-
-
+    ac.setOpCmds(0.0, 0.0, ArmNamedPosition.CONE_HIGH, true);
   }
 
   
@@ -211,12 +214,6 @@ public class Robot extends TimedRobot {
   ///////////////////////////////////////////////////////////////////
   @Override
   public void teleopInit() {
-    //Temporary arm stuff
-    b_motor = new CANSparkMax(2, MotorType.kBrushless);
-    b_motor.restoreFactoryDefaults();
-    s_motor = new CANSparkMax(16, MotorType.kBrushless);
-    s_motor.restoreFactoryDefaults();
-    o_controller = new OperatorInput(1);
   
    // b_motorCtrl = new WrapperedCANMotorCtrl("b_stick", 10, WrapperedCANMotorCtrl.CANMotorCtrlType.SPARK_MAX);
    // s_motorCtrl = new WrapperedCANMotorCtrl("s_stick", 11, WrapperedCANMotorCtrl.CANMotorCtrlType.SPARK_MAX);
