@@ -105,9 +105,6 @@ public class Robot extends TimedRobot {
 
     stt.start();
 
-
-    
-
     // Disable default behavior of the live-window output manipulation logic
     // We've got our own and never use this anyway.
     LiveWindow.setEnabled(false);
@@ -236,6 +233,7 @@ public class Robot extends TimedRobot {
     //Temporary arm stuff start
     // b_motor.setVoltage(b_stick.getY());
     // s_motor.setVoltage(s_stick.getX());
+    o_controller.update();
     b_motor.setVoltage(o_controller.boomMotor);
     s_motor.setVoltage(o_controller.stickMotor);
     
@@ -272,13 +270,9 @@ public class Robot extends TimedRobot {
     cc.setIntake(di.getClawIntake());
     cc.setEject(di.getClawEject());
 
-
-
     stt.mark("Human Input Mapping");
 
   }
-
-
 
   ///////////////////////////////////////////////////////////////////
   // Disabled-Specific
@@ -299,19 +293,14 @@ public class Robot extends TimedRobot {
 
     auto.sampleDashboardSelector();
     stt.mark("Auto Mode Update");
-
   }
-
-
-
   
   ///////////////////////////////////////////////////////////////////
   // Common Periodic updates
   ///////////////////////////////////////////////////////////////////
   @Override
-  public void robotPeriodic() {
-
-
+  public void robotPeriodic() 
+  {
     if(DriverStation.isTest() && !DriverStation.isDisabled()){
       dt.testUpdate();
     } else {
@@ -333,8 +322,6 @@ public class Robot extends TimedRobot {
     stt.end();
 
     SmartDashboard.putNumber("SDB FPGATime", Timer.getFPGATimestamp());
-
-
   }
 
   private void telemetryUpdate(){
