@@ -9,7 +9,7 @@ public class ArmSoftLimits {
     }
 
     public boolean isLimited(){
-    
+    // CURRENTLY A WIP IF YOU CRASH YOUR COMPUTER IT IS NOT MY FAULT
         // We will need to set the restriction variables to points on the limit lines - Kyle 
 
         // This finds the slope of the line that the arm is following and the restriction lines, uses that to see if they intersect, 
