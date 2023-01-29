@@ -11,8 +11,6 @@ public class ArmEndEffectorState {
     public double yvel;
     public double reflexFrac; //1.0 is fully reflex, 0.0 is fully non-reflex
 
-    // TODO - allow configuraiton of a "safe height" - minimum Y value the end affector must travel to before traveling in the X direction
-
     //TODO - add something here to fiture out if we should attempt to achieve the solution through a "concave" or "convex" joint solution
 
     public ArmEndEffectorState(double x, double y, boolean isReflex){

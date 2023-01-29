@@ -6,15 +6,15 @@ import frc.Constants;
 public class ArmPathPlanner {
 
     ArmPath curPath = null;
-    ArmEndEffectorState curTargetPos = null;
-    ArmEndEffectorState prevTargetPos = null;
+    ArmNamedPosition curTargetPos = null;
+    ArmNamedPosition prevTargetPos = null;
     ArmEndEffectorState curPositionCmd = null;
     boolean motionActive = false;
     boolean shouldRun = false;
     boolean shouldRunPrev = false;
     double pathStartTime = 0;
 
-    public void setCommand(boolean shouldRun, ArmEndEffectorState curTargetPos){
+    public void setCommand(boolean shouldRun, ArmNamedPosition curTargetPos){
         this.shouldRun = shouldRun;
         this.curTargetPos = curTargetPos;
     }
@@ -34,7 +34,7 @@ public class ArmPathPlanner {
 
         var pathTime = Timer.getFPGATimestamp() - pathStartTime;
 
-        if(curPath != null){
+        if(curPath != null && shouldRun){
             //There is a path init'ed already.
             if(pathTime > curPath.getDurationSec()){
                 //Time done - no longer commanding a moving path

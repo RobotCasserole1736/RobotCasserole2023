@@ -2,6 +2,7 @@ package frc.robot.Arm;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.Constants;
 
 public class ArmKinematics {
@@ -114,11 +115,11 @@ public class ArmKinematics {
             x = minRadius;
             y = 0.0;
         } else if (reqRadius >= maxRadius) {
-            var factor = maxRadius / reqRadius;
+            var factor = maxRadius / reqRadius * 0.99999;
             x *= factor;
             y *= factor;
         } else if (reqRadius <= minRadius) {
-            var factor = minRadius / reqRadius;
+            var factor = minRadius / reqRadius * 1.00001;
             x *= factor;
             y *= factor;
         }
@@ -140,6 +141,10 @@ public class ArmKinematics {
         double boomTerm2 = Math.atan(boomTerm2Num / boomTerm2Denom) * (isReflex ? 1.0 : -1.0);
 
         double boomAngleRad = boomTerm1 + boomTerm2;
+
+        if(!Double.isFinite(boomAngleRad) || !Double.isFinite(stickAngleRad)){
+            DriverStation.reportWarning("Cannot calculate inverse kinematics", false);
+        }
 
         return Pair.of((Double) boomAngleRad, (Double) stickAngleRad);
     }

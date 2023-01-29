@@ -1,7 +1,5 @@
 package frc.robot.Arm;
 
-import java.util.Arrays;
-
 public class ArmSoftLimits {
 
     public ArmEndEffectorState applyLimit(ArmEndEffectorState in) {

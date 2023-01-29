@@ -190,8 +190,6 @@ public class Robot extends TimedRobot {
     auto.update();
     stt.mark("Auto Update");
 
-    //Temp - these should eventaully com from the operator
-    ac.setOpCmds(0.0, 0.0, ArmNamedPosition.CONE_HIGH, true);
   }
 
   
@@ -225,20 +223,31 @@ public class Robot extends TimedRobot {
     }
 
     ad.setManualCommands(di.getFwdRevCmd_mps(), di.getSideToSideCmd_mps(), di.getRotateCmd_rps(), !di.getRobotRelative());
-
     ad.update();
 
-    //Temp - these should eventaully com from the operator
-    ac.setOpCmds(0.0, 0.0, ArmNamedPosition.STOW, true);
+    var curOpPos = ArmNamedPosition.STOW;
+    
+    //TODO - support cube vs. cone
+    if(oi.armHighPosCmd){
+      curOpPos = ArmNamedPosition.CONE_HIGH;
+    } else if(oi.armMidPosCmd){
+      curOpPos = ArmNamedPosition.CONE_MID;
+    } else if(oi.armLowPosCmd){
+      curOpPos = ArmNamedPosition.CONE_LOW;
+    } else if(oi.armStowPosCmd){
+      curOpPos = ArmNamedPosition.STOW;
+    }
 
+    ac.setOpCmds(oi.armManualXCmd, oi.armManualYCmd, curOpPos, oi.posCmdActive());
+
+    cc.setIntake(di.getClawIntake());
+    cc.setEject(di.getClawEject());
 
     if(di.getOdoResetCmd()){
       //Reset pose estimate to angle 0, but at the same translation we're at
       Pose2d newPose = new Pose2d(dt.getCurEstPose().getTranslation(), new Rotation2d(0.0));
       dt.setKnownPose(newPose);
     }
-    cc.setIntake(di.getClawIntake());
-    cc.setEject(di.getClawEject());
 
     stt.mark("Human Input Mapping");
 
