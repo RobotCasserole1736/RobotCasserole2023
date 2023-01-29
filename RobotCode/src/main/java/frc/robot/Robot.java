@@ -85,7 +85,7 @@ public class Robot extends TimedRobot {
 
   private CANSparkMax s_motor;
   WrapperedCANMotorCtrl s_motorCtrl;
-  private OperatorInput o_controller; 
+  private OperatorInput oi; 
   // ... 
   // But before here
   ///////////////////////////////////////////////////////////////////
@@ -96,12 +96,6 @@ public class Robot extends TimedRobot {
   ///////////////////////////////////////////////////////////////////
   @Override
   public void robotInit() {
-    //Temporary arm stuff
-    b_motor = new CANSparkMax(2, MotorType.kBrushless);
-    b_motor.restoreFactoryDefaults();
-    s_motor = new CANSparkMax(16, MotorType.kBrushless);
-    s_motor.restoreFactoryDefaults();
-    o_controller = new OperatorInput(1);
     stt = new SegmentTimeTracker("Robot.java", 0.25);
 
     stt.start();
@@ -138,6 +132,8 @@ public class Robot extends TimedRobot {
     cc = new clawControl();
 
     di = new DriverInput(0);
+    oi = new OperatorInput(1);
+
     stt.mark("Driver IO");
 
     dt = DrivetrainControl.getInstance();
@@ -215,23 +211,16 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
   
-   // b_motorCtrl = new WrapperedCANMotorCtrl("b_stick", 10, WrapperedCANMotorCtrl.CANMotorCtrlType.SPARK_MAX);
-   // s_motorCtrl = new WrapperedCANMotorCtrl("s_stick", 11, WrapperedCANMotorCtrl.CANMotorCtrlType.SPARK_MAX);
   }
 
   @Override
   public void teleopPeriodic() {
-
-    //Temporary arm stuff start
-    o_controller.update();
-    b_motor.setVoltage(o_controller.boomMotor);
-    s_motor.setVoltage(o_controller.stickMotor);
-    //Temporary arm stuff end
     
     stt.start();
     loopStartTime = Timer.getFPGATimestamp();
 
     di.update();
+    oi.update();
     stt.mark("Driver Input");
 
     /////////////////////////////////////
