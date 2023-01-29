@@ -17,8 +17,8 @@ public class ArmPath {
     //Time to linear position
     Trajectory traj;
 
-    ArmEndEffectorPos start; 
-    ArmEndEffectorPos end;
+    ArmEndEffectorState start; 
+    ArmEndEffectorState end;
     double max_vel;
     double max_accel; 
 
@@ -30,7 +30,7 @@ public class ArmPath {
      * @param max_accel_mps2
 
      */
-    public ArmPath(ArmEndEffectorPos start, ArmEndEffectorPos end, double max_vel_mps, double max_accel_mps2){
+    public ArmPath(ArmEndEffectorState start, ArmEndEffectorState end, double max_vel_mps, double max_accel_mps2){
         this.start = start; 
         this.end = end;
 
@@ -48,14 +48,11 @@ public class ArmPath {
      * @param time_sec
      * @return
      */
-    public ArmEndEffectorPos sample(double time_sec){
+    public ArmEndEffectorState sample(double time_sec){
         // Calculate interpolated reflex
         var timeFrac = time_sec/this.getDurationSec();
         var curReflex = start.reflexFrac * (1.0 - timeFrac) + end.reflexFrac * timeFrac;
-        
-        //TODO - Trajectory State includes velocity and direction information, maybe that needs to be exposed too?
-        // Right now this will strip all that away and jsut return x/y position
-        return ArmEndEffectorPos.fromTrajState(traj.sample(time_sec), curReflex);
+        return ArmEndEffectorState.fromTrajState(traj, time_sec, curReflex);
     }
 
     public double getDurationSec(){

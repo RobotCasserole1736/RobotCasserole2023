@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.Constants;
-import frc.robot.Arm.ArmEndEffectorPos;
-import frc.robot.Arm.ArmState;
+import frc.robot.Arm.ArmEndEffectorState;
+import frc.robot.Arm.ArmAngularState;
 
 public class ArmTelemetry {
 
@@ -119,12 +119,12 @@ public class ArmTelemetry {
         m_boom_ligament_act.setAngle(boomAngleDeg);
         m_stick_ligament_act.setAngle(stickAngleDeg);
     }
-    public void setDesired(ArmEndEffectorPos desPos, ArmState desArmState){
+    public void setDesired(ArmEndEffectorState desPos, ArmAngularState desArmState){
         desEndPosRoot.setPosition(desPos.x + LEFT_MARGIN, desPos.y);
         m_boom_ligament_des.setAngle(desArmState.boomAngleDeg);
         m_stick_ligament_des.setAngle(desArmState.stickAngleDeg);
     }
-    public void setMeasured(ArmState in){
+    public void setMeasured(ArmAngularState in){
         m_boom_ligament_meas.setAngle(in.boomAngleDeg);
         m_stick_ligament_meas.setAngle(in.stickAngleDeg);
     }

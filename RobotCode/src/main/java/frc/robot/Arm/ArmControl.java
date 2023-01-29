@@ -18,7 +18,7 @@ public class ArmControl {
     MotorControlBoom mb;
     MotorControlStick ms;
 
-    ArmState curMeasState;
+    ArmAngularState curMeasState;
 
     ArmPathPlanner pp;
     ArmManPosition mp;
@@ -32,7 +32,7 @@ public class ArmControl {
         ms = new MotorControlStick();
         pp = new ArmPathPlanner();
         mp = new ArmManPosition();
-        curMeasState = new ArmState(0,0);
+        curMeasState = new ArmAngularState(0,0);
     }
 
     public void setInactive(){
@@ -52,8 +52,8 @@ public class ArmControl {
         stickEncoder.update();
         var boomAngleDeg = Units.radiansToDegrees(boomEncoder.getAngle_rad());
         var stickAngleDeg = Units.radiansToDegrees(stickEncoder.getAngle_rad());
-        curMeasState = new ArmState(boomAngleDeg, stickAngleDeg); //TODO - add velocities here?
-        ArmEndEffectorPos curMeasPos = ArmKinematics.forward(curMeasState);
+        curMeasState = new ArmAngularState(boomAngleDeg, stickAngleDeg); //TODO - add velocities here?
+        ArmEndEffectorState curMeasPos = ArmKinematics.forward(curMeasState);
 
         mp.update(curMeasPos);
         pp.update(curMeasPos);

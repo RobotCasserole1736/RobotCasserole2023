@@ -20,12 +20,12 @@ public class MotorControlBoom {
 
     //TODO constructor
 
-    public void setCmd(ArmState in){
+    public void setCmd(ArmAngularState in){
         //todo - save off the right angles and velocities for this motor
         desAngleDeg = in.boomAngleDeg;
     }    
 
-    public void update(ArmState act_in){
+    public void update(ArmAngularState act_in){
 
         //todo calculate brake state desired
 

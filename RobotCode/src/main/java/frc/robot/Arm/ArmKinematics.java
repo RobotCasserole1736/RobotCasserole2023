@@ -6,10 +6,38 @@ import frc.Constants;
 
 public class ArmKinematics {
 
-    public static ArmEndEffectorPos forward(ArmState in) {
+    public static ArmEndEffectorState forward(ArmAngularState in) {
+        //Calcualte current, previous and next angles for each joint
+        var boomAngleCur = in.boomAngleDeg;
+        var boomAngleNext = boomAngleCur + in.boomAnglularVel * 0.02;
+        var boomAnglePrev = boomAngleCur - in.boomAnglularVel * 0.02;
 
-        var boomRad = Units.degreesToRadians(in.boomAngleDeg);
-        var stickRad = Units.degreesToRadians(in.stickAngleDeg);
+        var stickAngleCur = in.stickAngleDeg;
+        var stickAngleNext = stickAngleCur + in.stickAngularVel * 0.02;
+        var stickAnglePrev = stickAngleCur - in.stickAngularVel * 0.02;
+
+        //Convert current, previous, and next angles into x/y positions
+        var cur = forward_internal(boomAngleCur, stickAngleCur);
+        var prev = forward_internal(boomAnglePrev, stickAnglePrev);
+        var next = forward_internal(boomAngleNext, stickAngleNext);
+
+        // calcualte velocities assuming constant velocity motion from previous to next point.
+        var xVel = (next.x - prev.x) / 0.04;
+        var yVel = (next.y - prev.y) / 0.04;
+
+        //Calcualte reflex fraction from knowing whether the stick is angled up or down. 
+        double reflexFrac = stickAngleCur > 0.0 ? 0.0 : 1.0;
+
+        // Return a complete end effector state object.
+        return new ArmEndEffectorState(cur.x, cur.y, xVel, yVel, reflexFrac);
+   
+
+    }
+
+    private static ArmEndEffectorState forward_internal(double boomAngleDeg, double stickAngleDeg) {
+
+        var boomRad = Units.degreesToRadians(boomAngleDeg);
+        var stickRad = Units.degreesToRadians(stickAngleDeg);
 
         double armX = Constants.ARM_BOOM_LENGTH * Math.cos(boomRad) + 
                       Constants.ARM_STICK_LENGTH * Math.cos(boomRad + stickRad);
@@ -20,10 +48,10 @@ public class ArmKinematics {
 
         boolean isReflex = (stickRad < 0);
 
-        return new ArmEndEffectorPos(armX, armY, isReflex);
+        return new ArmEndEffectorState(armX, armY, isReflex);
     }
 
-    public static ArmState inverse(ArmEndEffectorPos in) {
+    public static ArmAngularState inverse(ArmEndEffectorState in) {
 
         //Calculate the fully reflex and fully non-reflex solutions
         var retReflex = inverse_internal(in.x, in.y, true);
@@ -33,7 +61,7 @@ public class ArmKinematics {
         var boomAngle = retReflex.getFirst() * in.reflexFrac + retNonReflex.getFirst() * (1.0 - in.reflexFrac);
         var stickAngle = retReflex.getSecond() * in.reflexFrac + retNonReflex.getSecond() * (1.0 - in.reflexFrac);
 
-        return new ArmState(Units.radiansToDegrees(boomAngle),
+        return new ArmAngularState(Units.radiansToDegrees(boomAngle),
                             Units.radiansToDegrees(stickAngle));
 
     }

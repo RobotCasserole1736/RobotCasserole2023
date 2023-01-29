@@ -15,12 +15,12 @@ public class MotorControlStick {
     @Signal
     double actAngleDeg;
 
-    public void setCmd(ArmState in){
+    public void setCmd(ArmAngularState in){
         //todo - save off the right angles and velocities for this motor
         desAngleDeg = in.stickAngleDeg;
     }
 
-    public void update(ArmState act_in){
+    public void update(ArmAngularState act_in){
 
 
         //todo calcualte feed forward for this segment (including gravity)

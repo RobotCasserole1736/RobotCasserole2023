@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl;
 import frc.lib.Calibration.CalWrangler;
 import frc.lib.LoadMon.RIOLoadMonitor;
 import frc.lib.LoadMon.SegmentTimeTracker;
@@ -28,9 +27,7 @@ import frc.robot.AutoDrive.AutoDrive.AutoDriveCmdState;
 import frc.robot.Autonomous.Autonomous;
 import frc.robot.Drivetrain.DrivetrainControl;
 import frc.sim.RobotModel;
-//Temporary arm stuff
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -58,6 +55,7 @@ public class Robot extends TimedRobot {
 
   // Main Driver
   DriverInput di;
+  OperatorInput oi; 
 
   //Drivetrain and drivetrain accessories
   DrivetrainControl dt;
@@ -78,14 +76,6 @@ public class Robot extends TimedRobot {
   final double ANGULAR_D = 0.0;
   PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
 
-  // Temporary arm control thing
-  private CANSparkMax b_motor;
-  WrapperedCANMotorCtrl b_motorCtrl;
-  // private Joystick b_stick;
-
-  private CANSparkMax s_motor;
-  WrapperedCANMotorCtrl s_motorCtrl;
-  private OperatorInput oi; 
   // ... 
   // But before here
   ///////////////////////////////////////////////////////////////////

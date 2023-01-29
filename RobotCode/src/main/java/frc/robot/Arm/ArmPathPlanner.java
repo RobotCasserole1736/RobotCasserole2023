@@ -6,20 +6,20 @@ import frc.Constants;
 public class ArmPathPlanner {
 
     ArmPath curPath = null;
-    ArmEndEffectorPos curTargetPos = null;
-    ArmEndEffectorPos prevTargetPos = null;
-    ArmEndEffectorPos curPositionCmd = null;
+    ArmEndEffectorState curTargetPos = null;
+    ArmEndEffectorState prevTargetPos = null;
+    ArmEndEffectorState curPositionCmd = null;
     boolean motionActive = false;
     boolean shouldRun = false;
     boolean shouldRunPrev = false;
     double pathStartTime = 0;
 
-    public void setCommand(boolean shouldRun, ArmEndEffectorPos curTargetPos){
+    public void setCommand(boolean shouldRun, ArmEndEffectorState curTargetPos){
         this.shouldRun = shouldRun;
         this.curTargetPos = curTargetPos;
     }
 
-    public void update(ArmEndEffectorPos curPos){
+    public void update(ArmEndEffectorState curPos){
         // calculate if we need a new path
         boolean shouldRunRisingEdge = (shouldRun == true && shouldRunPrev == false);
         boolean targetPosChanged = (curTargetPos != null && prevTargetPos != null && !curTargetPos.equals(prevTargetPos));
@@ -55,7 +55,7 @@ public class ArmPathPlanner {
 
     }
 
-    public ArmEndEffectorPos getCurDesPos(){
+    public ArmEndEffectorState getCurDesPos(){
         return curPositionCmd; 
     }
     

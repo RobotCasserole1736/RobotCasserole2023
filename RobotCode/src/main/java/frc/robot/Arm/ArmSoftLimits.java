@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class ArmSoftLimits {
 
-    public ArmEndEffectorPos applyLimit(ArmEndEffectorPos in) {
+    public ArmEndEffectorState applyLimit(ArmEndEffectorState in) {
         return null;// TODO - apply limits to the incoming position to fence it in
     }
     public int intersect (double ax, double ay, double wx, double wy) {

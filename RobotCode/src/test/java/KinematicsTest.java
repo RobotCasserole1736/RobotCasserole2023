@@ -3,9 +3,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import frc.Constants;
-import frc.robot.Arm.ArmEndEffectorPos;
+import frc.robot.Arm.ArmEndEffectorState;
 import frc.robot.Arm.ArmKinematics;
-import frc.robot.Arm.ArmState;
+import frc.robot.Arm.ArmAngularState;
 
 class KinematicsTest {
   //Floating point numbers can have a bit of error, that's ok in this case.
@@ -16,7 +16,7 @@ class KinematicsTest {
 
     //assign angle inputs for testcase
     // straight out forward on the robot
-    var testArmState = new ArmState();
+    var testArmState = new ArmAngularState();
     testArmState.boomAngleDeg = 0; 
     testArmState.stickAngleDeg = 0;
 
@@ -31,7 +31,7 @@ class KinematicsTest {
   void testStraightUp() {
 
     //straight up in the air
-    var testArmState = new ArmState();
+    var testArmState = new ArmAngularState();
     testArmState.boomAngleDeg = 90; 
     testArmState.stickAngleDeg = 0;
 
@@ -46,7 +46,7 @@ class KinematicsTest {
   void testAngleUnbent() {
 
     //At an angle
-    var testArmState = new ArmState();
+    var testArmState = new ArmAngularState();
     testArmState.boomAngleDeg = 45; 
     testArmState.stickAngleDeg = 0;
 
@@ -62,7 +62,7 @@ class KinematicsTest {
   void testBent1() {
 
     //boom straight up, stick straight out
-    var testArmState = new ArmState();
+    var testArmState = new ArmAngularState();
     testArmState.boomAngleDeg = 90; 
     testArmState.stickAngleDeg = -90;
 
@@ -78,7 +78,7 @@ class KinematicsTest {
   void testBent2() {
 
     //boom straight out, stick straight up
-    var testArmState = new ArmState();
+    var testArmState = new ArmAngularState();
     testArmState.boomAngleDeg = 0; 
     testArmState.stickAngleDeg = 90;
 
@@ -97,7 +97,7 @@ class KinematicsTest {
 
     for(double boomAngle : boomAngleTestVals){
       for(double stickAngle : stickAngleTestVals){
-        var expected = new ArmState(boomAngle, stickAngle);
+        var expected = new ArmAngularState(boomAngle, stickAngle);
         var intRes = ArmKinematics.forward(expected);
         var actual = ArmKinematics.inverse(intRes);
         assertEquals(expected.boomAngleDeg, actual.boomAngleDeg, DELTA);
@@ -117,7 +117,7 @@ class KinematicsTest {
       for(double y : testVals){
         for(boolean reflex: testReflexVals){
           var y_adj = y + Constants.ARM_BOOM_MOUNT_HIEGHT; // adjust our refernce frame to be about the boom mount point
-          var expected = new ArmEndEffectorPos(x, y_adj, reflex);
+          var expected = new ArmEndEffectorState(x, y_adj, reflex);
           var intRes = ArmKinematics.inverse(expected);
           var actual = ArmKinematics.forward(intRes);
           assertEquals(expected.x, actual.x, DELTA);

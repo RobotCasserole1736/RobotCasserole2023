@@ -2,7 +2,7 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import frc.robot.Arm.ArmEndEffectorPos;
+import frc.robot.Arm.ArmEndEffectorState;
 import frc.robot.Arm.ArmSoftLimits;
 
 class ArmSoftLimitsTest {
@@ -14,7 +14,7 @@ class ArmSoftLimitsTest {
 
     ArmSoftLimits asl = new ArmSoftLimits();
 
-    ArmEndEffectorPos testPos = new ArmEndEffectorPos(5, 5);
+    ArmEndEffectorState testPos = new ArmEndEffectorState(5, 5);
     var retVal = asl.applyLimit(testPos);
 
     // Confirm the position was not limited
