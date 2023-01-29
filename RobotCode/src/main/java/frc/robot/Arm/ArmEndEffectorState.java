@@ -3,7 +3,6 @@ package frc.robot.Arm;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.Trajectory.State;
 
 public class ArmEndEffectorState {
     public double x;
