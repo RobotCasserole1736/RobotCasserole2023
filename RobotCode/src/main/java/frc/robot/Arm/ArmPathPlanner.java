@@ -2,6 +2,8 @@ package frc.robot.Arm;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.Constants;
+import frc.robot.Arm.Path.ArmPath;
+import frc.robot.Arm.Path.ArmPathFactory;
 
 public class ArmPathPlanner {
 
@@ -27,7 +29,7 @@ public class ArmPathPlanner {
 
         //If so, make a new path
         if(newPathNeeded){
-            curPath = new ArmPath(curPos, curTargetPos, Constants.ARM_END_EFF_MAX_VEL_MPS, Constants.ARM_END_EFF_MAX_ACCEL_MPS2);
+            curPath = ArmPathFactory.build(curPos, curTargetPos);
             pathStartTime = Timer.getFPGATimestamp();
             motionActive = true;
         }

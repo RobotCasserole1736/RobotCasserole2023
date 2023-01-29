@@ -2,6 +2,7 @@ package frc.robot.Arm;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 
 public class ArmEndEffectorState {
@@ -71,15 +72,25 @@ public class ArmEndEffectorState {
     // from the top or bottom or maybe side?
 
 
-    Pose2d toStartPose(){
+    public Pose2d toStartPose(){
         return new Pose2d(this.x, this.y, Rotation2d.fromDegrees(90.0));
     }
 
-    Pose2d toEndPose(){
+    public Pose2d toEndPose(){
         return new Pose2d(this.x, this.y, Rotation2d.fromDegrees(270.0));
     }
 
-    static ArmEndEffectorState fromTrajState(Trajectory traj, double time, double reflexFrac){
+    public Pose2d toPoseFromOther(Translation2d other){
+        var rot = new Rotation2d(this.x - other.getX(), this.y - other.getY());
+        return new Pose2d(this.x, this.y, rot);
+    }
+
+    public Pose2d toPoseToOther(Translation2d other){
+        var rot = new Rotation2d(other.getX() - this.x, other.getY() - this.y);
+        return new Pose2d(this.x, this.y, rot);
+    }
+
+    public static ArmEndEffectorState fromTrajState(Trajectory traj, double time, double reflexFrac){
         var pos = traj.sample(time).poseMeters;
         var pos_prev = traj.sample(time - 0.02).poseMeters;
         var pos_next = traj.sample(time + 0.02).poseMeters;

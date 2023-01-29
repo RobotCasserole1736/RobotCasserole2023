@@ -14,8 +14,8 @@ public enum ArmNamedPosition {
     STOW(new ArmEndEffectorState(0.3, 0.9,false)),
     ;
 
-    ArmEndEffectorState pos;
-    double safeY = 0.0;
+    public ArmEndEffectorState pos;
+    public double safeY = 0.0;
     
     ArmNamedPosition(ArmEndEffectorState pos){
         this.pos = pos;
