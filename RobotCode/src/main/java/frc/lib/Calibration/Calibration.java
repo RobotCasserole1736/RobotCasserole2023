@@ -102,7 +102,6 @@ public class Calibration {
         commonConstructor();
     }
 
-
     /**
      * Constructor for a new calibratable value.
      * 
