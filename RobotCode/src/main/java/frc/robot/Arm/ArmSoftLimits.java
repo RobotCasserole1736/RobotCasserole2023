@@ -1,168 +1,132 @@
 package frc.robot.Arm;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class ArmSoftLimits {
 
-    private final double SMALL_DIFF = 0.0001;
-    private final double LARGE_DIFF = Double.MAX_VALUE;
-
-    private List<ArmEndEffectorPos> ArmLim = new ArrayList<ArmEndEffectorPos>();
-
-    public ArmSoftLimits() {
-
-        // Init a new set of bounding box coordinates
-
-        ArmLim.add(new ArmEndEffectorPos(0, 0));
-        ArmLim.add(new ArmEndEffectorPos(10, 0));
-        ArmLim.add(new ArmEndEffectorPos(10, 10));
-        ArmLim.add(new ArmEndEffectorPos(0, 10));
-
-    }
-
     public ArmEndEffectorPos applyLimit(ArmEndEffectorPos in) {
-
-        // This is the horizontal line method. Loop over each side and see if a
-        // horizontal line
-        // drawn from the input point to the right crosses the fence volume once and
-        // only once.
-        // If the input point is inside, then just return the input, else return the
-        // closest point
-        // on the fence to the input point as clipped position.
-
-        ArmEndEffectorPos clipPos = in;
-        ArmEndEffectorPos diff = new ArmEndEffectorPos();
-        ArmEndEffectorPos p0;
-        ArmEndEffectorPos p1;
-        ArmEndEffectorPos cross = new ArmEndEffectorPos();
-        double m;
-        double nearDist, p0Dist, crossDist;
-        int crossCount = 0;
-
-        for (int i = 0; i < ArmLim.size(); i++) {
-
-            // set up p0 and p1 for this segment
-            p0 = ArmLim.get(i);
-            if (i + 1 == ArmLim.size()) {
-                p1 = ArmLim.get(0); // close the boundary back onto the first point
-            } else {
-                p1 = ArmLim.get(i + 1);
-            }
-
-            diff.x = p1.x - p0.x;
-            diff.y = p1.y - p0.y;
-
-            if (diff.y < SMALL_DIFF) {
-                // horizontal line test (horizontal line does not cross a horizontal line)
-                ;
-            } else if (diff.x < SMALL_DIFF) {
-                // vertical line
-                if (in.x < Math.min(p0.x, p1.x) && in.y > Math.min(p0.y, p1.y) && in.y <= Math.max(p0.y, p1.y)) {
-                    // crosses this vertical line
-                    crossCount++;
-                } else {
-                    // does not cross the vertical line
-                    ;
-                }
-            } else if (in.y > Math.min(p0.y, p1.y) && in.y <= Math.max(p0.y, p1.y)) {
-                // boundary not horiz and not vert and in.y is in range of this segment
-                cross.x = (in.y - p0.y) * diff.x / diff.y + p0.x;
-                if (in.x < cross.x) {
-                    // horizontal line crosses the boundary
-                    crossCount++;
-                } else {
-                    // do nothing out of range
-                    ;
-                }
-            }
-
-            if (crossCount == 1) {
-                // inside so no need to clip
-                clipPos = in;
-            } else {
-                // in is outside of the fence so clip to nearest point on the boundary
-                nearDist = LARGE_DIFF;
-
-                for (i = 0; i < ArmLim.size(); i++) {
-
-                    // set up p0 and p1 for this segment
-                    p0 = ArmLim.get(i);
-                    if (i + 1 == ArmLim.size()) {
-                        p1 = ArmLim.get(0); // close the boundary back onto the first point
-                    } else {
-                        p1 = ArmLim.get(i + 1);
-                    }
-
-                    diff.x = p1.x - p0.x;
-                    diff.y = p1.y - p0.y;
-
-                    // calc p0 to in distance
-                    p0Dist = Math.sqrt(Math.pow(in.x - p0.x, 2) + Math.pow(in.y - p0.y, 2));
-                    if (diff.y < SMALL_DIFF) {
-                        // horiz
-                        cross.x = in.x;
-                        cross.y = p0.y;
-                        if (cross.x > Math.min(p0.x, p1.x) && cross.x <= Math.max(p0.x, p1.x)) {
-                            // in range
-                            crossDist = Math.abs(in.y - cross.y);
-                        } else {
-                            // out of range
-                            crossDist = LARGE_DIFF;
-                        }
-                    } else if (diff.x < SMALL_DIFF) {
-                        // vert
-                        cross.x = p0.x;
-                        cross.y = in.y;
-                        if (cross.y > Math.min(p0.y, p1.y) && cross.y <= Math.max(p0.y, p1.y)) {
-                            // in range
-                            crossDist = Math.abs(in.x - cross.x);
-                        } else {
-                            // out of range
-                            crossDist = LARGE_DIFF;
-                        }
-                    } else {
-                        // not horiz or vert
-                        m = diff.y / diff.x; // slope
-                        cross.x = (m * p0.x - p0.y + in.x / m + in.y) / (m + 1.0 / m);
-                        cross.y = m * cross.x - m * p0.x + p0.y;
-                        if ((cross.x > Math.min(p0.x, p1.x) && cross.x <= Math.max(p0.x, p1.x)) &&
-                                (cross.y > Math.min(p0.y, p1.y) && cross.y <= Math.max(p0.y, p1.y))) {
-                            // in range
-                            crossDist = Math.sqrt(Math.pow(in.x - cross.x, 2) + Math.pow(in.y - cross.y, 2));
-                        } else {
-                            // out of range
-                            crossDist = LARGE_DIFF;
-                        }
-                    }
-
-                    // check if the current distance is closest
-                    if (crossDist < p0Dist) {
-                        if (crossDist < nearDist) {
-                            // use this one
-                            nearDist = crossDist;
-                            clipPos = cross;
-                        } else {
-                            // leave nearest in place
-                            ;
-                        }
-                    } else {
-                        if (p0Dist < nearDist) {
-                            // use this one
-                            nearDist = p0Dist;
-                            clipPos = p0;
-                        } else {
-                            // leave nearest in place
-                            ;
-                        }
-                    }
-                }
-            }
-
-        }
-
-        return clipPos;
-
+        return null;// TODO - apply limits to the incoming position to fence it in
     }
+    public int intersect (double ax, double ay, double wx, double wy) {
+        return 0;
+    }
+    public boolean isLimited() {
+        // CURRENTLY A WIP IF YOU CRASH YOUR COMPUTER IT IS NOT MY FAULT
+        // We will need to set the restriction variables to points on the limit lines -
+        // Kyle
 
+        // This finds the slope of the line that the arm is following and the
+        // restriction lines, uses that to see if they intersect,
+        // and then sets the wanted position to the limit if it is outside the
+        // restriction area.
+        double[] restrictionXPoints = { 1, 1, 4, 4 }; // This is where we declare the points for the restriction area.
+                                                      // RESTRICTION LINES CAN NOT BE VERTICLE OR HORIZONTLE
+        double[] restrictionYPoints = { 1, 4, 4, 1 };
+        int loopForTestingSoftLimits = 0;
+
+        double wantedYPosArm = 1; // These are temporary values, we will need to change them when we get the
+                                  // simulation done.
+        double wantedXPosArm = 1;
+        double actualYPosArm = 1;
+        double actualXPosArm = 1;
+
+        while (restrictionXPoints.length >= loopForTestingSoftLimits + 1) { // this loop will repeat for each side
+
+            double restrictionPointOneX = restrictionXPoints[loopForTestingSoftLimits];// this sets the restriction
+                                                                                       // points to the relevant value
+            double restrictionPointOneY = restrictionYPoints[loopForTestingSoftLimits];
+            double restrictionPointTwoX; // this declares some variables that the if statement will use.
+            double restrictionPointTwoY;
+
+            if (loopForTestingSoftLimits + 1 >= restrictionXPoints.length) { // this if statement checks to see if the
+                                                                             // realivant value for the restrictions is
+                                                                             // the last one on the list
+                restrictionPointTwoX = restrictionXPoints[0]; // if is the last one, it chooses the first value
+                restrictionPointTwoY = restrictionYPoints[0];
+            } else {
+                restrictionPointTwoX = restrictionXPoints[loopForTestingSoftLimits]; // if not it chooses the following
+                                                                                     // value
+                restrictionPointTwoY = restrictionYPoints[loopForTestingSoftLimits];
+            }
+            double slopeForWantedLine = (wantedYPosArm - actualYPosArm) / (wantedXPosArm - actualXPosArm); // this finds
+                                                                                                           // the slope
+                                                                                                           // for the
+                                                                                                           // line we
+                                                                                                           // are
+                                                                                                           // traviling
+                                                                                                           // on & the
+                                                                                                           // slope for
+                                                                                                           // the
+                                                                                                           // restriction
+                                                                                                           // line
+            double slopeForRestrictionLine;
+
+            if (restrictionPointTwoX - restrictionPointOneX == 0) { // my attempt to try to prevent restrictionangle var
+                                                                    // being NaN :/ I dont know if it works yet
+                slopeForRestrictionLine = (restrictionPointTwoY - restrictionPointOneY) / (0.01);
+            } else {
+
+                slopeForRestrictionLine = (restrictionPointTwoY - restrictionPointOneY)
+                        / (restrictionPointTwoX - restrictionPointOneX);
+            }
+            Boolean parrallelTestForLines = 0.1 > Math.sqrt(
+                    (slopeForWantedLine - slopeForRestrictionLine) * (slopeForWantedLine - slopeForRestrictionLine)); // this
+                                                                                                                      // sets
+                                                                                                                      // a
+                                                                                                                      // boolean
+                                                                                                                      // var.
+                                                                                                                      // to
+                                                                                                                      // true
+                                                                                                                      // if
+                                                                                                                      // the
+                                                                                                                      // two
+                                                                                                                      // lines
+                                                                                                                      // are
+                                                                                                                      // close
+                                                                                                                      // enough
+                                                                                                                      // to
+                                                                                                                      // parrallel
+            if (parrallelTestForLines == false) { // if the two are not parrallel then it executes the following code:
+                // finding the y intercepts for the two lines:
+                double yInterceptForWantedLine;
+                yInterceptForWantedLine = actualYPosArm - slopeForWantedLine * actualXPosArm;
+
+                double yInterceptForRestrictionLine;
+                yInterceptForRestrictionLine = restrictionPointOneY - slopeForRestrictionLine * restrictionPointOneX;
+
+                // finding the x pos where the two lines intercept
+                double wantedAndRestrictionLineInterceptXPos;
+                wantedAndRestrictionLineInterceptXPos = (0 - 1)
+                        * ((yInterceptForRestrictionLine - yInterceptForRestrictionLine)
+                                / (slopeForWantedLine - slopeForRestrictionLine));
+                // finding the y pos where the two lines intercept
+                double wantedAndRestrictionLineInterceptYPos;
+                wantedAndRestrictionLineInterceptYPos = slopeForWantedLine * wantedAndRestrictionLineInterceptXPos
+                        + yInterceptForWantedLine;
+
+                // finding the lengths of the two lines.
+                double lengthForWantedLength = ((wantedXPosArm - actualXPosArm) * (wantedXPosArm - actualXPosArm))
+                        + ((wantedYPosArm - actualYPosArm) * (wantedYPosArm - actualYPosArm));
+                double lengthForTestingLength = ((wantedAndRestrictionLineInterceptXPos - actualXPosArm)
+                        * (wantedAndRestrictionLineInterceptXPos - actualXPosArm))
+                        + ((wantedAndRestrictionLineInterceptYPos - actualYPosArm)
+                                * (wantedAndRestrictionLineInterceptYPos - actualYPosArm));
+
+                if (Math.sqrt(lengthForWantedLength) > Math.sqrt(lengthForTestingLength)) { // testing to see if the
+                                                                                            // line between the wanted
+                                                                                            // point and actual point is
+                                                                                            // longer than the length of
+                                                                                            // the line between the
+                                                                                            // intercection point and
+                                                                                            // the actual pos.
+                    return true; // it is intercepting
+
+                } else {
+                    loopForTestingSoftLimits = loopForTestingSoftLimits + 1; // adds 1 to the number of times that the
+                                                                             // loop has run.
+                }
+            }
+        }
+        return false; // it is not
+    }
 }
