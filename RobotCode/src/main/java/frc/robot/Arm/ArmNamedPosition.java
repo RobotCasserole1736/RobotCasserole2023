@@ -7,7 +7,7 @@ public enum ArmNamedPosition {
     CUBE_HIGH(new ArmEndEffectorState(1.5,1.1,true), 0.1),
     CONE_LOW(new ArmEndEffectorState(0.5,0.1,false)),
     CONE_MID(new ArmEndEffectorState(1.0,0.3,false)),
-    CONE_HIGH(new ArmEndEffectorState(1.5,1.1,true)),
+    CONE_HIGH(new ArmEndEffectorState(1.5,1.1,false)),
     SHELF(new ArmEndEffectorState(0.2,0.3,true), 0.05),
     FLOOR(new ArmEndEffectorState(0.5,0.05,false)),
     FLOOR_TIPPED_CONE(new ArmEndEffectorState(0.5,0.05,true), 0.1),

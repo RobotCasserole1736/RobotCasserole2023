@@ -64,6 +64,7 @@ public class Robot extends TimedRobot {
   // Autonomous Control Utilities
   Autonomous auto;
   PoseTelemetry pt;
+  ArmTelemetry at;
 
   SegmentTimeTracker stt;
 
@@ -135,6 +136,7 @@ public class Robot extends TimedRobot {
     stt.mark("Autonomous");
 
     pt = PoseTelemetry.getInstance();
+    at = ArmTelemetry.getInstance();
     stt.mark("Pose Telemetry");
 
     db = new Dashboard(webserver);

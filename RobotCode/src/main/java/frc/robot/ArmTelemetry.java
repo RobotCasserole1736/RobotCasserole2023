@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.Constants;
+import frc.lib.Signal.Annotations.Signal;
 import frc.robot.Arm.ArmEndEffectorState;
 import frc.robot.Arm.ArmAngularState;
 
@@ -104,6 +105,18 @@ public class ArmTelemetry {
                 10,
                 new Color8Bit(Color.kLimeGreen)));
 
+
+    @Signal
+    double desPosX;
+    @Signal
+    double measPosX;
+    @Signal
+    double desPosY;
+    @Signal
+    double measPosY;
+    @Signal
+    double desReflexFrac;
+
     private ArmTelemetry(){
         // Put Mechanism 2d to SmartDashboard
         SmartDashboard.putData("Arm", m_mech2d);
@@ -123,10 +136,17 @@ public class ArmTelemetry {
         desEndPosRoot.setPosition(desPos.x + LEFT_MARGIN, desPos.y);
         m_boom_ligament_des.setAngle(desArmState.boomAngleDeg);
         m_stick_ligament_des.setAngle(desArmState.stickAngleDeg);
+
+        desPosX = desPos.x;
+        desPosY = desPos.y;
+        desReflexFrac = desPos.reflexFrac;
     }
-    public void setMeasured(ArmAngularState in){
-        m_boom_ligament_meas.setAngle(in.boomAngleDeg);
-        m_stick_ligament_meas.setAngle(in.stickAngleDeg);
+    public void setMeasured(ArmEndEffectorState measPos, ArmAngularState measArmState){
+        m_boom_ligament_meas.setAngle(measArmState.boomAngleDeg);
+        m_stick_ligament_meas.setAngle(measArmState.stickAngleDeg);
+
+        measPosX = measPos.x;
+        measPosY = measPos.y;
     }
     
 }

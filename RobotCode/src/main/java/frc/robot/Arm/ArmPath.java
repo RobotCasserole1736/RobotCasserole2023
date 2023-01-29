@@ -6,9 +6,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Timer;
 import frc.Constants;
 
 /**
@@ -26,18 +25,14 @@ public class ArmPath {
     double max_vel;
     double max_accel; 
 
-    final double reflexAngle = Units.degreesToRadians(30.0);
-    final double reflexDistance = (Constants.ARM_BOOM_LENGTH + Constants.ARM_STICK_LENGTH) * 0.97;
-    final double reflexX = reflexDistance * Math.cos(reflexAngle);
-    final double reflexY = Constants.ARM_BOOM_MOUNT_HIEGHT + reflexDistance * Math.sin(reflexAngle);
-    final Translation2d reflexWaypoint = new Translation2d(reflexX, reflexY);
-
-
-    final double reflexTransitionTimeSec = 0.75;
-    final double reflexStartRadiusM = 0.15;
+    final double reflexTransitionTimeSec = 1.0;
+    final double reflexHeightM = Constants.ARM_BOOM_MOUNT_HIEGHT;
+    final double reflexStartPosX = (Constants.ARM_STICK_LENGTH + Constants.ARM_BOOM_LENGTH);
     double reflexStartTime = 0;
     boolean reflexStarted = false;
     boolean reflexFinished = false;
+
+    TrapezoidProfile reflexTrap;
 
     /**
      * Create a new arm trajectory from start to end with the given constraints
@@ -57,9 +52,10 @@ public class ArmPath {
         var interiorWaypoints = new ArrayList<Translation2d>();//none by default
 
         //If we're switching reflex, add an extra "full extension" waypoint.
-        if(start.reflexFrac != end.pos.reflexFrac){
-            interiorWaypoints.add(reflexWaypoint);
-        }
+        if(start.reflexFrac == end.pos.reflexFrac){
+            interiorWaypoints.add(new Translation2d(Constants.ARM_BOOM_LENGTH + Constants.ARM_STICK_LENGTH, reflexHeightM));
+            reflexTrap = new TrapezoidProfile(new TrapezoidProfile.Constraints(1.0/reflexTransitionTimeSec, 1.0/reflexTransitionTimeSec), new TrapezoidProfile.State(1.0, 0.0));
+        } 
         
         //If the end has a configured safe height, add in an additional waypoint to account for it
         if(end.safeY > 0){
@@ -85,8 +81,7 @@ public class ArmPath {
 
         if(reflexStarted == false){
             var curPosCmd = traj.sample(time_sec);
-            var distToReflex = reflexWaypoint.getDistance(curPosCmd.poseMeters.getTranslation());
-            if(distToReflex < reflexStartRadiusM){
+            if(curPosCmd.poseMeters.getX() > reflexStartPosX){
                 reflexStartTime = time_sec;
                 reflexStarted = true;
             }
@@ -103,7 +98,7 @@ public class ArmPath {
             curReflex = end.pos.reflexFrac;
         } else {
             //in transition
-            var timeFrac = (time_sec - reflexStartTime)/reflexTransitionTimeSec;
+            var timeFrac = reflexTrap.calculate(time_sec - reflexStartTime).position;
             curReflex = start.reflexFrac * (1.0 - timeFrac) + end.pos.reflexFrac * timeFrac;
         }
 

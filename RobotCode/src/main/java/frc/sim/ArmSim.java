@@ -8,6 +8,7 @@ import frc.hardwareWrappers.SimDeviceBanks;
 import frc.hardwareWrappers.AbsoluteEncoder.Sim.SimAbsoluteEncoder;
 import frc.hardwareWrappers.MotorCtrl.Sim.SimSmartMotor;
 import frc.robot.ArmTelemetry;
+import frc.robot.Arm.ArmNamedPosition;
 
 public class ArmSim {
 
@@ -23,8 +24,8 @@ public class ArmSim {
     SimAbsoluteEncoder stickAbsEnc;
 
     // Angles, in our defined reference system
-    double curStickAngle_rad = 0.0;
-    double curBoomAngle_rad = -Math.PI/2;
+    double curStickAngle_rad = Units.degreesToRadians(160.0);
+    double curBoomAngle_rad= Units.degreesToRadians(-120.0);
 
     // Speeds, in our reference system
     double curStickAngSpd_radpersec = 0.0;
@@ -40,6 +41,7 @@ public class ArmSim {
 
         boomAbsEnc = (SimAbsoluteEncoder) SimDeviceBanks.getDIDevice(Constants.ARM_BOOM_ENC_IDX);
         stickAbsEnc = (SimAbsoluteEncoder) SimDeviceBanks.getDIDevice(Constants.ARM_STICK_ENC_IDX);
+
     }
 
     public void update(boolean isDisabled){

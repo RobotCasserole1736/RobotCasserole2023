@@ -77,7 +77,7 @@ public class ArmControl {
 
         // Update telemetry
         ArmTelemetry.getInstance().setDesired(curDesPosLimited, curDesState);
-        ArmTelemetry.getInstance().setMeasured(curMeasState);
+        ArmTelemetry.getInstance().setMeasured(curMeasPos, curMeasState);
     }
     
 }

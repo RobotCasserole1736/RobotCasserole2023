@@ -115,13 +115,13 @@ public class ArmKinematics {
             x = minRadius;
             y = 0.0;
         } else if (reqRadius >= maxRadius) {
-            var factor = maxRadius / reqRadius * 0.99999;
-            x *= factor;
-            y *= factor;
+            var angle = Math.atan2(y, x);
+            x = maxRadius * Math.cos(angle) * 0.99999999;
+            y = maxRadius * Math.sin(angle) * 0.99999999;
         } else if (reqRadius <= minRadius) {
-            var factor = minRadius / reqRadius * 1.00001;
-            x *= factor;
-            y *= factor;
+            var angle = Math.atan2(y, x);
+            x = minRadius * Math.cos(angle) * 1.0000000000001;
+            y = minRadius * Math.sin(angle) * 1.0000000000001;
         }
 
         double stickDenom = 2 * Constants.ARM_BOOM_LENGTH * Constants.ARM_STICK_LENGTH;
