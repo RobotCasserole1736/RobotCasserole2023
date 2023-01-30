@@ -72,11 +72,11 @@ public class ArmEndEffectorState {
     // from the top or bottom or maybe side?
 
 
-    public Pose2d toStartPose(){
+    public Pose2d toPoseToTop(){
         return new Pose2d(this.x, this.y, Rotation2d.fromDegrees(90.0));
     }
 
-    public Pose2d toEndPose(){
+    public Pose2d toPoseFromTop(){
         return new Pose2d(this.x, this.y, Rotation2d.fromDegrees(270.0));
     }
 
@@ -87,6 +87,11 @@ public class ArmEndEffectorState {
 
     public Pose2d toPoseToOther(Translation2d other){
         var rot = new Rotation2d(other.getX() - this.x, other.getY() - this.y);
+        return new Pose2d(this.x, this.y, rot);
+    }
+
+    public Pose2d toPoseToOther(ArmNamedPosition other){
+        var rot = new Rotation2d(other.pos.x - this.x, other.pos.y - this.y);
         return new Pose2d(this.x, this.y, rot);
     }
 

@@ -115,12 +115,17 @@ public class ArmKinematics {
             x = minRadius;
             y = 0.0;
         } else if (reqRadius >= maxRadius) {
+            //Requested point beyond the reach of the arm
+            // Project the point back into the reachable area
             var angle = Math.atan2(y, x);
-            x = maxRadius * Math.cos(angle) * 0.99999999;
+            x = maxRadius * Math.cos(angle) * 0.99999999; //Fudge factor because floating point numbers might still round to the wrong side of the circle
             y = maxRadius * Math.sin(angle) * 0.99999999;
         } else if (reqRadius <= minRadius) {
+            //Requested point inside the "unreachable" circle near
+            // the pivot point. 
+            // Project the point back out into the reachable area
             var angle = Math.atan2(y, x);
-            x = minRadius * Math.cos(angle) * 1.0000000000001;
+            x = minRadius * Math.cos(angle) * 1.0000000000001; //Fudge Factor because floating point numbers might still round to the wrong side of the circle
             y = minRadius * Math.sin(angle) * 1.0000000000001;
         }
 

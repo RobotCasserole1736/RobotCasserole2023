@@ -2,6 +2,7 @@ package frc.robot.Arm.Path;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
@@ -16,7 +17,9 @@ import frc.robot.Arm.ArmNamedPosition;
 /**
  * Thin wrapper on wpilib's trajectory to re-orient the reference frame from
  * a field into our arm's plane. Reflex-Inverting implies the arm will fully extend
- * partway through the path, flip its reflex, then continue onward.
+ * partway through the path, flip its reflex, then continue onward. The point of
+ * full extension is called the "reflex point", and is where we can safely flip
+ * the reflex from one to the other without causing jerky motion of the arm.
  */
 public class ReflexInvertingArmPath implements ArmPath {
 
@@ -32,9 +35,14 @@ public class ReflexInvertingArmPath implements ArmPath {
     double duration1;
     double totalDuration;
 
+    // All these constants are related to finding two points:
+    // reflexEnd - the reflex point of "full extension" at some angle upward from the horizon
+    // reflexMid - a point on that same line but slightly "short" of full extension that
+    //       we'll use to make sure the path planner goes straight in and out of the 
+    //       reflex point. 
     final double reflexDist = (Constants.ARM_STICK_LENGTH + Constants.ARM_BOOM_LENGTH);
     final double reflexAngleRad = Units.degreesToRadians(15.0);
-    final double reflexMidPointFrac = 0.85;
+    final double reflexMidPointFrac = 0.90;
     final double reflexEndPosX = reflexDist * Math.cos(reflexAngleRad);
     final double reflexEndPosY = reflexDist * Math.sin(reflexAngleRad) + Constants.ARM_BOOM_MOUNT_HIEGHT;
     final double reflexMidPosX = reflexDist * reflexMidPointFrac * Math.cos(reflexAngleRad);
@@ -62,19 +70,25 @@ public class ReflexInvertingArmPath implements ArmPath {
         var reflexEndpoint = new ArmEndEffectorState(reflexEndPosX, reflexEndPosY);
         var reflexMidpoint = new Translation2d(reflexMidPosX, reflexMidPosY);
 
-        ////////////////////////////////////
-        // First Trajectory
+        ///////////////////////////////////////////////////////
+        // First Trajectory - start out to the reflex point
 
-        var interiorWaypoints = new ArrayList<Translation2d>();//none by default
+        var interiorWaypoints = new ArrayList<Translation2d>();
 
-        // Always start with slight upward motion
-        interiorWaypoints.add(new Translation2d(start.x, start.y + 0.2));
+        // If we're outside frame perimiter, start with slight upward motion to clear common obstacles
+        Pose2d pathStartPos;
+        if(start.x > Constants.WHEEL_BASE_HALF_LENGTH_M){
+            interiorWaypoints.add(new Translation2d(start.x, start.y + 0.2));
+            pathStartPos = start.toPoseToTop();
+        } else {
+            pathStartPos = start.toPoseToOther(end);
+        }
 
         //Go to the reflex midpoint (right before actually reflexing)
         interiorWaypoints.add(reflexMidpoint);
 
         if(reflexEndpoint.distTo(start) > MIN_PATHPLAN_DIST_M) {
-            traj1 = TrajectoryGenerator.generateTrajectory(start.toStartPose(), interiorWaypoints, reflexEndpoint.toPoseFromOther(reflexMidpoint), cfg);
+            traj1 = TrajectoryGenerator.generateTrajectory(pathStartPos, interiorWaypoints, reflexEndpoint.toPoseFromOther(reflexMidpoint), cfg);
             duration1 = traj1.getTotalTimeSeconds();
         } else {
             //give up on first part
@@ -84,7 +98,9 @@ public class ReflexInvertingArmPath implements ArmPath {
 
         totalDuration += duration1;
 
-        interiorWaypoints = new ArrayList<Translation2d>();//none by default
+        ///////////////////////////////////////////////////////
+        // Second Trajectory - reflex point to the end position
+        interiorWaypoints = new ArrayList<Translation2d>();//Reset to be blank for part two
 
         interiorWaypoints.add(reflexMidpoint);
 
@@ -97,7 +113,7 @@ public class ReflexInvertingArmPath implements ArmPath {
         }
 
         if(end.pos.distTo(reflexEndpoint) > MIN_PATHPLAN_DIST_M) {
-            traj2 = TrajectoryGenerator.generateTrajectory(reflexEndpoint.toPoseToOther(reflexMidpoint), interiorWaypoints, end.pos.toEndPose(), cfg);
+            traj2 = TrajectoryGenerator.generateTrajectory(reflexEndpoint.toPoseToOther(reflexMidpoint), interiorWaypoints, end.pos.toPoseFromTop(), cfg);
             totalDuration += traj2.getTotalTimeSeconds();
         } else {
             // give up on second part
@@ -113,14 +129,15 @@ public class ReflexInvertingArmPath implements ArmPath {
      */
     public ArmEndEffectorState sample(double time_sec){
 
-        // Calculate interpolated reflex, which starts once we're near the reflex point
-
         if(time_sec < duration1){
+            //Within the first path, all done with the starting reflex
             return ArmEndEffectorState.fromTrajState(traj1, time_sec, start.reflexFrac);
         } else if(time_sec < totalDuration){
+            //Within the second path, all done with the ending reflex
             var curTime = time_sec - duration1;
             return ArmEndEffectorState.fromTrajState(traj2, curTime, end.pos.reflexFrac); 
         } else {
+            //Past the end of the path
             return end.pos;
         }
     }

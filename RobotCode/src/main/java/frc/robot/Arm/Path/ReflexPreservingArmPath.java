@@ -2,12 +2,14 @@ package frc.robot.Arm.Path;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.Constants;
 import frc.robot.Arm.ArmEndEffectorState;
 import frc.robot.Arm.ArmNamedPosition;
 
@@ -47,6 +49,15 @@ public class ReflexPreservingArmPath implements ArmPath {
 
         var interiorWaypoints = new ArrayList<Translation2d>();//none by default
 
+        // If we're outside frame perimiter, start with slight upward motion to clear common obstacles
+        Pose2d pathStartPos;
+        if(start.x > Constants.WHEEL_BASE_HALF_LENGTH_M){
+            interiorWaypoints.add(new Translation2d(start.x, start.y + 0.2));
+            pathStartPos = start.toPoseToTop();
+        } else {
+            pathStartPos = start.toPoseToOther(end);
+        }
+
         //If the end has a configured safe height, add in an additional waypoint to account for it
         if(end.safeY > 0){
             var safeWaypoint = new Translation2d(end.pos.x, end.safeY);
@@ -57,7 +68,7 @@ public class ReflexPreservingArmPath implements ArmPath {
         cfg.addConstraint(new CentripetalAccelerationConstraint(max_accel_mps2));
         
         if(end.pos.distTo(start) > MIN_PATHPLAN_DIST_M) {
-            traj = TrajectoryGenerator.generateTrajectory(start.toStartPose(), interiorWaypoints, end.pos.toEndPose(), cfg);
+            traj = TrajectoryGenerator.generateTrajectory(pathStartPos, interiorWaypoints, end.pos.toPoseFromTop(), cfg);
             totalDuration = traj.getTotalTimeSeconds();
         } else {
             //Error while planning. Just give up.
