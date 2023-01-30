@@ -1,5 +1,9 @@
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -9,6 +13,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.Constants;
 import frc.lib.Signal.Annotations.Signal;
+import frc.lib.Util.Mechanism2DPolygon;
 import frc.robot.Arm.ArmEndEffectorState;
 import frc.robot.Arm.ArmAngularState;
 
@@ -46,10 +51,14 @@ public class ArmTelemetry {
     private final MechanismLigament2d bumpers = bumperRoot.append(new MechanismLigament2d("Bumpers", LOW_GOAL, 0, 50, new Color8Bit(Color.kRed)));
     private final MechanismLigament2d nodeBase = bumpers.append(new MechanismLigament2d("Node Base", HIGH_GOAL - LOW_GOAL, 0, 100, new Color8Bit(Color.kWhite)));
 
-    private final MechanismRoot2d desEndPosRoot = m_mech2d.getRoot("DesEndEffPos", 1, 1);
-    private final MechanismLigament2d desEndPosMarker1 = desEndPosRoot.append(new MechanismLigament2d("EndPosMarker1", 0.02, 0, 20, new Color8Bit(Color.kLimeGreen)));
-    private final MechanismLigament2d desEndPosMarker2 = desEndPosRoot.append(new MechanismLigament2d("EndPosMarker2", 0.02, 180, 20, new Color8Bit(Color.kLimeGreen)));
-
+    private final ArrayList<Translation2d> endEffPolygon = new ArrayList<Translation2d>(Arrays.asList(
+        new Translation2d(0.02,0),
+        new Translation2d(0,0.02),
+        new Translation2d(-0.02,0),
+        new Translation2d(0,-0.02),
+        new Translation2d(0.02,0)
+    ));
+    private final Mechanism2DPolygon desEndEffPos = new Mechanism2DPolygon(m_mech2d, "DesEndEffPos", endEffPolygon);
 
     private final MechanismLigament2d m_boom_ligament_act =
         m_armPivot.append(
@@ -121,6 +130,8 @@ public class ArmTelemetry {
         // Put Mechanism 2d to SmartDashboard
         SmartDashboard.putData("Arm", m_mech2d);
 
+        desEndEffPos.setStyle(new Color8Bit(Color.kLimeGreen), 2);
+
         if(Robot.isReal()){
             //Effectively hid the Act ligament if we're on a real robot
             m_boom_ligament_act.setLength(0);
@@ -133,7 +144,7 @@ public class ArmTelemetry {
         m_stick_ligament_act.setAngle(stickAngleDeg);
     }
     public void setDesired(ArmEndEffectorState desPos, ArmAngularState desArmState){
-        desEndPosRoot.setPosition(desPos.x + LEFT_MARGIN, desPos.y);
+        desEndEffPos.setOrigin(new Translation2d(desPos.x + LEFT_MARGIN, desPos.y));
         m_boom_ligament_des.setAngle(desArmState.boomAngleDeg);
         m_stick_ligament_des.setAngle(desArmState.stickAngleDeg);
 
