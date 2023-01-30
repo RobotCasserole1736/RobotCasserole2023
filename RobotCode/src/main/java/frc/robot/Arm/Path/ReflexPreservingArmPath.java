@@ -7,6 +7,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Arm.ArmEndEffectorState;
 import frc.robot.Arm.ArmNamedPosition;
 
@@ -26,6 +27,7 @@ public class ReflexPreservingArmPath implements ArmPath {
     ArmNamedPosition end;
     double max_vel;
     double max_accel; 
+    double totalDuration = 0;
 
     /**
      * Create a new arm trajectory from start to end with the given constraints
@@ -54,7 +56,14 @@ public class ReflexPreservingArmPath implements ArmPath {
         TrajectoryConfig cfg = new TrajectoryConfig(max_vel_mps, max_accel_mps2);
         cfg.addConstraint(new CentripetalAccelerationConstraint(max_accel_mps2));
         
-        traj = TrajectoryGenerator.generateTrajectory(start.toStartPose(), interiorWaypoints, end.pos.toEndPose(), cfg);
+        if(end.pos.distTo(start) > MIN_PATHPLAN_DIST_M) {
+            traj = TrajectoryGenerator.generateTrajectory(start.toStartPose(), interiorWaypoints, end.pos.toEndPose(), cfg);
+            totalDuration = traj.getTotalTimeSeconds();
+        } else {
+            //Error while planning. Just give up.
+            totalDuration = 0.0;
+            DriverStation.reportWarning("Trajectory too small!", false);
+        }
 
     }
 
@@ -64,12 +73,17 @@ public class ReflexPreservingArmPath implements ArmPath {
      * @return
      */
     public ArmEndEffectorState sample(double time_sec){
-        double curReflex = end.pos.reflexFrac;
-        return ArmEndEffectorState.fromTrajState(traj, time_sec, curReflex);
+        if(time_sec < totalDuration){
+            double curReflex = end.pos.reflexFrac;
+            return ArmEndEffectorState.fromTrajState(traj, time_sec, curReflex);
+        } else {
+            return end.pos;
+        }
+
     }
 
     public double getDurationSec(){
-        return traj.getTotalTimeSeconds();
+        return totalDuration;
     }
 
 }

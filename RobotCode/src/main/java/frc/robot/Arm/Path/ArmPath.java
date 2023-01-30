@@ -1,14 +1,5 @@
 package frc.robot.Arm.Path;
 
-import java.util.ArrayList;
-
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
-import frc.Constants;
 import frc.robot.Arm.ArmEndEffectorState;
 import frc.robot.Arm.ArmNamedPosition;
 
@@ -17,6 +8,8 @@ import frc.robot.Arm.ArmNamedPosition;
  * a field into our arm's plane
  */
 public interface ArmPath {
+
+    public static final double MIN_PATHPLAN_DIST_M = 0.02;
 
     /**
      * Create a new arm trajectory from start to end with the given constraints

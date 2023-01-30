@@ -52,13 +52,13 @@ public class ArmEndEffectorState {
         this.reflexFrac = 0;
     }
 
-    double distTo(ArmEndEffectorState other){
+    public double distTo(ArmEndEffectorState other){
         double x2 = Math.pow(this.x - other.x, 2);
         double y2 = Math.pow(this.y - other.y, 2);
         return Math.sqrt(x2 + y2);
     }
 
-    ArmEndEffectorState interpolateTo(ArmEndEffectorState other, double frac){
+    public ArmEndEffectorState interpolateTo(ArmEndEffectorState other, double frac){
         double fracInv = (1.0 - frac);
         double x = other.x * frac + this.x * fracInv;
         double y = other.y * frac + this.y * fracInv;

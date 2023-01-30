@@ -6,14 +6,11 @@ public class ArmManPosition {
         //TODO - save incoming commands
     }
 
-    public void update(ArmEndEffectorState curMeasPos){
+    public ArmEndEffectorState update(ArmEndEffectorState curDesPos){
         //TODO - if we just went from inactive to active, reset the desired position to actual
 
         //Todo - calcuate the new desired position based on incoming velocity comands
-    }
-
-    public ArmEndEffectorState getCurDesPos(){
-        return null; //TODO - return the actual current desired position
+        return curDesPos;
     }
 
     public boolean cmdActive(){

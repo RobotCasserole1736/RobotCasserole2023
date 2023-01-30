@@ -18,7 +18,8 @@ public class ArmControl {
     MotorControlBoom mb;
     MotorControlStick ms;
 
-    ArmAngularState curMeasState;
+    ArmAngularState curMeasAngularStates;
+    ArmEndEffectorState curDesState;
 
     ArmPathPlanner pp;
     ArmManPosition mp;
@@ -32,7 +33,8 @@ public class ArmControl {
         ms = new MotorControlStick();
         pp = new ArmPathPlanner();
         mp = new ArmManPosition();
-        curMeasState = new ArmAngularState(0,0);
+        curMeasAngularStates = new ArmAngularState(0,0);
+        curDesState = ArmNamedPosition.STOW.pos;
     }
 
     public void setInactive(){
@@ -52,32 +54,29 @@ public class ArmControl {
         stickEncoder.update();
         var boomAngleDeg = Units.radiansToDegrees(boomEncoder.getAngle_rad());
         var stickAngleDeg = Units.radiansToDegrees(stickEncoder.getAngle_rad());
-        curMeasState = new ArmAngularState(boomAngleDeg, stickAngleDeg); //TODO - add velocities here?
-        ArmEndEffectorState curMeasPos = ArmKinematics.forward(curMeasState);
+        curMeasAngularStates = new ArmAngularState(boomAngleDeg, stickAngleDeg); 
+        ArmEndEffectorState curMeasPos = ArmKinematics.forward(curMeasAngularStates);
 
-        mp.update(curMeasPos);
-        pp.update(curMeasPos);
-
-        // Arbitrate to desired position from manual and pathplanned commands
-        var curDesPosRaw = ArmPosCmdArbitration.arbitrate(mp.getCurDesPos(), pp.getCurDesPos());
+        curDesState = pp.update(curDesState);
+        curDesState = mp.update(curDesState);
 
         //Apply soft limits
         //var curDesPosLimited = ArmSoftLimits.applyLimit(curDesPosRaw);
-        var curDesPosLimited = curDesPosRaw;
+        var curDesStateLimited = curDesState;
 
         // Apply kinematics to get linkge positions
-        var curDesState = ArmKinematics.inverse(curDesPosLimited);
+        var curDesAngularStates = ArmKinematics.inverse(curDesStateLimited);
 
         // Send desired state to the motor control
-        mb.setCmd(curDesState);
-        mb.update(curMeasState);
+        mb.setCmd(curDesAngularStates);
+        mb.update(curMeasAngularStates);
 
-        ms.setCmd(curDesState);
-        ms.update(curMeasState);
+        ms.setCmd(curDesAngularStates);
+        ms.update(curMeasAngularStates);
 
         // Update telemetry
-        ArmTelemetry.getInstance().setDesired(curDesPosLimited, curDesState);
-        ArmTelemetry.getInstance().setMeasured(curMeasPos, curMeasState);
+        ArmTelemetry.getInstance().setDesired(curDesStateLimited, curDesAngularStates);
+        ArmTelemetry.getInstance().setMeasured(curMeasPos, curMeasAngularStates);
     }
     
 }

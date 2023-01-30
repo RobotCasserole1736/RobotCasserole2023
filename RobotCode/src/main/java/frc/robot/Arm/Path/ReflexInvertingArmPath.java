@@ -8,6 +8,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.Constants;
 import frc.robot.Arm.ArmEndEffectorState;
 import frc.robot.Arm.ArmNamedPosition;
@@ -28,6 +29,8 @@ public class ReflexInvertingArmPath implements ArmPath {
     ArmNamedPosition end;
     double max_vel;
     double max_accel; 
+    double duration1;
+    double totalDuration;
 
     final double reflexDist = (Constants.ARM_STICK_LENGTH + Constants.ARM_BOOM_LENGTH);
     final double reflexAngleRad = Units.degreesToRadians(15.0);
@@ -70,9 +73,16 @@ public class ReflexInvertingArmPath implements ArmPath {
         //Go to the reflex midpoint (right before actually reflexing)
         interiorWaypoints.add(reflexMidpoint);
 
-        traj1 = TrajectoryGenerator.generateTrajectory(start.toStartPose(), interiorWaypoints, reflexEndpoint.toPoseFromOther(reflexMidpoint), cfg);
+        if(reflexEndpoint.distTo(start) > MIN_PATHPLAN_DIST_M) {
+            traj1 = TrajectoryGenerator.generateTrajectory(start.toStartPose(), interiorWaypoints, reflexEndpoint.toPoseFromOther(reflexMidpoint), cfg);
+            duration1 = traj1.getTotalTimeSeconds();
+        } else {
+            //give up on first part
+            duration1 = 0;
+            DriverStation.reportWarning("Trajectory too small!", false);
+        }
 
-        
+        totalDuration += duration1;
 
         interiorWaypoints = new ArrayList<Translation2d>();//none by default
 
@@ -86,10 +96,13 @@ public class ReflexInvertingArmPath implements ArmPath {
             interiorWaypoints.add(safeWaypoint2);
         }
 
-        traj2 = TrajectoryGenerator.generateTrajectory(reflexEndpoint.toPoseToOther(reflexMidpoint), interiorWaypoints, end.pos.toEndPose(), cfg);
-
-        
-
+        if(end.pos.distTo(reflexEndpoint) > MIN_PATHPLAN_DIST_M) {
+            traj2 = TrajectoryGenerator.generateTrajectory(reflexEndpoint.toPoseToOther(reflexMidpoint), interiorWaypoints, end.pos.toEndPose(), cfg);
+            totalDuration += traj2.getTotalTimeSeconds();
+        } else {
+            // give up on second part
+            DriverStation.reportWarning("Trajectory too small!", false);
+        }
 
     }
 
@@ -102,16 +115,18 @@ public class ReflexInvertingArmPath implements ArmPath {
 
         // Calculate interpolated reflex, which starts once we're near the reflex point
 
-        if(time_sec <= traj1.getTotalTimeSeconds()){
+        if(time_sec < duration1){
             return ArmEndEffectorState.fromTrajState(traj1, time_sec, start.reflexFrac);
-        } else {
-            var curTime = time_sec - traj1.getTotalTimeSeconds();
+        } else if(time_sec < totalDuration){
+            var curTime = time_sec - duration1;
             return ArmEndEffectorState.fromTrajState(traj2, curTime, end.pos.reflexFrac); 
+        } else {
+            return end.pos;
         }
     }
 
     public double getDurationSec(){
-        return traj1.getTotalTimeSeconds() + traj2.getTotalTimeSeconds();
+        return totalDuration;
     }
 
 }
