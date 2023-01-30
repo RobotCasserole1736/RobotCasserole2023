@@ -138,7 +138,7 @@ public class ArmKinematics {
         double boomTerm2Denom = Constants.ARM_BOOM_LENGTH
                 + Constants.ARM_STICK_LENGTH * Math.cos(stickAngleRad * (isReflex ? -1.0 : 1.0));
 
-        double boomTerm2 = Math.atan(boomTerm2Num / boomTerm2Denom) * (isReflex ? 1.0 : -1.0);
+        double boomTerm2 = Math.atan2(boomTerm2Num , boomTerm2Denom) * (isReflex ? 1.0 : -1.0);
 
         double boomAngleRad = boomTerm1 + boomTerm2;
 
