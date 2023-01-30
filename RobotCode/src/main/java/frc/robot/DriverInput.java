@@ -89,7 +89,6 @@ public class DriverInput {
         isConnected = driverController.isConnected();
 
         if(isConnected){
-
             
             curFwdRevCmd = -1.0 * driverController.getLeftY();
             curRotCmd = -1.0 * driverController.getRightX();
@@ -105,11 +104,11 @@ public class DriverInput {
             } else if(driverController.getRightStickButton()) {
                 curRotCmd = curRotCmd / 2.0;
             }
-            
+                
             fwdRevSlewCmd = fwdRevSlewLimiter.calculate(curFwdRevCmd);
             rotSlewCmd = rotSlewLimiter.calculate(curRotCmd);
             sideToSideSlewCmd = sideToSideSlewLimiter.calculate(curSideToSideCmd);
-            
+                
             robotRelative = driverController.getRightBumper();
 
             resetOdometry = resetOdoDbnc.calculate(driverController.getAButton());
@@ -120,8 +119,6 @@ public class DriverInput {
             clawEject = driverController.getRightTriggerAxis() > .75;
             clawIntake = driverController.getLeftTriggerAxis() > .75;
  
-           
-
         } else {
             //Controller Unplugged Defaults
             curFwdRevCmd = 0.0;

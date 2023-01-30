@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
@@ -11,10 +12,13 @@ public class OperatorInput {
 
     @Signal(units = "bool")
     boolean isConnected;
-    @Signal(units = "inPerSec")
-    double armManualXCmd;
-    @Signal(units = "inPerSec")
-    double armManualYCmd;
+
+    @Signal(units="mps")
+    double curVerticalCmd;
+
+    @Signal(units="mps")
+    double curHorizontalCmd;
+
 
     @Signal
     boolean armLowPosCmd = false;
@@ -44,16 +48,20 @@ public class OperatorInput {
         isConnected = ctrl.isConnected();
 
         if (isConnected) {
-            armManualXCmd = MathUtil.applyDeadband(-1.0 * ctrl.getLeftY(), stickDb.get()) * manMaxVel.get();
-            armManualYCmd = MathUtil.applyDeadband(-1.0 * ctrl.getRightY(), stickDb.get()) * manMaxVel.get();
+            curVerticalCmd =  ctrl.getLeftY();
+            curHorizontalCmd = ctrl.getRightY();
+
+            curVerticalCmd = MathUtil.applyDeadband( curVerticalCmd,stickDb.get()) * Units.inchesToMeters(manMaxVel.get()); 
+            curHorizontalCmd = MathUtil.applyDeadband( curHorizontalCmd,stickDb.get())  * Units.inchesToMeters(manMaxVel.get()); 
+
             armLowPosCmd = ctrl.getAButton();
             armMidPosCmd = ctrl.getBButton();
             armHighPosCmd = ctrl.getYButton();
             armStowPosCmd = ctrl.getXButton();
         } else {
             // Controller Unplugged Defaults
-            armManualXCmd = 0.0;
-            armManualYCmd = 0.0;
+            curVerticalCmd = 0.0;
+            curHorizontalCmd = 0.0;
             armLowPosCmd = false;
             armMidPosCmd = false;
             armHighPosCmd = false;
@@ -66,6 +74,6 @@ public class OperatorInput {
     }
 
     public boolean manCmdActive(){
-        return armManualXCmd != 0.0 || armManualYCmd != 0.0;
+        return curVerticalCmd != 0.0 || curHorizontalCmd != 0.0;
     }
 }

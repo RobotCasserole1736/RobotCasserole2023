@@ -240,7 +240,7 @@ public class Robot extends TimedRobot {
       curOpPos = ArmNamedPosition.STOW;
     }
 
-    ac.setOpCmds(oi.armManualXCmd, oi.armManualYCmd, curOpPos, oi.posCmdActive());
+    ac.setOpCmds(oi.curHorizontalCmd, oi.curVerticalCmd, curOpPos, oi.posCmdActive());
 
     cc.setIntake(di.getClawIntake());
     cc.setEject(di.getClawEject());

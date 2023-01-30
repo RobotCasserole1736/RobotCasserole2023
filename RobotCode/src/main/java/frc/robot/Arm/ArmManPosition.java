@@ -1,20 +1,55 @@
 package frc.robot.Arm;
 
+import frc.Constants;
+
 public class ArmManPosition {
 
-    public void setOpVelCmds(boolean isActive, double x_vel, double y_vel){
-        //TODO - save incoming commands
+    double des_x_vel;
+    double des_y_vel;
+    boolean isActive;
+    boolean isActive_prev; //stores previous value of isActive state
+    ArmEndEffectorState newDesPos;
+
+    ArmManPosition(){
+        
+        des_x_vel = 0;
+        des_y_vel = 0;
+        isActive = false;
+        isActive_prev = false;
+        newDesPos = new ArmEndEffectorState(0,0,false);
     }
 
-    public ArmEndEffectorState update(ArmEndEffectorState curDesPos){
-        //TODO - if we just went from inactive to active, reset the desired position to actual
 
-        //Todo - calcuate the new desired position based on incoming velocity comands
-        return curDesPos;
+    public void setOpVelCmds(boolean isActive, double x_vel, double y_vel){
+
+        des_x_vel = x_vel;
+        des_y_vel = y_vel;
+
+        //isActive_prev copies that state of isActive to compare if it has changed (later on)
+        isActive_prev = this.isActive;
+        this.isActive = isActive;
+
+    }
+
+    public ArmEndEffectorState update(ArmEndEffectorState curMeasPos){
+        //If we just went from inactive to active, reset the desired position to actual
+
+        if(isActive_prev == false && isActive){
+            newDesPos = curMeasPos;
+        }
+
+    
+        //Calcuate the new desired position based on incoming velocity commands
+        newDesPos.x = curMeasPos.x + des_x_vel * Constants.Ts;
+        newDesPos.y = curMeasPos.y + des_y_vel * Constants.Ts;
+
+        return newDesPos;
+
     }
 
     public boolean cmdActive(){
-        return false; //TODO return true when the operator is actively commanding motion
+        return isActive;
+
+        //Return true when the operator is actively commanding motion
     }
-    
 }
