@@ -24,6 +24,8 @@ public class ArmControl {
     ArmPathPlanner pp;
     ArmManPosition mp;
 
+    ArmSoftLimits asl;
+
     //TODO put offsets in for this
     WrapperedAbsoluteEncoder boomEncoder = new WrapperedAbsoluteEncoder(AbsoluteEncType.SRXEncoder, "Boom", Constants.ARM_BOOM_ENC_IDX, 0);
     WrapperedAbsoluteEncoder stickEncoder = new WrapperedAbsoluteEncoder(AbsoluteEncType.SRXEncoder, "Stick", Constants.ARM_STICK_ENC_IDX, 0);
@@ -33,6 +35,7 @@ public class ArmControl {
         ms = new MotorControlStick();
         pp = new ArmPathPlanner();
         mp = new ArmManPosition();
+        asl = new ArmSoftLimits();
         curMeasAngularStates = new ArmAngularState(0,0);
         curDesState = ArmNamedPosition.STOW.pos;
     }
@@ -61,7 +64,7 @@ public class ArmControl {
         curDesState = mp.update(curDesState);
 
         //Apply soft limits
-        //var curDesPosLimited = ArmSoftLimits.applyLimit(curDesPosRaw);
+        //var curDesPosLimited = asl.applyLimit(curDesPosRaw);
         var curDesStateLimited = curDesState;
 
         // Apply kinematics to get linkge positions

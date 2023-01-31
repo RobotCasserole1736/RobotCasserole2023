@@ -1,6 +1,33 @@
 package frc.robot.Arm;
 
+import java.util.ArrayList;
+
+import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.ArmTelemetry;
+
 public class ArmSoftLimits {
+
+    double[] restrictionXPoints = { 1, 1, 4, 4 }; // This is where we declare the points for the restriction area.
+    // RESTRICTION LINES CAN NOT BE VERTICLE OR HORIZONTLE
+    double[] restrictionYPoints = { 1, 4, 4, 1 };
+
+    public ArmSoftLimits(){
+
+        //for now - send over the restriction points one-time to telemetry
+        var softLimitPoly = new ArrayList<Translation2d>();
+        for(int idx = 0; idx < restrictionXPoints.length; idx++){
+            //Pack x/y coordinates into Translation2d's
+            var x = restrictionXPoints[idx];
+            var y = restrictionYPoints[idx];
+            softLimitPoly.add(new Translation2d(x,y));
+        }
+        //Close back to first point
+        var x = restrictionXPoints[0];
+        var y = restrictionYPoints[0];
+        softLimitPoly.add(new Translation2d(x,y));
+        
+        ArmTelemetry.getInstance().setSoftLimits(softLimitPoly);
+    }
 
     public ArmEndEffectorState applyLimit(ArmEndEffectorState in) {
         return null;// TODO - apply limits to the incoming position to fence it in
@@ -17,9 +44,7 @@ public class ArmSoftLimits {
         // restriction lines, uses that to see if they intersect,
         // and then sets the wanted position to the limit if it is outside the
         // restriction area.
-        double[] restrictionXPoints = { 1, 1, 4, 4 }; // This is where we declare the points for the restriction area.
-                                                      // RESTRICTION LINES CAN NOT BE VERTICLE OR HORIZONTLE
-        double[] restrictionYPoints = { 1, 4, 4, 1 };
+       
         int loopForTestingSoftLimits = 0;
 
         double wantedYPosArm = 1; // These are temporary values, we will need to change them when we get the

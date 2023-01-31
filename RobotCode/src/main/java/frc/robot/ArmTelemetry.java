@@ -2,6 +2,7 @@ package frc.robot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -63,6 +64,8 @@ public class ArmTelemetry {
     private final Mechanism2DPolygon desEndEffPos = new Mechanism2DPolygon(m_mech2d, "DesEndEffPos", endEffPolygon);
 
     private final Mechanism2DPolygon desPath = new Mechanism2DPolygon(m_mech2d, "DesPath", new ArrayList<Translation2d>());
+    
+    private final Mechanism2DPolygon softLimits = new Mechanism2DPolygon(m_mech2d, "SoftLimits", new ArrayList<Translation2d>());
 
 
     private final MechanismLigament2d m_boom_ligament_act =
@@ -137,6 +140,7 @@ public class ArmTelemetry {
 
         desEndEffPos.setStyle(new Color8Bit(Color.kLimeGreen), 2);
         desPath.setStyle(new Color8Bit(Color.kCyan),1);
+        softLimits.setStyle(new Color8Bit(Color.kRed),1);
 
         if(Robot.isReal()){
             //Effectively hid the Act ligament if we're on a real robot
@@ -157,6 +161,10 @@ public class ArmTelemetry {
         pathPoly.add(new Translation2d(point.x + LEFT_MARGIN, point.y));
 
         desPath.setPolygon(pathPoly);
+    }
+
+    public void setSoftLimits(List<Translation2d> softLimitPoly){
+        softLimits.setPolygon(softLimitPoly);
     }
 
     public void setActual(double boomAngleDeg, double stickAngleDeg){
