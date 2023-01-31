@@ -46,4 +46,12 @@ public class GamepieceModeManager {
     public boolean isCubeMode(){
         return (curMode == GamepieceMode.CUBE);
     }
+
+    public void toggleMode(){
+        if(isConeMode()){
+            curMode = GamepieceMode.CUBE;
+        } else {
+            curMode = GamepieceMode.CONE;
+        }
+    }
 }
