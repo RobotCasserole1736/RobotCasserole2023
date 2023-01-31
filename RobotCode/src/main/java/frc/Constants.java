@@ -124,7 +124,7 @@ public class Constants {
     //static public final int UNUSED = 17;
 
     // Pneumatics Hub
-    //static public final int UNUSED = 0;
+    static public final int CLAW_SOLENOID = 0;
     //static public final int UNUSED = 1;
     //static public final int UNUSED = 2;
     //static public final int UNUSED = 3;

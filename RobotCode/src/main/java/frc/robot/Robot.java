@@ -26,6 +26,7 @@ import frc.robot.AutoDrive.AutoDrive;
 import frc.robot.AutoDrive.AutoDrive.AutoDriveCmdState;
 import frc.robot.Autonomous.Autonomous;
 import frc.robot.Drivetrain.DrivetrainControl;
+import frc.robot.GamepieceModeManager;
 import frc.sim.RobotModel;
 
 /**
@@ -52,6 +53,8 @@ public class Robot extends TimedRobot {
   BatteryMonitor batMan;
   ArmControl ac;
   clawControl cc;
+
+  GamepieceModeManager mm;
 
   // Main Driver
   DriverInput di;
@@ -292,7 +295,7 @@ public class Robot extends TimedRobot {
 
     ac.update();
     cw.update();
-    cc.update();
+    cc.update(mm);
     stt.mark("Cal Wrangler");
     db.updateDriverView();
     stt.mark("Dashboard");
