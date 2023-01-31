@@ -15,6 +15,7 @@ import frc.Constants;
 import frc.lib.Signal.Annotations.Signal;
 import frc.lib.Util.Mechanism2DPolygon;
 import frc.robot.Arm.ArmEndEffectorState;
+import frc.robot.Arm.Path.ArmPath;
 import frc.robot.Arm.ArmAngularState;
 
 public class ArmTelemetry {
@@ -58,7 +59,11 @@ public class ArmTelemetry {
         new Translation2d(0,-0.02),
         new Translation2d(0.02,0)
     ));
+
     private final Mechanism2DPolygon desEndEffPos = new Mechanism2DPolygon(m_mech2d, "DesEndEffPos", endEffPolygon);
+
+    private final Mechanism2DPolygon desPath = new Mechanism2DPolygon(m_mech2d, "DesPath", new ArrayList<Translation2d>());
+
 
     private final MechanismLigament2d m_boom_ligament_act =
         m_armPivot.append(
@@ -131,12 +136,27 @@ public class ArmTelemetry {
         SmartDashboard.putData("Arm", m_mech2d);
 
         desEndEffPos.setStyle(new Color8Bit(Color.kLimeGreen), 2);
+        desPath.setStyle(new Color8Bit(Color.kCyan),1);
 
         if(Robot.isReal()){
             //Effectively hid the Act ligament if we're on a real robot
             m_boom_ligament_act.setLength(0);
             m_stick_ligament_act.setLength(0);
         }
+    }
+
+    public void setDesPath(ArmPath path){
+        var pathPoly = new ArrayList<Translation2d>();
+
+        for(double time = 0.0; time < path.getDurationSec(); time += 0.2){
+            var point = path.sample(time);
+            pathPoly.add(new Translation2d(point.x + LEFT_MARGIN, point.y));
+        }
+
+        var point = path.sample(path.getDurationSec());
+        pathPoly.add(new Translation2d(point.x + LEFT_MARGIN, point.y));
+
+        desPath.setPolygon(pathPoly);
     }
 
     public void setActual(double boomAngleDeg, double stickAngleDeg){

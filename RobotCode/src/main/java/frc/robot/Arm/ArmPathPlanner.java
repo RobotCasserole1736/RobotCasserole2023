@@ -1,7 +1,7 @@
 package frc.robot.Arm;
 
 import edu.wpi.first.wpilibj.Timer;
-import frc.Constants;
+import frc.robot.ArmTelemetry;
 import frc.robot.Arm.Path.ArmPath;
 import frc.robot.Arm.Path.ArmPathFactory;
 
@@ -24,13 +24,14 @@ public class ArmPathPlanner {
     public ArmEndEffectorState update(ArmEndEffectorState curDesState){
         // calculate if we need a new path
         boolean shouldRunRisingEdge = (shouldRun == true && shouldRunPrev == false);
-        boolean targetPosChanged = (curTargetPos != null && prevTargetPos != null && !curTargetPos.equals(prevTargetPos));
+        boolean targetPosChanged = (curTargetPos != null && prevTargetPos != null && !curTargetPos.equals(prevTargetPos) && shouldRun);
         boolean newPathNeeded = shouldRunRisingEdge || targetPosChanged;
 
         //If so, make a new path
         if(newPathNeeded){
             curPath = ArmPathFactory.build(curDesState, curTargetPos);
             pathStartTime = Timer.getFPGATimestamp();
+            ArmTelemetry.getInstance().setDesPath(curPath);
             motionActive = true;
         }
 

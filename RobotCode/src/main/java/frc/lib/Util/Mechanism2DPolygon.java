@@ -47,15 +47,6 @@ public class Mechanism2DPolygon {
         draw();
     }
 
-    public void clear(){
-        this.polygon.clear();
-        draw();
-    }
-
-    public void addPoint(Translation2d point){
-        this.polygon.add(point);
-    }
-
     public void setOrigin(Translation2d origin){
         this.origin = origin;
         draw();
