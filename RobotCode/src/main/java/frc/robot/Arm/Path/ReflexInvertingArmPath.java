@@ -1,6 +1,7 @@
 package frc.robot.Arm.Path;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -29,6 +30,8 @@ public class ReflexInvertingArmPath implements ArmPath {
     Trajectory traj2;
 
     ArmEndEffectorState start; 
+    List<Translation2d> interiorWaypoints1;
+    List<Translation2d> interiorWaypoints2;
     ArmNamedPosition end;
     double max_vel;
     double max_accel; 
@@ -37,17 +40,11 @@ public class ReflexInvertingArmPath implements ArmPath {
 
     // All these constants are related to finding two points:
     // reflexEnd - the reflex point of "full extension" at some angle upward from the horizon
-    // reflexMid - a point on that same line but slightly "short" of full extension that
-    //       we'll use to make sure the path planner goes straight in and out of the 
-    //       reflex point. 
     final double reflexDist = (Constants.ARM_STICK_LENGTH + Constants.ARM_BOOM_LENGTH);
-    final double reflexAngleRad = Units.degreesToRadians(15.0);
+    final double reflexAngleRad = Units.degreesToRadians(20.0);
     final double reflexMidPointFrac = 0.90;
     final double reflexEndPosX = reflexDist * Math.cos(reflexAngleRad);
     final double reflexEndPosY = reflexDist * Math.sin(reflexAngleRad) + Constants.ARM_BOOM_MOUNT_HIEGHT;
-    final double reflexMidPosX = reflexDist * reflexMidPointFrac * Math.cos(reflexAngleRad);
-    final double reflexMidPosY = reflexDist * reflexMidPointFrac * Math.sin(reflexAngleRad) + Constants.ARM_BOOM_MOUNT_HIEGHT;
-
 
     /**
      * Create a new arm trajectory from start to end with the given constraints
@@ -68,27 +65,23 @@ public class ReflexInvertingArmPath implements ArmPath {
         cfg.addConstraint(new CentripetalAccelerationConstraint(max_accel_mps2));
 
         var reflexEndpoint = new ArmEndEffectorState(reflexEndPosX, reflexEndPosY);
-        var reflexMidpoint = new Translation2d(reflexMidPosX, reflexMidPosY);
 
         ///////////////////////////////////////////////////////
         // First Trajectory - start out to the reflex point
 
-        var interiorWaypoints = new ArrayList<Translation2d>();
+        interiorWaypoints1 = new ArrayList<Translation2d>();
 
-        // If we're outside frame perimiter, start with slight upward motion to clear common obstacles
         Pose2d pathStartPos;
         if(start.x > Constants.WHEEL_BASE_HALF_LENGTH_M){
-            interiorWaypoints.add(new Translation2d(start.x, start.y + 0.2));
+            // If we're outside frame perimiter, ensure we start with
+            // upward motion to clear obstacles
             pathStartPos = start.toPoseToTop();
         } else {
             pathStartPos = start.toPoseToOther(end);
         }
 
-        //Go to the reflex midpoint (right before actually reflexing)
-        interiorWaypoints.add(reflexMidpoint);
-
         if(reflexEndpoint.distTo(start) > MIN_PATHPLAN_DIST_M) {
-            traj1 = TrajectoryGenerator.generateTrajectory(pathStartPos, interiorWaypoints, reflexEndpoint.toPoseFromOther(reflexMidpoint), cfg);
+            traj1 = TrajectoryGenerator.generateTrajectory(pathStartPos, interiorWaypoints1, reflexEndpoint.toPoseFromOther(start), cfg);
             duration1 = traj1.getTotalTimeSeconds();
         } else {
             //give up on first part
@@ -100,20 +93,28 @@ public class ReflexInvertingArmPath implements ArmPath {
 
         ///////////////////////////////////////////////////////
         // Second Trajectory - reflex point to the end position
-        interiorWaypoints = new ArrayList<Translation2d>();//Reset to be blank for part two
+        interiorWaypoints2 = new ArrayList<Translation2d>();//Reset to be blank for part two
 
-        interiorWaypoints.add(reflexMidpoint);
+        Pose2d pathEndPos;
 
-        //If the end has a configured safe height, add in waypoints to account for it
         if(end.safeY > 0){
-            var safeWaypoint1 = new Translation2d(end.pos.x, end.safeY);
-            var safeWaypoint2 = new Translation2d(end.pos.x, (end.safeY + end.pos.y)/2);
-            interiorWaypoints.add(safeWaypoint1);
-            interiorWaypoints.add(safeWaypoint2);
+            //If the end has a configured safe height, add in an additional waypoint to account for it
+            // TODO - handle safe Y better
+            pathEndPos = end.pos.toPoseFromTop();
+        } else {
+            // If we end outside the frame perimiter, approach from top.
+            // Otherwise, just go straight to it.
+            if(end.pos.x > Constants.WHEEL_BASE_HALF_LENGTH_M){
+                pathEndPos = end.pos.toPoseFromTop();
+            } else {
+                pathEndPos = end.pos.toPoseFromOther(start);
+            }
         }
 
+
+
         if(end.pos.distTo(reflexEndpoint) > MIN_PATHPLAN_DIST_M) {
-            traj2 = TrajectoryGenerator.generateTrajectory(reflexEndpoint.toPoseToOther(reflexMidpoint), interiorWaypoints, end.pos.toPoseFromTop(), cfg);
+            traj2 = TrajectoryGenerator.generateTrajectory(reflexEndpoint.toPoseToOther(end), interiorWaypoints2, pathEndPos, cfg);
             totalDuration += traj2.getTotalTimeSeconds();
         } else {
             // give up on second part
@@ -145,5 +146,17 @@ public class ReflexInvertingArmPath implements ArmPath {
     public double getDurationSec(){
         return totalDuration;
     }
+
+    @Override
+    public List<Translation2d> getWaypoints() {
+        var retList = new ArrayList<Translation2d>();
+        retList.add(new Translation2d(start.x, start.y));
+        retList.addAll(interiorWaypoints1);
+        retList.add(new Translation2d(reflexEndPosX, reflexEndPosY));
+        retList.addAll(interiorWaypoints2);
+        retList.add(new Translation2d(end.pos.x, end.pos.y));
+        return retList;
+    }
+
 
 }

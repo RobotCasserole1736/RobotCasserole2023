@@ -1,5 +1,8 @@
 package frc.robot.Arm.Path;
 
+import java.util.List;
+
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Arm.ArmEndEffectorState;
 import frc.robot.Arm.ArmNamedPosition;
 
@@ -32,5 +35,10 @@ public interface ArmPath {
      * @return the duration of the path in seconds
      */
     public abstract double getDurationSec();
+
+    /**
+     * @return the duration of the path in seconds
+     */
+    public abstract List<Translation2d> getWaypoints();
 
 }

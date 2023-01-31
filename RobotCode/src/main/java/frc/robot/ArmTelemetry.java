@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.Constants;
 import frc.lib.Signal.Annotations.Signal;
+import frc.lib.Util.Mechanism2DMarker;
 import frc.lib.Util.Mechanism2DPolygon;
 import frc.robot.Arm.ArmEndEffectorState;
 import frc.robot.Arm.Path.ArmPath;
@@ -53,18 +54,10 @@ public class ArmTelemetry {
     private final MechanismLigament2d bumpers = bumperRoot.append(new MechanismLigament2d("Bumpers", LOW_GOAL, 0, 50, new Color8Bit(Color.kRed)));
     private final MechanismLigament2d nodeBase = bumpers.append(new MechanismLigament2d("Node Base", HIGH_GOAL - LOW_GOAL, 0, 100, new Color8Bit(Color.kWhite)));
 
-    private final ArrayList<Translation2d> endEffPolygon = new ArrayList<Translation2d>(Arrays.asList(
-        new Translation2d(0.02,0),
-        new Translation2d(0,0.02),
-        new Translation2d(-0.02,0),
-        new Translation2d(0,-0.02),
-        new Translation2d(0.02,0)
-    ));
-
-    private final Mechanism2DPolygon desEndEffPos = new Mechanism2DPolygon(m_mech2d, "DesEndEffPos", endEffPolygon);
-
+    private final Mechanism2DMarker desEndEffPos = new Mechanism2DMarker(m_mech2d, "DesEndEffPos", 0.02);
     private final Mechanism2DPolygon desPath = new Mechanism2DPolygon(m_mech2d, "DesPath", new ArrayList<Translation2d>());
-    
+    private final List<Mechanism2DMarker> desPathWaypointMarkers = new ArrayList<Mechanism2DMarker>(10); //Hardcode max 10 waypoints. Hopefully we won't need more than that.
+
     private final Mechanism2DPolygon softLimits = new Mechanism2DPolygon(m_mech2d, "SoftLimits", new ArrayList<Translation2d>());
 
 
@@ -138,9 +131,21 @@ public class ArmTelemetry {
         // Put Mechanism 2d to SmartDashboard
         SmartDashboard.putData("Arm", m_mech2d);
 
+        //Init all waypoint markers
+        for(int i = 0; i < 10; i++){
+            desPathWaypointMarkers.add(new Mechanism2DMarker(m_mech2d, "desPathMarker" + Integer.toString(i), 0.015));
+        }
+
+
+        // configure styles
+        for(Mechanism2DMarker marker : desPathWaypointMarkers){
+            marker.setVisible(false);
+            marker.setStyle(new Color8Bit(Color.kLightCyan), 1);
+        }
         desEndEffPos.setStyle(new Color8Bit(Color.kLimeGreen), 2);
         desPath.setStyle(new Color8Bit(Color.kCyan),1);
         softLimits.setStyle(new Color8Bit(Color.kRed),1);
+
 
         if(Robot.isReal()){
             //Effectively hid the Act ligament if we're on a real robot
@@ -161,6 +166,19 @@ public class ArmTelemetry {
         pathPoly.add(new Translation2d(point.x + LEFT_MARGIN, point.y));
 
         desPath.setPolygon(pathPoly);
+
+        var waypoints = path.getWaypoints();
+        for(int i = 0; i < desPathWaypointMarkers.size(); i++){
+            var marker = desPathWaypointMarkers.get(i);
+            if(i < waypoints.size()){
+                var waypoint = waypoints.get(i);
+                marker.setLocation(waypoint.plus(new Translation2d(LEFT_MARGIN, 0)));
+                marker.setVisible(true);
+            } else {
+                marker.setVisible(false);
+            }
+        }
+
     }
 
     public void setSoftLimits(List<Translation2d> softLimitPoly){
@@ -172,7 +190,7 @@ public class ArmTelemetry {
         m_stick_ligament_act.setAngle(stickAngleDeg);
     }
     public void setDesired(ArmEndEffectorState desPos, ArmAngularState desArmState){
-        desEndEffPos.setOrigin(new Translation2d(desPos.x + LEFT_MARGIN, desPos.y));
+        desEndEffPos.setLocation(new Translation2d(desPos.x + LEFT_MARGIN, desPos.y));
         m_boom_ligament_des.setAngle(desArmState.boomAngleDeg);
         m_stick_ligament_des.setAngle(desArmState.stickAngleDeg);
 

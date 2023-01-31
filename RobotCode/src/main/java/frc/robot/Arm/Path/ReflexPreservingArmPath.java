@@ -1,6 +1,7 @@
 package frc.robot.Arm.Path;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -26,6 +27,7 @@ public class ReflexPreservingArmPath implements ArmPath {
     Trajectory traj;
 
     ArmEndEffectorState start; 
+    List<Translation2d> interiorWaypoints;
     ArmNamedPosition end;
     double max_vel;
     double max_accel; 
@@ -47,28 +49,39 @@ public class ReflexPreservingArmPath implements ArmPath {
         this.max_vel = max_vel_mps;
         this.max_accel = max_accel_mps2; 
 
-        var interiorWaypoints = new ArrayList<Translation2d>();//none by default
+        TrajectoryConfig cfg = new TrajectoryConfig(max_vel_mps, max_accel_mps2);
+        cfg.addConstraint(new CentripetalAccelerationConstraint(max_accel_mps2));
 
-        // If we're outside frame perimiter, start with slight upward motion to clear common obstacles
+        interiorWaypoints = new ArrayList<Translation2d>();//none by default
+
         Pose2d pathStartPos;
         if(start.x > Constants.WHEEL_BASE_HALF_LENGTH_M){
-            interiorWaypoints.add(new Translation2d(start.x, start.y + 0.2));
+            // If we're outside frame perimiter, ensure we start with upward motion
             pathStartPos = start.toPoseToTop();
         } else {
             pathStartPos = start.toPoseToOther(end);
         }
 
-        //If the end has a configured safe height, add in an additional waypoint to account for it
+        Pose2d pathEndPos;
+
         if(end.safeY > 0){
-            var safeWaypoint = new Translation2d(end.pos.x, end.safeY);
-            interiorWaypoints.add(safeWaypoint);
+            //If the end has a configured safe height, add in an additional waypoint to account for it
+            // TODO - handle safe Y better
+            pathEndPos = end.pos.toPoseFromTop();
+        } else {
+            // If we end outside the frame perimiter, approach from top.
+            // Otherwise, just go straight to it.
+            if(end.pos.x > Constants.WHEEL_BASE_HALF_LENGTH_M){
+                pathEndPos = end.pos.toPoseFromTop();
+            } else {
+                pathEndPos = end.pos.toPoseFromOther(start);
+            }
         }
 
-        TrajectoryConfig cfg = new TrajectoryConfig(max_vel_mps, max_accel_mps2);
-        cfg.addConstraint(new CentripetalAccelerationConstraint(max_accel_mps2));
-        
+
+
         if(end.pos.distTo(start) > MIN_PATHPLAN_DIST_M) {
-            traj = TrajectoryGenerator.generateTrajectory(pathStartPos, interiorWaypoints, end.pos.toPoseFromTop(), cfg);
+            traj = TrajectoryGenerator.generateTrajectory(pathStartPos, interiorWaypoints, pathEndPos, cfg);
             totalDuration = traj.getTotalTimeSeconds();
         } else {
             //Error while planning. Just give up.
@@ -95,6 +108,15 @@ public class ReflexPreservingArmPath implements ArmPath {
 
     public double getDurationSec(){
         return totalDuration;
+    }
+
+    @Override
+    public List<Translation2d> getWaypoints() {
+        var retList = new ArrayList<Translation2d>();
+        retList.add(new Translation2d(start.x, start.y));
+        retList.addAll(interiorWaypoints);
+        retList.add(new Translation2d(end.pos.x, end.pos.y));
+        return retList;
     }
 
 }

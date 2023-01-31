@@ -1,6 +1,8 @@
 package frc.robot.Arm;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import frc.Constants;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder.AbsoluteEncType;
@@ -58,7 +60,11 @@ public class ArmControl {
         var boomAngleDeg = Units.radiansToDegrees(boomEncoder.getAngle_rad());
         var stickAngleDeg = Units.radiansToDegrees(stickEncoder.getAngle_rad());
         curMeasAngularStates = new ArmAngularState(boomAngleDeg, stickAngleDeg); 
-        ArmEndEffectorState curMeasPos = ArmKinematics.forward(curMeasAngularStates);
+        ArmEndEffectorState curMeasState = ArmKinematics.forward(curMeasAngularStates);
+
+        if(DriverStation.isDisabled()){
+            curDesState = curMeasState;
+        }
 
         curDesState = pp.update(curDesState);
         curDesState = mp.update(curDesState);
@@ -79,7 +85,7 @@ public class ArmControl {
 
         // Update telemetry
         ArmTelemetry.getInstance().setDesired(curDesStateLimited, curDesAngularStates);
-        ArmTelemetry.getInstance().setMeasured(curMeasPos, curMeasAngularStates);
+        ArmTelemetry.getInstance().setMeasured(curMeasState, curMeasAngularStates);
     }
     
 }
