@@ -104,7 +104,6 @@ public class Robot extends TimedRobot {
     NetworkTableInstance.getDefault().startServer();
     stt.mark("NT4");
 
-
     /* Init website utilties */
     webserver = new Webserver2();
     stt.mark("Webserver2");
@@ -119,15 +118,17 @@ public class Robot extends TimedRobot {
     stt.mark("Battery Monitor");
 
     ac = ArmControl.getInstance();
+    stt.mark("Arm Control");
 
-    //bcd = new Ballcolordetector();
-    stt.mark("Ball Color Detector");
+    mm = GamepieceModeManager.getInstance();
+    stt.mark("Gamepiece Manager");
 
     cc = new clawControl();
+    stt.mark("Claw Control");
+
 
     di = new DriverInput(0);
     oi = new OperatorInput(1);
-
     stt.mark("Driver IO");
 
     dt = DrivetrainControl.getInstance();
@@ -140,7 +141,7 @@ public class Robot extends TimedRobot {
 
     pt = PoseTelemetry.getInstance();
     at = ArmTelemetry.getInstance();
-    stt.mark("Pose Telemetry");
+    stt.mark("Telemetry");
 
     db = new Dashboard(webserver);
     stt.mark("Dashboard");
@@ -229,6 +230,8 @@ public class Robot extends TimedRobot {
 
     ad.setManualCommands(di.getFwdRevCmd_mps(), di.getSideToSideCmd_mps(), di.getRotateCmd_rps(), !di.getRobotRelative());
     ad.update();
+    stt.mark("Auto Drive Calculation");
+
 
     var curOpPos = ArmNamedPosition.STOW;
     
@@ -244,9 +247,13 @@ public class Robot extends TimedRobot {
     }
 
     ac.setOpCmds(oi.curHorizontalCmd, oi.curVerticalCmd, curOpPos, oi.posCmdActive());
+    stt.mark("Arm Control");
+
 
     cc.setIntake(di.getClawIntake());
     cc.setEject(di.getClawEject());
+    stt.mark("Claw Control");
+
 
     if(di.getOdoResetCmd()){
       //Reset pose estimate to angle 0, but at the same translation we're at
@@ -272,6 +279,7 @@ public class Robot extends TimedRobot {
     loopStartTime = Timer.getFPGATimestamp();
 
     ac.setInactive();
+    stt.mark("Arm Control");
     
     dt.calUpdate(false);
     stt.mark("Cal Updates");
@@ -295,7 +303,7 @@ public class Robot extends TimedRobot {
 
     ac.update();
     cw.update();
-    cc.update(mm);
+    cc.update();
     stt.mark("Cal Wrangler");
     db.updateDriverView();
     stt.mark("Dashboard");

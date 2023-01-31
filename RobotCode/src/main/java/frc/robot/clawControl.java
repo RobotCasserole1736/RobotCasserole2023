@@ -40,14 +40,15 @@ public class clawControl {
         curIntakecmd = intake;
     }
 
-    public void update(GamepieceModeManager in) {
+    public void update() {
+        var gpmm = GamepieceModeManager.getInstance();
 
-        if(in.isConeMode()){
+        if(gpmm.isConeMode()){
             clawSolenoidCmd = true;
             //dashboard change?
         }
     
-        if(in.isCubeMode()){
+        if(gpmm.isCubeMode()){
             clawSolenoidCmd = false;
             //dashboard change?
         }
