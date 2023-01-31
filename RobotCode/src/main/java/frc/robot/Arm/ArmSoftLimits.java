@@ -13,6 +13,10 @@ public class ArmSoftLimits {
 
     public ArmSoftLimits(){
 
+        updateTelemetry();
+    }
+
+    public void updateTelemetry(){
         //for now - send over the restriction points one-time to telemetry
         var softLimitPoly = new ArrayList<Translation2d>();
         for(int idx = 0; idx < restrictionXPoints.length; idx++){
