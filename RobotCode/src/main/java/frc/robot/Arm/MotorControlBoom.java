@@ -4,12 +4,23 @@ import edu.wpi.first.wpilibj.Solenoid;
 import frc.Constants;
 import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl;
 import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl.CANMotorCtrlType;
+import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
 
 public class MotorControlBoom {
 
 
     WrapperedCANMotorCtrl motorCtrl = new WrapperedCANMotorCtrl("Boom", Constants.ARM_BOOM_MOTOR_CANID, CANMotorCtrlType.SPARK_MAX);
+
+    //Feed Forward
+    Calibration kV = new Calibration("Arm Boom kF", "V/radpersec", 0.0);
+    Calibration kG = new Calibration("Arm Boom kG", "V/rad", 0.0);
+    Calibration kS = new Calibration("Arm Boom kS", "V", 0.0);
+
+    //Feedback
+    Calibration kP = new Calibration("Arm Boom kP", "V/rad", 12.0/5.0);
+    Calibration kI = new Calibration("Arm Boom kI", "V*sec/rad", 0.0);
+    Calibration kD = new Calibration("Arm Boom kD", "V/radpersec", 0.0);
 
     Solenoid brakeSol;
 
