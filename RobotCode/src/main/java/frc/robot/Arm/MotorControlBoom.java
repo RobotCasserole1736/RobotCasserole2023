@@ -18,14 +18,14 @@ public class MotorControlBoom {
     WrapperedCANMotorCtrl motorCtrl = new WrapperedCANMotorCtrl("Boom", Constants.ARM_BOOM_MOTOR_CANID, CANMotorCtrlType.SPARK_MAX);
 
     //Feed Forward
-    Calibration kV = new Calibration("Arm Boom kF", "V/radpersec", 0.0);
-    Calibration kG = new Calibration("Arm Boom kG", "V/rad", 0.0);
+    Calibration kV = new Calibration("Arm Boom kF", "V/degpersec", 0.13);
+    Calibration kG = new Calibration("Arm Boom kG", "V/cos(deg)", 0.2);
     Calibration kS = new Calibration("Arm Boom kS", "V", 0.0);
 
     //Feedback
-    Calibration kP = new Calibration("Arm Boom kP", "V/rad", 12.0/5.0);
-    Calibration kI = new Calibration("Arm Boom kI", "V*sec/rad", 0.0);
-    Calibration kD = new Calibration("Arm Boom kD", "V/radpersec", 0.0);
+    Calibration kP = new Calibration("Arm Boom kP", "V/deg", 2.0);
+    Calibration kI = new Calibration("Arm Boom kI", "V*sec/deg", 0.1);
+    Calibration kD = new Calibration("Arm Boom kD", "V/degpersec", 0.0);
 
     Calibration brakeErrThresh = new Calibration("Arm Boom Brake Engage Allowable Error", "deg", 1.0);
     Debouncer brakeErrDbnc = new Debouncer(0.25, DebounceType.kRising);
@@ -62,7 +62,8 @@ public class MotorControlBoom {
 
         var motorCmdV = 0.0;
         var angleErr = Math.abs(desAngleDeg - actAngleDeg);
-        var engageBrake = brakeErrDbnc.calculate(angleErr < brakeErrThresh.get());
+        var armStationary = desAngVelDegPerSec == 0.0;
+        var engageBrake = brakeErrDbnc.calculate((angleErr < brakeErrThresh.get()) && armStationary);
 
         if(engageBrake){
             //Brake engaged. 
@@ -78,7 +79,7 @@ public class MotorControlBoom {
 
             // Calculate Feed-Forward
             cmdFeedForward = Math.signum(desAngVelDegPerSec) * kS.get() + 
-                            Math.cos(Units.degreesToRadians(desAngleDeg)) * kG.get() + 
+                            -1.0 * Math.cos(Units.degreesToRadians(desAngleDeg)) * kG.get() + 
                             desAngVelDegPerSec * kV.get();
 
             // Update feedback command
@@ -87,7 +88,7 @@ public class MotorControlBoom {
             motorCmdV = cmdFeedForward + cmdFeedBack;
 
             // Brake off
-            brakeSol.set(true);
+            brakeSol.set(false);
         }
 
 

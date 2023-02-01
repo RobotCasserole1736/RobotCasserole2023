@@ -39,12 +39,18 @@ public class ArmManPosition {
         }
 
     
-        //Calcuate the new desired position based on incoming velocity commands
-        newDesPos.x = curMeasPos.x + des_x_vel * Constants.Ts;
-        newDesPos.y = curMeasPos.y + des_y_vel * Constants.Ts;
-        newDesPos.reflexFrac = curMeasPos.reflexFrac;
+        if(isActive){
+            //Calcuate the new desired position based on incoming velocity commands
+            newDesPos.xvel = des_x_vel;
+            newDesPos.yvel = des_y_vel;
+            newDesPos.x = curMeasPos.x + des_x_vel * Constants.Ts;
+            newDesPos.y = curMeasPos.y + des_y_vel * Constants.Ts;
+            newDesPos.reflexFrac = curMeasPos.reflexFrac;
+            return newDesPos;
+        } else {
+            return curMeasPos; //passthrough while inactive.
+        }
 
-        return newDesPos;
 
     }
 

@@ -38,19 +38,13 @@ public class ArmPathPlanner {
         var pathTime = Timer.getFPGATimestamp() - pathStartTime;
 
         if(curPath != null && shouldRun){
-            //There is a path init'ed already.
-            if(pathTime > curPath.getDurationSec()){
-                //Time done - no longer commanding a moving path
-                motionActive = false;
-            }
-
-            if(motionActive){
-                curPositionCmd = curPath.sample(pathTime);
-            }
+            curPositionCmd = curPath.sample(pathTime);
         } else {
             //No path started yet
             motionActive = false;
             curPositionCmd = curDesState;
+            curPositionCmd.xvel = 0; //ensure we command a "stopped" arm.
+            curPositionCmd.yvel = 0;
         }
 
         shouldRunPrev = shouldRun;

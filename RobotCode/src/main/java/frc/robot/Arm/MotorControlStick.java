@@ -13,14 +13,14 @@ public class MotorControlStick {
     WrapperedCANMotorCtrl motorCtrl = new WrapperedCANMotorCtrl("Stick", Constants.ARM_STICK_MOTOR_CANID, CANMotorCtrlType.SPARK_MAX);
 
     //Feed Forward
-    Calibration kV = new Calibration("Arm Stick kF", "V/radpersec", 0.0);
-    Calibration kG = new Calibration("Arm Stick kG", "V/rad", 0.0);
+    Calibration kV = new Calibration("Arm Stick kF", "V/degpersec", 0.13);
+    Calibration kG = new Calibration("Arm Stick kG", "V/cos(deg)", 0.1);
     Calibration kS = new Calibration("Arm Stick kS", "V", 0.0);
 
     //Feedback
-    Calibration kP = new Calibration("Arm Stick kP", "V/rad", 12.0/5.0);
-    Calibration kI = new Calibration("Arm Stick kI", "V*sec/rad", 0.0);
-    Calibration kD = new Calibration("Arm Stick kD", "V/radpersec", 0.0);
+    Calibration kP = new Calibration("Arm Stick kP", "V/deg", 2.0);
+    Calibration kI = new Calibration("Arm Stick kI", "V*sec/deg", 0.1);
+    Calibration kD = new Calibration("Arm Stick kD", "V/degpersec", 0.0);
 
     PIDController m_pid = new PIDController(0, 0, 0);
 
@@ -49,13 +49,14 @@ public class MotorControlStick {
 
         actAngleDeg = act_in.stickAngleDeg;
         actAngVelDegPerSec = act_in.stickAngularVel;
+        var actBoomAngleDeg = act_in.boomAngleDeg;
 
         //Update PID constants
         m_pid.setPID(kP.get(), kI.get(), kD.get());
 
         //Calculate Feed-Forward
         cmdFeedForward = Math.signum(desAngVelDegPerSec) * kS.get() + 
-                         Math.cos(Units.degreesToRadians(desAngleDeg)) * kG.get() + 
+                         -1.0 * Math.cos(Units.degreesToRadians(desAngleDeg + actBoomAngleDeg)) * kG.get() + 
                          desAngVelDegPerSec * kV.get();
 
 
