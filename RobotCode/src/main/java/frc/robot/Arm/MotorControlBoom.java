@@ -14,8 +14,9 @@ public class MotorControlBoom {
 
     //TODO constructor
 
-    public void setCmd(ArmState in){
+    public void setCmd(double in){
         //todo - save off the right angles and velocities for this motor
+        motorCtrl.setVoltageCmd(in);
     }    
 
     public void update(){
@@ -27,7 +28,7 @@ public class MotorControlBoom {
         //todo closed loop calcualtion
 
         //todo send stuff to the motor
-        motorCtrl.setVoltageCmd(5.0); // TODO don't do this arm go zoooom
+        // motorCtrl.setVoltageCmd(5.0); // TODO don't do this arm go zoooom
 
         //TODO send stuff to the brake
     }

@@ -5,6 +5,7 @@ import frc.Constants;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder.AbsoluteEncType;
 import frc.robot.ArmTelemetry;
+import frc.robot.OperatorInput;
 
 public class ArmControl {
 
@@ -17,6 +18,8 @@ public class ArmControl {
 
     MotorControlBoom mb;
     MotorControlStick ms;
+
+    private OperatorInput o_controller;
 
     ArmState curMeasState;
 
@@ -33,6 +36,7 @@ public class ArmControl {
         pp = new ArmPathPlanner();
         mp = new ArmManPosition();
         curMeasState = new ArmState(0,0,null);
+        o_controller = new OperatorInput(1);
     }
 
     public void update(){
@@ -56,15 +60,17 @@ public class ArmControl {
         var curDesState = ArmKinematics.reverse(curDesPosLimited);
 
         // Send desired state to the motor control
-        mb.setCmd(curDesState);
-        mb.update();
+        
+        o_controller.update();
 
-        ms.setCmd(curDesState);
-        ms.update();
+        mb.setCmd(o_controller.getBoomCmd());
+        // mb.update();
+
+        ms.setCmd(o_controller.getStickCmd());
+        // ms.update();
 
         // Update telemetry
         ArmTelemetry.getInstance().setDesired(curDesPosLimited, curDesState);
         ArmTelemetry.getInstance().setMeasured(curMeasState);
-    }
-    
+    }    
 }

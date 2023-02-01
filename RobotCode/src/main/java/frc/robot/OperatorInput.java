@@ -23,6 +23,14 @@ public class OperatorInput {
         operatorController = new XboxController(controllerIdx);
         stickDeadband = new Calibration(getName(controllerIdx) + "StickDeadBand", "", 0.1);
     }
+
+    public double getBoomCmd(){
+        return boomMotor;
+    }
+
+    public double getStickCmd(){
+        return stickMotor;
+    }
     
     public void update(){
 

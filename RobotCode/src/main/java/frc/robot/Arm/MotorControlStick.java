@@ -1,18 +1,16 @@
 package frc.robot.Arm;
-
-import frc.Constants;
-import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl;
-import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl.CANMotorCtrlType;
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
+// import frc.Constants;
 
 public class MotorControlStick {
 
-    WrapperedCANMotorCtrl motorCtrl = new WrapperedCANMotorCtrl("Stick", Constants.ARM_STICK_MOTOR_CANID, CANMotorCtrlType.SPARK_MAX);
-
-    public void setCmd(ArmState in){
+    VictorSP motorCtrl = new VictorSP(5);
+    public void setCmd(double in){
         //todo - save off the right angles and velocities for this motor
+        motorCtrl.setVoltage(in);
     }
 
-    public void update(){
+    public void update(double in){
 
 
         //todo calcualte feed forward for this segment (including gravity)
@@ -20,8 +18,6 @@ public class MotorControlStick {
         //todo closed loop calcualtion
 
         //todo send stuff to the motor
-        motorCtrl.setVoltageCmd(5.0); // TODO don't do this arm go zoooom
-
+        // motorCtrl.setVoltage(in); // TODO don't do this arm go zoooom
     }
-    
 }

@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.photonvision.PhotonCamera;
 import edu.wpi.first.math.controller.PIDController;
@@ -83,9 +84,8 @@ public class Robot extends TimedRobot {
   WrapperedCANMotorCtrl b_motorCtrl;
   // private Joystick b_stick;
 
-  private CANSparkMax s_motor;
-  WrapperedCANMotorCtrl s_motorCtrl;
-  private OperatorInput o_controller; 
+  private VictorSP s_motor;
+  private OperatorInput o_controller;
   // ... 
   // But before here
   ///////////////////////////////////////////////////////////////////
@@ -210,8 +210,7 @@ public class Robot extends TimedRobot {
     //Temporary arm stuff
     b_motor = new CANSparkMax(2, MotorType.kBrushless);
     b_motor.restoreFactoryDefaults();
-    s_motor = new CANSparkMax(16, MotorType.kBrushless);
-    s_motor.restoreFactoryDefaults();
+    s_motor = new VictorSP(5);
     o_controller = new OperatorInput(1);
   
    // b_motorCtrl = new WrapperedCANMotorCtrl("b_stick", 10, WrapperedCANMotorCtrl.CANMotorCtrlType.SPARK_MAX);
