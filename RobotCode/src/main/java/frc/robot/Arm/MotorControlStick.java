@@ -47,24 +47,21 @@ public class MotorControlStick {
 
     public void update(ArmAngularState act_in){
 
+        actAngleDeg = act_in.stickAngleDeg;
+        actAngVelDegPerSec = act_in.stickAngularVel;
+
         //Update PID constants
         m_pid.setPID(kP.get(), kI.get(), kD.get());
 
         //Calculate Feed-Forward
-        var cmdFeedForward = Math.signum(desAngVelDegPerSec) * kS.get() + 
-                             Math.cos(Units.degreesToRadians(desAngleDeg)) * kG.get() + 
-                             desAngVelDegPerSec * kV.get();
+        cmdFeedForward = Math.signum(desAngVelDegPerSec) * kS.get() + 
+                         Math.cos(Units.degreesToRadians(desAngleDeg)) * kG.get() + 
+                         desAngVelDegPerSec * kV.get();
 
 
-        //todo calcualte feed forward for this segment (including gravity)
+        cmdFeedBack = m_pid.calculate(actAngleDeg, desAngleDeg);
 
-        //todo closed loop calcualtion that's better than this
-        actAngleDeg = act_in.stickAngleDeg;
-        var err =  desAngleDeg - actAngleDeg;
-        var cmd = 12.0/5.0 * err;
-
-        //todo send stuff to the motor
-        motorCtrl.setVoltageCmd(cmd); // TODO don't do this arm go zoooom
+        motorCtrl.setVoltageCmd(cmdFeedForward + cmdFeedBack); 
 
     }
     
