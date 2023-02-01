@@ -14,7 +14,7 @@ public class MotorControlStick {
 
     //Feed Forward
     Calibration kV = new Calibration("Arm Stick kF", "V/degpersec", 0.13);
-    Calibration kG = new Calibration("Arm Stick kG", "V/cos(deg)", 0.1);
+    Calibration kG = new Calibration("Arm Stick kG", "V/cos(deg)", 0.7);
     Calibration kS = new Calibration("Arm Stick kS", "V", 0.0);
 
     //Feedback
@@ -56,7 +56,7 @@ public class MotorControlStick {
 
         //Calculate Feed-Forward
         cmdFeedForward = Math.signum(desAngVelDegPerSec) * kS.get() + 
-                         -1.0 * Math.cos(Units.degreesToRadians(desAngleDeg + actBoomAngleDeg)) * kG.get() + 
+                         Math.cos(Units.degreesToRadians(actAngleDeg + actBoomAngleDeg)) * kG.get() + 
                          desAngVelDegPerSec * kV.get();
 
 

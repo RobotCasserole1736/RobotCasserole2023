@@ -19,7 +19,7 @@ public class MotorControlBoom {
 
     //Feed Forward
     Calibration kV = new Calibration("Arm Boom kF", "V/degpersec", 0.13);
-    Calibration kG = new Calibration("Arm Boom kG", "V/cos(deg)", 0.2);
+    Calibration kG = new Calibration("Arm Boom kG", "V/cos(deg)", 0.25);
     Calibration kS = new Calibration("Arm Boom kS", "V", 0.0);
 
     //Feedback
@@ -64,6 +64,7 @@ public class MotorControlBoom {
         var angleErr = Math.abs(desAngleDeg - actAngleDeg);
         var armStationary = desAngVelDegPerSec == 0.0;
         var engageBrake = brakeErrDbnc.calculate((angleErr < brakeErrThresh.get()) && armStationary);
+        //engageBrake=false; //tuning temp
 
         if(engageBrake){
             //Brake engaged. 
@@ -79,7 +80,7 @@ public class MotorControlBoom {
 
             // Calculate Feed-Forward
             cmdFeedForward = Math.signum(desAngVelDegPerSec) * kS.get() + 
-                            -1.0 * Math.cos(Units.degreesToRadians(desAngleDeg)) * kG.get() + 
+                            Math.cos(Units.degreesToRadians(actAngleDeg)) * kG.get() + 
                             desAngVelDegPerSec * kV.get();
 
             // Update feedback command
