@@ -48,8 +48,8 @@ public class OperatorInput {
         isConnected = ctrl.isConnected();
 
         if (isConnected) {
-            curVerticalCmd =  ctrl.getLeftY();
-            curHorizontalCmd = ctrl.getRightY();
+            curVerticalCmd =  -1 * ctrl.getLeftY();
+            curHorizontalCmd = -1 * ctrl.getRightY();
 
             curVerticalCmd = MathUtil.applyDeadband( curVerticalCmd,stickDb.get()) * Units.inchesToMeters(manMaxVel.get()); 
             curHorizontalCmd = MathUtil.applyDeadband( curHorizontalCmd,stickDb.get())  * Units.inchesToMeters(manMaxVel.get()); 
