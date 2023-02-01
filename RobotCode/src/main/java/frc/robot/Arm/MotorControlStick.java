@@ -29,14 +29,14 @@ public class MotorControlStick {
     @Signal(units="V")
     double cmdFeedBack;
 
-    @Signal
+    @Signal(units="deg")
     double desAngleDeg;
-    @Signal
+    @Signal(units="deg")
     double actAngleDeg;
 
-    @Signal
+    @Signal(units="degpersec")
     double desAngVelDegPerSec;
-    @Signal
+    @Signal(units="degpersec")
     double actAngVelDegPerSec;
 
     public void setCmd(ArmAngularState in){
