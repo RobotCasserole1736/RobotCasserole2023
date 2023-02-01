@@ -2,13 +2,14 @@ package frc.sim;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.simulation.SolenoidSim;
 import frc.Constants;
 import frc.hardwareWrappers.SimDeviceBanks;
 import frc.hardwareWrappers.AbsoluteEncoder.Sim.SimAbsoluteEncoder;
 import frc.hardwareWrappers.MotorCtrl.Sim.SimSmartMotor;
 import frc.robot.ArmTelemetry;
-import frc.robot.Arm.ArmNamedPosition;
 
 public class ArmSim {
 
@@ -31,9 +32,12 @@ public class ArmSim {
     double curStickAngSpd_radpersec = 0.0;
     double curBoomAngSpd_radpersec = 0.0;
 
-    // driven by one neo
+    // driven by one neo each
     private final DCMotor m_boomGearbox = DCMotor.getNEO(1).withReduction(Constants.ARM_BOOM_GEAR_RATIO);
     private final DCMotor m_stickGearbox = DCMotor.getNEO(1).withReduction(Constants.ARM_STICK_GEAR_RATIO);
+
+    // With a brake ont he boom
+    private final SolenoidSim m_boomBrakeSol = new SolenoidSim(PneumaticsModuleType.CTREPCM, Constants.ARM_BOOM_BRAKE_SOLENOID);
 
     public ArmSim(){
         boomMotorCtrl = (SimSmartMotor) SimDeviceBanks.getCANDevice(Constants.ARM_BOOM_MOTOR_CANID);
@@ -62,9 +66,8 @@ public class ArmSim {
         var boomMotorTorque  = m_boomGearbox.getTorque(boomCurrent);
         var stickMotorTorque = m_stickGearbox.getTorque(stickCurrent);
 
-        var boomBrakeEngaged = false; //TODO - populate this from sim devices somewhow?
-
-
+        // Brake engaged when solenoid engaged, disengaged otherwise.
+        var boomBrakeEngaged = m_boomBrakeSol.getOutput(); 
 
         // Stick Moment of Inertia - considered constant, as the sum of the MOI of the
         // stick itself, plus the end effecor (modeled as a point mass at distance stick_len from the pivot)
@@ -99,20 +102,25 @@ public class ArmSim {
         var stickAlpha_radpersec2 = (stickGravTorque + stickMotorTorque + stickFricTorque) / stick_moi;
 
 
+        // Integrate the silly way. Listen to tyler and oblarg sob quietly from afar, unsure of where these
+        // voodoo doll like pains are coming from.
+
         // Boom can only rotate if brake is released
         if(boomBrakeEngaged){
             // Presume no slip, static friciton. Force is whatever it needs to be to counter out
-            // all other incoming forces, making acceleration zero.
+            // all other incoming forces, making accel & velocity zero.
             boomAlpha_radpersec2 = 0;
-        } 
+            curBoomAngSpd_radpersec = 0;
+        }  else {
+            //Normal boom integration
+            curBoomAngSpd_radpersec += boomAlpha_radpersec2 * Constants.SIM_SAMPLE_RATE_SEC;
+            curBoomAngle_rad += curBoomAngSpd_radpersec * Constants.SIM_SAMPLE_RATE_SEC;
+        }
 
-        // Integrate the silly way. Listen to tyler and oblarg sob quietly from afar, unsure of where these
-        // voodoo doll like pains are coming from.
         // Stick can always freely rotate
         curStickAngSpd_radpersec += stickAlpha_radpersec2 * Constants.SIM_SAMPLE_RATE_SEC;
         curStickAngle_rad += curStickAngSpd_radpersec * Constants.SIM_SAMPLE_RATE_SEC;
-        curBoomAngSpd_radpersec += boomAlpha_radpersec2 * Constants.SIM_SAMPLE_RATE_SEC;
-        curBoomAngle_rad += curBoomAngSpd_radpersec * Constants.SIM_SAMPLE_RATE_SEC;
+
 
         // Finally, we set our simulated encoder's readings and simulated battery voltage
         boomAbsEnc.setRawAngle(curBoomAngle_rad);

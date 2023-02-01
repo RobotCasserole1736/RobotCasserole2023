@@ -125,7 +125,7 @@ public class Constants {
 
     // Pneumatics Hub
     static public final int CLAW_SOLENOID = 0;
-    //static public final int UNUSED = 1;
+    static public final int ARM_BOOM_BRAKE_SOLENOID = 1;
     //static public final int UNUSED = 2;
     //static public final int UNUSED = 3;
     //static public final int UNUSED = 4;
