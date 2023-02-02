@@ -87,5 +87,9 @@ public class ArmControl {
         ArmTelemetry.getInstance().setDesired(curDesStateLimited, curDesAngularStates);
         ArmTelemetry.getInstance().setMeasured(curMeasState, curMeasAngularStates);
     }
+
+    public boolean isPathPlanning(){
+        return pp.motionActive;
+    }
     
 }

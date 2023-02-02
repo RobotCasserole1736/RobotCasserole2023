@@ -39,6 +39,7 @@ public class ArmPathPlanner {
 
         if(curPath != null && shouldRun){
             curPositionCmd = curPath.sample(pathTime);
+            motionActive = (pathTime <= curPath.getDurationSec());
         } else {
             //No path started yet
             motionActive = false;

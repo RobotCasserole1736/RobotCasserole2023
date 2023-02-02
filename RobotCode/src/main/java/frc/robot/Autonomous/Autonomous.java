@@ -12,10 +12,9 @@ import frc.lib.Autonomous.AutoModeList;
 import frc.lib.Util.CrashTracker;
 import frc.robot.Autonomous.Modes.DoNothing;
 import frc.robot.Autonomous.Modes.DriveFwd;
+import frc.robot.Autonomous.Modes.ScoreTwoTop;
 import frc.robot.Autonomous.Modes.Wait;
-import frc.robot.Autonomous.Modes.steak2023;
-import frc.robot.Autonomous.Modes.Steak;
-import frc.robot.Autonomous.Modes.TwoBallAuto;
+import frc.robot.Autonomous.Modes.Steak2023;
 import frc.robot.Drivetrain.DrivetrainControl;
 
 
@@ -84,10 +83,9 @@ public class Autonomous {
         delayModeList.add(new Wait(6.0));
         delayModeList.add(new Wait(9.0));
 
-        mainModeList.add(new Steak());
-        mainModeList.add(new steak2023());
-        mainModeList.add(new TwoBallAuto());
-        mainModeList.add(new DriveFwd());
+        mainModeList.add(new ScoreTwoTop());
+        mainModeList.add(new DriveFwd(3.0));
+        mainModeList.add(new Steak2023());
         mainModeList.add(new DoNothing());
         
 

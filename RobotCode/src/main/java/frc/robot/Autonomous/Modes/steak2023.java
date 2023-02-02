@@ -4,7 +4,7 @@ import frc.lib.AutoSequencer.AutoSequencer;
 import frc.lib.Autonomous.AutoMode;
 import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 
-public class steak2023 extends AutoMode {
+public class Steak2023 extends AutoMode {
 
     AutoEventJSONTrajectory driveEvent1 = null;
     

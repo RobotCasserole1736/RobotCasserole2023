@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
   RIOLoadMonitor loadMon;
   BatteryMonitor batMan;
   ArmControl ac;
-  clawControl cc;
+  ClawControl cc;
 
   GamepieceModeManager mm;
 
@@ -123,7 +123,7 @@ public class Robot extends TimedRobot {
     mm = GamepieceModeManager.getInstance();
     stt.mark("Gamepiece Manager");
 
-    cc = new clawControl();
+    cc = ClawControl.getInstance();
     stt.mark("Claw Control");
 
 
