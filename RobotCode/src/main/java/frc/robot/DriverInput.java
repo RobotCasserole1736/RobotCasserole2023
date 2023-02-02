@@ -118,6 +118,12 @@ public class DriverInput {
 
             clawEject = driverController.getRightTriggerAxis() > .75;
             clawIntake = driverController.getLeftTriggerAxis() > .75;
+
+            if(clawEject && clawIntake) {
+                clawEject = false;
+                clawIntake = false;
+            }
+
  
         } else {
             //Controller Unplugged Defaults
