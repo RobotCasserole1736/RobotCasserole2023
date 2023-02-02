@@ -144,7 +144,7 @@ public class AutoEventJSONTrajectory extends AutoEvent {
 
 
     public Pose2d getInitialPose(){
-        return path.getInitialPose();
+        return path.getInitialHolonomicPose();
     }
 
 }

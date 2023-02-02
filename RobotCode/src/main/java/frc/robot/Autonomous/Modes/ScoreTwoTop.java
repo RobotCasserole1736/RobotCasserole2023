@@ -29,7 +29,7 @@ public class ScoreTwoTop extends AutoMode {
         initDrive = new AutoEventJSONTrajectory("Score, pickup", 1.0);
         seq.addEvent(initDrive);
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_LOW));
-        var drivePickup = new AutoEventDriveTime(2.0, 0.25, 0);
+        var drivePickup = new AutoEventDriveTime(2.0, 0.25);
         drivePickup.addChildEvent(new AutoEventSetClawIntake());
         seq.addEvent(drivePickup);
     }

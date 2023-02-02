@@ -39,7 +39,6 @@ public class AutoEventDriveTime extends AutoEvent {
     double duration = 0;
     double speed_mps = 0;
 
-    final double HEADING_P_GAIN = -0.5;
     final double RAMP_TIME = 0.75;
     final double INIT_TIME = 0.35;
 
@@ -49,16 +48,12 @@ public class AutoEventDriveTime extends AutoEvent {
     double speedCmdRaw = 0;
     double speedCmdRateLimit = 0;
 
-
-    double targetAngleRad;
-
     DrivetrainControl dt_inst;
 
-    public AutoEventDriveTime(double duration_in, double speed_mps, double targetAngleRad) {
+    public AutoEventDriveTime(double duration_in, double speed_mps) {
 
         duration = duration_in + INIT_TIME;
         this.speed_mps = speed_mps;
-        this.targetAngleRad = targetAngleRad;
         dt_inst = DrivetrainControl.getInstance();    
         spdRateLimit = new SlewRateLimiter(Math.abs(speed_mps)/RAMP_TIME);
     }
@@ -91,11 +86,8 @@ public class AutoEventDriveTime extends AutoEvent {
             }
 
             speedCmdRateLimit = spdRateLimit.calculate(speedCmdRaw);
-            
-            double headingError = dt_inst.getCurEstPose().getRotation().getRadians() - targetAngleRad;
-            double rotationCmd_radpersec = headingError * HEADING_P_GAIN; //Simple hacked together P controller to try to maintain heading
-            
-            dt_inst.setCmdRobotRelative(speedCmdRateLimit, 0.0, rotationCmd_radpersec);
+
+            dt_inst.setCmdRobotRelative(speedCmdRateLimit, 0.0, 0.0);
 
 
             //Populate desired pose from drivetrain - meh
