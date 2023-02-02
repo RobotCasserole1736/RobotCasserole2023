@@ -1,6 +1,7 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2023.1.1"
+    id 'org.ajoberstar.grgit' version '5.0.0'
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -157,21 +158,21 @@ task genMetaData(){
 
         // Get currently checked-out SHA1
         try{
-            git_sha1 = Grgit.open(currentDir: file('.')).head().id
+            git_sha1 = grgit.open(currentDir: file('.')).head().id
         } catch (all) {
             git_sha1 = "unknown"
         }
 
         // Get currently checked-out branch friendly name
         try{
-            git_branch = Grgit.open(currentDir: file('.')).branch.current().name
+            git_branch = grgit.open(currentDir: file('.')).branch.current().name
         } catch (all) {
             git_branch = "unknown"
         }
 
         // Get friendly names of the tags on this commit (if any)
         try{
-            def repo = Grgit.open(currentDir: file('.'))
+            def repo = grgit.open(currentDir: file('.'))
             def head = repo.head()
             def tag_list = repo.tag.list().findAll{it.commit == head}
             if(tag_list.size() > 0){
@@ -190,15 +191,19 @@ task genMetaData(){
 
         // Get clean/dirty status of working directory
         try{
-            git_wd_clean = Grgit.open(currentDir: file('.')).status().isClean()
+            git_wd_clean = grgit.open(currentDir: file('.')).status().isClean()
         } catch (all) {
             git_wd_clean = "unknown"
         }
 
         // Build file contents and write to disk
-        filecontents += "<html><body>\n"
+        filecontents += "<html>\n"
+        filecontents += "<head>\n"
+        filecontents += "<link rel=\"stylesheet\" href=\"common.css\">";
+        filecontents += "<link rel=\"stylesheet\" href=\"index.css\">";
+        filecontents += "</head>\n"
+        filecontents += "<body>\n"
         filecontents += "<table>\n"
-        filecontents += "<head><link rel=\"stylesheet\" href=\"main.css\"></head>\n"
         filecontents += "<tr><td>Build Username     </td><td> ${build_uname}  </td></tr>\n"
         filecontents += "<tr><td>Build Host PC      </td><td> ${build_host}   </td></tr>\n"
         filecontents += "<tr><td>Build Time         </td><td> ${build_time}   </td></tr>\n"
