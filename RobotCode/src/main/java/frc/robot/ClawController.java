@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.Constants;
 import frc.lib.Signal.Annotations.Signal;
 
-public class ClawControl {
+public class ClawController {
     Spark intakeWheels;
     boolean curEjectcmd;
     boolean curIntakecmd;
@@ -15,17 +15,17 @@ public class ClawControl {
     @Signal
     boolean clawSolenoidCmd = true;
 
-	private static ClawControl inst = null;
-	public static synchronized ClawControl getInstance() {
+	private static ClawController inst = null;
+	public static synchronized ClawController getInstance() {
 		if(inst == null)
-			inst = new ClawControl();
+			inst = new ClawController();
 		return inst;
 	}
 
 
     // todo add open/close stuff
 
-    private ClawControl() {
+    private ClawController() {
         intakeWheels = new Spark(0);
        
         clawSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,Constants.CLAW_SOLENOID);

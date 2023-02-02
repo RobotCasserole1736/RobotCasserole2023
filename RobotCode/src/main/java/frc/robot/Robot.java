@@ -26,7 +26,6 @@ import frc.robot.AutoDrive.AutoDrive;
 import frc.robot.AutoDrive.AutoDrive.AutoDriveCmdState;
 import frc.robot.Autonomous.Autonomous;
 import frc.robot.Drivetrain.DrivetrainControl;
-import frc.robot.GamepieceModeManager;
 import frc.sim.RobotModel;
 
 /**
@@ -52,7 +51,7 @@ public class Robot extends TimedRobot {
   RIOLoadMonitor loadMon;
   BatteryMonitor batMan;
   ArmControl ac;
-  ClawControl cc;
+  ClawController cc;
 
   GamepieceModeManager mm;
 
@@ -123,7 +122,7 @@ public class Robot extends TimedRobot {
     mm = GamepieceModeManager.getInstance();
     stt.mark("Gamepiece Manager");
 
-    cc = ClawControl.getInstance();
+    cc = ClawController.getInstance();
     stt.mark("Claw Control");
 
 

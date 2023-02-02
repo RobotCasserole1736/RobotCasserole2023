@@ -14,7 +14,7 @@ import frc.robot.Autonomous.Modes.DoNothing;
 import frc.robot.Autonomous.Modes.DriveFwd;
 import frc.robot.Autonomous.Modes.ScoreTwoTop;
 import frc.robot.Autonomous.Modes.Wait;
-import frc.robot.Autonomous.Modes.Steak2023;
+import frc.robot.Autonomous.Modes.SteakAuto2023;
 import frc.robot.Drivetrain.DrivetrainControl;
 
 
@@ -85,7 +85,7 @@ public class Autonomous {
 
         mainModeList.add(new ScoreTwoTop());
         mainModeList.add(new DriveFwd(3.0));
-        mainModeList.add(new Steak2023());
+        mainModeList.add(new SteakAuto2023());
         mainModeList.add(new DoNothing());
         
 
