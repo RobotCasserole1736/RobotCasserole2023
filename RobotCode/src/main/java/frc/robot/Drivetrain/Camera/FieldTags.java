@@ -8,6 +8,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import frc.lib.Faults.Fault;
 
 /**
  * Class to wrapper the actions of loading a .json file which defines all
@@ -25,6 +26,9 @@ public class FieldTags {
     }
 
     AprilTagFieldLayout fieldTags; 
+
+    Fault notLoadedFault = new Fault("Apriltag Pose", "Failed to load field definition file.");
+
     
     private FieldTags(){
         try {
@@ -40,7 +44,10 @@ public class FieldTags {
         Optional<Pose3d> tmp = Optional.empty();
         if(isLoaded()){
             tmp = fieldTags.getTagPose(id);
-        } 
+            notLoadedFault.clearFault();
+        }  else {
+            notLoadedFault.reportFault();
+        }
         return tmp;
     }
 

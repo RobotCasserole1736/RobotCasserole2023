@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.lib.Calibration.Calibration;
+import frc.lib.Faults.Fault;
 import frc.lib.Signal.Annotations.Signal;
 
 public class OperatorInput {
@@ -31,6 +32,8 @@ public class OperatorInput {
 
     Calibration stickDb;
     Calibration manMaxVel;
+
+    Fault disconFault = new Fault("Operator Controller", "Unplugged");
 
     String getName(int idx) {
         return "Operator Ctrl " + Integer.toString(idx) + " ";
@@ -67,6 +70,9 @@ public class OperatorInput {
             armHighPosCmd = false;
             armStowPosCmd = false;
         }
+
+        disconFault.set(isConnected);
+
     }
 
     public boolean posCmdActive(){ 

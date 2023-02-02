@@ -12,7 +12,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.lib.Faults.Fault;
 import frc.lib.Signal.Annotations.Signal;
 import frc.robot.PoseTelemetry;
 
@@ -27,14 +27,19 @@ public class PhotonCamWrapper {
 
     final Transform3d robotToCam;
 
+    Fault disconnectedFault;
+
 
     public PhotonCamWrapper(String cameraName, Transform3d robotToCam){
         this.cam = new PhotonCamera(cameraName);
         this.robotToCam = robotToCam;
         this.observations = new ArrayList<CameraPoseObservation>();
+        disconnectedFault = new Fault(cameraName, "Camera not sending data");
     }
 
     public void update(Pose2d lastEstimate){
+
+        disconnectedFault.set(!cam.isConnected());
 
         var res = cam.getLatestResult();
         double observationTime = Timer.getFPGATimestamp() - res.getLatencyMillis();
