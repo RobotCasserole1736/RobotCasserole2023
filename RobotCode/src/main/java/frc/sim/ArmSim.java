@@ -36,7 +36,7 @@ public class ArmSim {
 
     public ArmSim(){
         boomMotorCtrl = (SimSmartMotor) SimDeviceBanks.getCANDevice(Constants.ARM_BOOM_MOTOR_CANID);
-        stickMotorCtrl = (SimSmartMotor) SimDeviceBanks.getCANDevice(Constants.ARM_STICK_MOTOR_CANID);
+        stickMotorCtrl = (SimSmartMotor) SimDeviceBanks.getDIDevice(5);
 
         boomAbsEnc = (SimAbsoluteEncoder) SimDeviceBanks.getDIDevice(Constants.ARM_BOOM_ENC_IDX);
         stickAbsEnc = (SimAbsoluteEncoder) SimDeviceBanks.getDIDevice(Constants.ARM_STICK_ENC_IDX);
