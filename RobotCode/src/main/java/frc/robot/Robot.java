@@ -208,7 +208,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     //Temporary arm stuff
-    b_motor = new CANSparkMax(2, MotorType.kBrushless);
+    b_motor = new CANSparkMax(10, MotorType.kBrushless);
     b_motor.restoreFactoryDefaults();
     s_motor = new VictorSP(5);
     o_controller = new OperatorInput(1);
