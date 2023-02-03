@@ -18,6 +18,7 @@ public class SimSmartMotor extends AbstractSimmableMotorController {
     public ArrayList<SimSmartMotor> simFollowers = new ArrayList<SimSmartMotor>();
 
     boolean isInverted;
+    boolean isBrakeMode = false;
     double kP;
     double kI;
     double kD;
@@ -95,6 +96,12 @@ public class SimSmartMotor extends AbstractSimmableMotorController {
 
     public double sim_getWindingVoltage(){
         return curWindingVoltage * curLimitFactor;
+    }
+
+    // True when the controller has gone to high impedeance to allow
+    // coasting, false otherwise
+    public boolean sim_isCoasting(){
+        return !this.isBrakeMode && curWindingVoltage == 0.0;
     }
 
     public void sim_setSupplyVoltage(double supply_V){
@@ -184,6 +191,11 @@ public class SimSmartMotor extends AbstractSimmableMotorController {
     @Override
     public void resetDistance() {
         curPos_rad = 0;
+    }
+
+    @Override
+    public void setBrakeMode(boolean isBrakeMode) {
+        this.isBrakeMode = isBrakeMode;
     }
 
 

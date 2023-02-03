@@ -178,4 +178,21 @@ public class RealSparkMax extends AbstractSimmableMotorController {
     }
 
 
+    @Override
+    public void setBrakeMode(boolean isBrakeMode) {
+        boolean success = false;
+        int retryCount = 0;
+        while(!success && retryCount++ < MAX_RETRIES){    
+            var err1 = m_motor.setIdleMode(isBrakeMode ? IdleMode.kBrake : IdleMode.kCoast);
+            success = err1 == REVLibError.kOk;
+        }
+
+        if(!success) {
+            DriverStation.reportError("Failed to configure coast/brake mode for motor CAN ID " + Integer.toString(this.m_motor.getDeviceId()), false);
+        }
+
+        
+    }
+
+
 }

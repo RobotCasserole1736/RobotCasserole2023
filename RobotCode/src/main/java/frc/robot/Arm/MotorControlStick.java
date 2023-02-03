@@ -39,6 +39,10 @@ public class MotorControlStick {
     @Signal(units="degpersec")
     double actAngVelDegPerSec;
 
+    public MotorControlStick(){
+        motorCtrl.setBrakeMode(true);
+    }
+
     public void setCmd(ArmAngularState in){
         //todo - save off the right angles and velocities for this motor
         desAngleDeg = in.stickAngleDeg;

@@ -59,8 +59,8 @@ public class ArmSim {
         } 
 
         //Using the last speed, get our motor currents
-        var boomCurrent = m_boomGearbox.getCurrent(curBoomAngSpd_radpersec, boomVoltage);
-        var stickCurrent = m_stickGearbox.getCurrent(curStickAngSpd_radpersec, stickVoltage);
+        var boomCurrent  = boomMotorCtrl.sim_isCoasting()  ? 0 : m_boomGearbox.getCurrent(curBoomAngSpd_radpersec, boomVoltage);
+        var stickCurrent = stickMotorCtrl.sim_isCoasting() ? 0 : m_stickGearbox.getCurrent(curStickAngSpd_radpersec, stickVoltage);
 
         //Using current, find the applied motor torque
         var boomMotorTorque  = m_boomGearbox.getTorque(boomCurrent);
