@@ -4,34 +4,25 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl;
-import frc.lib.Calibration.CalWrangler;
-import frc.lib.LoadMon.RIOLoadMonitor;
-import frc.lib.LoadMon.SegmentTimeTracker;
-import frc.lib.Logging.LogFileWrangler;
-import frc.lib.Signal.SignalWrangler;
-import frc.lib.Signal.Annotations.Signal;
-import frc.lib.Webserver2.Webserver2;
-import frc.robot.Arm.ArmControl;
-import frc.robot.AutoDrive.AutoDrive;
-import frc.robot.AutoDrive.AutoDrive.AutoDriveCmdState;
-import frc.robot.Autonomous.Autonomous;
-import frc.robot.Drivetrain.DrivetrainControl;
-import frc.sim.RobotModel;
+
 //Temporary arm stuff
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+/**
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -39,327 +30,111 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  * project.
  */
 public class Robot extends TimedRobot {
+  private static final String kDefaultAuto = "Default";
+  private static final String kCustomAuto = "My Auto";
+  private String m_autoSelected;
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  public static double loopStartTime;
-
-  ///////////////////////////////////////////////////////////////////
-  // Instatntiate new classes after here 
-  // ...
-
-  // Website utilities
-  Webserver2 webserver;
-  Dashboard db;
-  CalWrangler cw;
-
-  // Things
-  RIOLoadMonitor loadMon;
-  BatteryMonitor batMan;
-  ArmControl ac;
-  clawControl cc;
-
-  // Main Driver
-  DriverInput di;
-
-  //Drivetrain and drivetrain accessories
-  DrivetrainControl dt;
-  AutoDrive ad;
-
-  // Autonomous Control Utilities
-  Autonomous auto;
-  PoseTelemetry pt;
-
-  SegmentTimeTracker stt;
-
-  @Signal(units = "sec")
-  double mainLoopDuration;
-  @Signal(units = "sec")
-  double mainLoopPeriod;
-
-  final double ANGULAR_P = 0.1;
-  final double ANGULAR_D = 0.0;
-  PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
-
-  // Temporary arm control thing
-  private CANSparkMax b_motor;
-  WrapperedCANMotorCtrl b_motorCtrl;
+    private CANSparkMax b_motor;
   // private Joystick b_stick;
 
   private VictorSP s_motor;
-  private OperatorInput o_controller;
-  // ... 
-  // But before here
-  ///////////////////////////////////////////////////////////////////
+  private XboxController o_controller; 
 
 
-  ///////////////////////////////////////////////////////////////////
-  // Do one-time initilization here
-  ///////////////////////////////////////////////////////////////////
+  /**
+   * This function is run when the robot is first started up and should be used for any
+   * initialization code.
+   */
   @Override
   public void robotInit() {
+    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    m_chooser.addOption("My Auto", kCustomAuto);
+    SmartDashboard.putData("Auto choices", m_chooser);
 
-    stt = new SegmentTimeTracker("Robot.java", 0.25);
-
-    stt.start();
-
-    // Disable default behavior of the live-window output manipulation logic
-    // We've got our own and never use this anyway.
-    LiveWindow.setEnabled(false);
-    LiveWindow.disableAllTelemetry();
-    stt.mark("LW Disable");
-
-    // Start NT4 with logging
-    NetworkTableInstance.getDefault().startServer();
-    stt.mark("NT4");
-
-
-    /* Init website utilties */
-    webserver = new Webserver2();
-    stt.mark("Webserver2");
-
-    cw = CalWrangler.getInstance();
-    stt.mark("Cal Wrangler");
-
-    loadMon = new RIOLoadMonitor();
-    stt.mark("RIO Load Monitor");
-
-    batMan = BatteryMonitor.getInstance();
-    stt.mark("Battery Monitor");
-
-    ac = ArmControl.getInstance();
-
-    //bcd = new Ballcolordetector();
-    stt.mark("Ball Color Detector");
-
-    cc = new clawControl();
-
-    di = new DriverInput(0);
-    stt.mark("Driver IO");
-
-    dt = DrivetrainControl.getInstance();
-    ad = new AutoDrive();
-    stt.mark("Drivetrain Control");
-
-    auto = Autonomous.getInstance();
-    auto.loadSequencer();
-    stt.mark("Autonomous");
-
-    pt = PoseTelemetry.getInstance();
-    stt.mark("Pose Telemetry");
-
-    db = new Dashboard(webserver);
-    stt.mark("Dashboard");
-
-    if(Robot.isSimulation()){
-      simulationSetup();
-    }
-    syncSimPoseToEstimate();
-    stt.mark("Simulation");
-
-    SignalWrangler.getInstance().registerSignals(this);
-    stt.mark("Signal Registration");
-
-    webserver.startServer();
-    stt.mark("Webserver Startup");
-
-    PhotonCamera.setVersionCheckEnabled(false);
-    stt.mark("Photonvision Config");
-
-    System.gc();
-    stt.mark("Post Init GC");
-
-    System.out.println("Init Stats:");
-    stt.end();
-
-  }
-
-
-  ///////////////////////////////////////////////////////////////////
-  // Autonomous-Specific
-  ///////////////////////////////////////////////////////////////////
-  @Override
-  public void autonomousInit() {
-
-    LogFileWrangler.getInstance().syncLogFileNameToMatch();
-
-    //Reset sequencer
-    auto.reset();
-    auto.startSequencer();
-
-    // Ensure simulation resets to correct pose at the start of autonomous
-    syncSimPoseToEstimate();
-
-  }
-
-  @Override
-  public void autonomousPeriodic() {
-    stt.start();
-    loopStartTime = Timer.getFPGATimestamp();
-
-    //Step the sequencer forward
-    auto.update();
-    stt.mark("Auto Update");
-
-  }
-
-  
-  ///////////////////////////////////////////////////////////////////
-  // Teleop-Specific
-  ///////////////////////////////////////////////////////////////////
-  @Override
-  public void teleopInit() {
-    //Temporary arm stuff
     b_motor = new CANSparkMax(10, MotorType.kBrushless);
     b_motor.restoreFactoryDefaults();
     s_motor = new VictorSP(5);
-    o_controller = new OperatorInput(1);
-  
-   // b_motorCtrl = new WrapperedCANMotorCtrl("b_stick", 10, WrapperedCANMotorCtrl.CANMotorCtrlType.SPARK_MAX);
-   // s_motorCtrl = new WrapperedCANMotorCtrl("s_stick", 11, WrapperedCANMotorCtrl.CANMotorCtrlType.SPARK_MAX);
+    o_controller = new XboxController(1);
   }
 
+  /**
+   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
+   * that you want ran during disabled, autonomous, teleoperated and test.
+   *
+   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
+   * SmartDashboard integrated updating.
+   */
+  @Override
+  public void robotPeriodic() {}
+
+  /**
+   * This autonomous (along with the chooser code above) shows how to select between different
+   * autonomous modes using the dashboard. The sendable chooser code works with the Java
+   * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the chooser code and
+   * uncomment the getString line to get the auto name from the text box below the Gyro
+   *
+   * <p>You can add additional auto modes by adding additional comparisons to the switch structure
+   * below with additional strings. If using the SendableChooser make sure to add them to the
+   * chooser code above as well.
+   */
+  @Override
+  public void autonomousInit() {
+    m_autoSelected = m_chooser.getSelected();
+    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    System.out.println("Auto selected: " + m_autoSelected);
+  }
+
+  /** This function is called periodically during autonomous. */
+  @Override
+  public void autonomousPeriodic() {
+    switch (m_autoSelected) {
+      case kCustomAuto:
+        // Put custom auto code here
+        break;
+      case kDefaultAuto:
+      default:
+        // Put default auto code here
+        break;
+    }
+  }
+
+  /** This function is called once when teleop is enabled. */
+  @Override
+  public void teleopInit() {
+
+
+  }
+
+  /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
 
-    //Temporary arm stuff start
-    o_controller.update();
-    b_motor.setVoltage(o_controller.boomMotor);
-    s_motor.setVoltage(o_controller.stickMotor);
-    //Temporary arm stuff end
-    
-    stt.start();
-    loopStartTime = Timer.getFPGATimestamp();
-
-    di.update();
-    stt.mark("Driver Input");
-
-    /////////////////////////////////////
-    // Drivetrain Input Mapping
-
-    if(di.getSpinMoveCmd()){
-      ad.setCmd(AutoDriveCmdState.DO_A_BARREL_ROLL);
-    } else if (di.getDriveToCenterCmd()){
-      ad.setCmd(AutoDriveCmdState.DRIVE_TO_CENTER);
-    } else {
-      ad.setCmd(AutoDriveCmdState.MANUAL);
-    }
-
-    ad.setManualCommands(di.getFwdRevCmd_mps(), di.getSideToSideCmd_mps(), di.getRotateCmd_rps(), !di.getRobotRelative());
-
-    ad.update();
-
-
-    if(di.getOdoResetCmd()){
-      //Reset pose estimate to angle 0, but at the same translation we're at
-      Pose2d newPose = new Pose2d(dt.getCurEstPose().getTranslation(), new Rotation2d(0.0));
-      dt.setKnownPose(newPose);
-    }
-    cc.setIntake(di.getClawIntake());
-    cc.setEject(di.getClawEject());
-
-    stt.mark("Human Input Mapping");
-
+b_motor.set(o_controller.getLeftY());
+s_motor.set(o_controller.getRightY());
   }
 
-  ///////////////////////////////////////////////////////////////////
-  // Disabled-Specific
-  ///////////////////////////////////////////////////////////////////
+  /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {
+  public void disabledInit() {}
 
-  }
-
+  /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {
-    stt.start();
-    loopStartTime = Timer.getFPGATimestamp();
+  public void disabledPeriodic() {}
 
-    
-    dt.calUpdate(false);
-    stt.mark("Cal Updates");
-
-    auto.sampleDashboardSelector();
-    stt.mark("Auto Mode Update");
-  }
-  
-  ///////////////////////////////////////////////////////////////////
-  // Common Periodic updates
-  ///////////////////////////////////////////////////////////////////
+  /** This function is called once when test mode is enabled. */
   @Override
-  public void robotPeriodic() 
-  {
-    if(DriverStation.isTest() && !DriverStation.isDisabled()){
-      dt.testUpdate();
-    } else {
-      dt.update();
-    }
-    stt.mark("Drivetrain");
+  public void testInit() {}
 
-    ac.update();
-    cw.update();
-    cc.update();
-    stt.mark("Cal Wrangler");
-    db.updateDriverView();
-    stt.mark("Dashboard");
-    telemetryUpdate();
-    stt.mark("Telemetry");
-    stt.end();
-
-    SmartDashboard.putNumber("SDB FPGATime", Timer.getFPGATimestamp());
-  }
-
-  private void telemetryUpdate(){
-    double time = loopStartTime;
-
-    dt.updateTelemetry();
-
-    pt.setDesiredPose(dt.getCurDesiredPose());
-    pt.setEstimatedPose(dt.getCurEstPose());
-    
-    pt.update(time);
-
-    mainLoopDuration = stt.loopDurationSec;
-    mainLoopPeriod = stt.loopPeriodSec;
-
-    SignalWrangler.getInstance().sampleAllSignals(time);
-  }
-
-  ///////////////////////////////////////////////////////////////////
-  // Test-Mode-Specific
-  ///////////////////////////////////////////////////////////////////
-
+  /** This function is called periodically during test mode. */
   @Override
-  public void testInit(){
-    // Tell the subsystems that care that we're entering test mode.
-    dt.testInit();
-  }
+  public void testPeriodic() {}
 
+  /** This function is called once when the robot is first started up. */
   @Override
-  public void testPeriodic(){
-    stt.start();
-    loopStartTime = Timer.getFPGATimestamp();
-    // Nothing special here, yet
-  }
+  public void simulationInit() {}
 
-  ///////////////////////////////////////////////////////////////////
-  // Simulation Support
-  ///////////////////////////////////////////////////////////////////
-
-  RobotModel plant;
-
-  public void simulationSetup(){
-    plant = new RobotModel();
-    syncSimPoseToEstimate();
-  }
-
-  public void syncSimPoseToEstimate(){
-    if(Robot.isSimulation()){
-      plant.reset(dt.getCurEstPose());
-    }
-  }
-
+  /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic(){
-    plant.update(this.isDisabled());
-    pt.setActualPose(plant.getCurActPose());
-  }
+  public void simulationPeriodic() {}
 }
