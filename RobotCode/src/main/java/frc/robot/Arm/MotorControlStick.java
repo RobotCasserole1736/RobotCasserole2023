@@ -7,10 +7,14 @@ import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl;
 import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl.CANMotorCtrlType;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
+//Temporary change
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 
 public class MotorControlStick {
 
-    WrapperedCANMotorCtrl motorCtrl = new WrapperedCANMotorCtrl("Stick", Constants.ARM_STICK_MOTOR_CANID, CANMotorCtrlType.SPARK_MAX);
+    // WrapperedCANMotorCtrl motorCtrl = new WrapperedCANMotorCtrl("Stick", Constants.ARM_STICK_MOTOR_CANID, CANMotorCtrlType.SPARK_MAX);
+    VictorSP motorCtrl = new VictorSP(5);
+
 
     //Feed Forward
     Calibration kV = new Calibration("Arm Stick kF", "V/degpersec", 0.13);
@@ -62,7 +66,8 @@ public class MotorControlStick {
 
         cmdFeedBack = m_pid.calculate(actAngleDeg, desAngleDeg);
 
-        motorCtrl.setVoltageCmd(cmdFeedForward + cmdFeedBack); 
+        //motorCtrl.setVoltageCmd(cmdFeedForward + cmdFeedBack); 
+        motorCtrl.setVoltage(cmdFeedForward + cmdFeedBack); 
 
     }
     
