@@ -1,6 +1,8 @@
 # RobotCasserole2023
 Software for Robot Casserole's 2023 Charged Up 🔋⚡ Competition Season
 
+![Logo](ReadMeImages/Donut_Shirt_Colored_FINAL-1.jpg)
+
 ## Contents
 1. Driver View
 2. Main Source Code
