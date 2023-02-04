@@ -17,7 +17,13 @@ public class ArmPathFactory {
         } else {
             newPath = new ReflexInvertingArmPath();
         }
-        newPath.build(start, end, Constants.ARM_END_EFF_MAX_VEL_MPS, Constants.ARM_END_EFF_MAX_ACCEL_MPS2);
+        var success = newPath.build(start, end, Constants.ARM_END_EFF_MAX_VEL_MPS, Constants.ARM_END_EFF_MAX_ACCEL_MPS2);
+
+        if(!success){
+            //generation failed. Fallback on a simpler strategy
+            newPath = new LinearInterpolatedArmPath();
+            newPath.build(start, end, Constants.ARM_END_EFF_MAX_VEL_MPS * 0.3, Constants.ARM_END_EFF_MAX_ACCEL_MPS2);
+        }
         return newPath;
     }
 

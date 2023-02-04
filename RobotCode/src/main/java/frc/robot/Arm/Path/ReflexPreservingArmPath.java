@@ -5,11 +5,9 @@ import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.spline.SplineParameterizer.MalformedSplineException;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.TrajectoryParameterizer.TrajectoryGenerationException;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.Constants;
@@ -44,7 +42,7 @@ public class ReflexPreservingArmPath implements ArmPath {
 
      */
     @Override
-    public void build(ArmEndEffectorState start, ArmNamedPosition end, double max_vel_mps, double max_accel_mps2){
+    public boolean build(ArmEndEffectorState start, ArmNamedPosition end, double max_vel_mps, double max_accel_mps2){
         this.start = start; 
         this.end = end;
 
@@ -57,8 +55,9 @@ public class ReflexPreservingArmPath implements ArmPath {
         interiorWaypoints = new ArrayList<Translation2d>();//none by default
 
         Pose2d pathStartPos;
-        if(start.x > Constants.WHEEL_BASE_HALF_LENGTH_M){
-            // If we're outside frame perimiter, ensure we start with upward motion
+        if(start.x > Constants.WHEEL_BASE_HALF_LENGTH_M && Math.abs(start.x - end.get().x) > 0.01){
+            // If we're outside frame perimiter and about to move horizontally, 
+            // ensure we start with upward motion to clear obstacles
             pathStartPos = start.toPoseToTop();
         } else {
             pathStartPos = start.toPoseToOther(end);
@@ -88,14 +87,15 @@ public class ReflexPreservingArmPath implements ArmPath {
             if(traj.getStates().size() > 1){
                 failed = false;
             }
-        } catch (MalformedSplineException e){
-        } catch (TrajectoryGenerationException e){
+        } catch (Exception e){
         } 
 
         if(failed){
             totalDuration = 0.0;
             DriverStation.reportWarning("Trajectory generation failed!", false);
         }
+
+        return !failed;
 
     }
 

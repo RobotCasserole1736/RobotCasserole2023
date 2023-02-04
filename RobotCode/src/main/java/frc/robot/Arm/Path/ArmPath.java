@@ -20,9 +20,10 @@ public interface ArmPath {
      * @param end
      * @param max_vel_mps
      * @param max_accel_mps2
+     * @return true if generation was successful, false otherwise
 
      */
-    public abstract void build(ArmEndEffectorState start, ArmNamedPosition end, double max_vel_mps, double max_accel_mps2);
+    public abstract boolean build(ArmEndEffectorState start, ArmNamedPosition end, double max_vel_mps, double max_accel_mps2);
 
     /**
      * Return the ArmPosition at a given time

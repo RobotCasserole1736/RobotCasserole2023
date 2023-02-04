@@ -66,6 +66,17 @@ public class ArmEndEffectorState {
         return new ArmEndEffectorState(x, y, reflexFrac);
     }
 
+    public ArmEndEffectorState interpolateTo(ArmEndEffectorState other, double frac, double linearVel){
+        double fracInv = (1.0 - frac);
+        double x = other.x * frac + this.x * fracInv;
+        double y = other.y * frac + this.y * fracInv;
+        double reflexFrac = other.reflexFrac * frac + this.reflexFrac * fracInv;
+        var velDir = new Rotation2d(other.x - this.x, other.y - this.y);
+        double xVel = linearVel * velDir.getCos();
+        double yVel = linearVel * velDir.getSin();
+        return new ArmEndEffectorState(x, y, xVel, yVel, reflexFrac);
+    }
+
     //TODO - refine these 
     // Requirements: rather than two methods for start/end, we should 
     // have a single method that supports confguring whether you want to approach the position

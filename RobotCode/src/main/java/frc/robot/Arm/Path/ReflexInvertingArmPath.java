@@ -5,11 +5,9 @@ import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.spline.SplineParameterizer.MalformedSplineException;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.TrajectoryParameterizer.TrajectoryGenerationException;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -56,7 +54,8 @@ public class ReflexInvertingArmPath implements ArmPath {
      * @param max_accel_mps2
 
      */
-    public void build(ArmEndEffectorState start, ArmNamedPosition end, double max_vel_mps, double max_accel_mps2){
+    @Override
+    public boolean build(ArmEndEffectorState start, ArmNamedPosition end, double max_vel_mps, double max_accel_mps2){
         this.start = start; 
         this.end = end;
 
@@ -74,9 +73,9 @@ public class ReflexInvertingArmPath implements ArmPath {
         interiorWaypoints1 = new ArrayList<Translation2d>();
 
         Pose2d pathStartPos;
-        if(start.x > Constants.WHEEL_BASE_HALF_LENGTH_M){
-            // If we're outside frame perimiter, ensure we start with
-            // upward motion to clear obstacles
+        if(start.x > Constants.WHEEL_BASE_HALF_LENGTH_M && Math.abs(start.x - end.get().x) > 0.01){
+            // If we're outside frame perimiter and about to move horizontally, 
+            // ensure we start with upward motion to clear obstacles
             pathStartPos = start.toPoseToTop();
         } else {
             pathStartPos = start.toPoseToOther(end);
@@ -87,8 +86,7 @@ public class ReflexInvertingArmPath implements ArmPath {
             traj1 = TrajectoryGenerator.generateTrajectory(pathStartPos, interiorWaypoints1, reflexEndpoint.toPoseFromOther(start), cfg);
             duration1 = traj1.getTotalTimeSeconds();
             failed = false;
-        } catch (MalformedSplineException e){
-        } catch (TrajectoryGenerationException e){
+        } catch (Exception e){
         }
 
         if(failed){
@@ -124,12 +122,17 @@ public class ReflexInvertingArmPath implements ArmPath {
         try {
             traj2 = TrajectoryGenerator.generateTrajectory(reflexEndpoint.toPoseToOther(end), interiorWaypoints2, pathEndPos, cfg);
             totalDuration += traj2.getTotalTimeSeconds();
-        } catch (MalformedSplineException e){
-        } catch (TrajectoryGenerationException e){
+        } catch (Exception e){
         }
 
         if(failed){
             DriverStation.reportWarning("Trajectory 2 generation failed!", false);
+        }
+
+        if(totalDuration == 0.0){
+            return false;
+        } else {
+            return true;
         }
 
     }
