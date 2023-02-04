@@ -49,6 +49,10 @@ public class MotorControlBoom {
     @Signal(units="degpersec")
     double actAngVelDegPerSec;
 
+    public MotorControlBoom(){
+        motorCtrl.setBrakeMode(true);
+    }
+
     public void setCmd(ArmAngularState in){
         //todo - save off the right angles and velocities for this motor
         desAngleDeg = in.boomAngleDeg;

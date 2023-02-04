@@ -56,6 +56,9 @@ class SwerveModuleControl {
         wheelMotorCtrl.setInverted(invertWheel);
         azmthMotorCtrl.setInverted(true);
 
+        wheelMotorCtrl.setBrakeMode(false);
+        azmthMotorCtrl.setBrakeMode(true);
+
         azmthPosDesSig = new frc.lib.Signal.Signal(SwerveStateTopicSet.PREFIX + modName + SwerveStateTopicSet.SUFFIX_AZMTH_DES, "deg");
         azmthPosActSig = new frc.lib.Signal.Signal(SwerveStateTopicSet.PREFIX + modName + SwerveStateTopicSet.SUFFIX_AZMTH_ACT, "deg");
         wheelSpdDesSig = new frc.lib.Signal.Signal(SwerveStateTopicSet.PREFIX + modName + SwerveStateTopicSet.SUFFIX_WHEEL_DES, "RPM");

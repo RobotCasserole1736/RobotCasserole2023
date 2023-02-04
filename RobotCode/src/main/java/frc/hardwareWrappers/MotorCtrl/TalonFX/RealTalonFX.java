@@ -196,6 +196,13 @@ public class RealTalonFX extends AbstractSimmableMotorController {
         _talon.setSelectedSensorPosition(0,0,50);
     }
 
+
+    @Override
+    public void setBrakeMode(boolean isBrakeMode) {
+        _talon.setNeutralMode(isBrakeMode ? NeutralMode.Brake : NeutralMode.Coast);
+        
+    }
+
     
     
 }

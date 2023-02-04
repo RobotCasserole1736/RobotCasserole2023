@@ -91,5 +91,9 @@ public class WrapperedCANMotorCtrl {
         ctrl.resetDistance();
     }
 
+    public void setBrakeMode(boolean brakeMode){
+        ctrl.setBrakeMode(brakeMode);
+    }
+
 
 }
