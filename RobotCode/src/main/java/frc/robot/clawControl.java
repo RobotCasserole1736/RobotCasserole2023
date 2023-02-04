@@ -8,6 +8,7 @@ public class clawControl {
     boolean curEjectcmd;
     boolean curIntakecmd;
     Solenoid clampSolenoid; // todo is this actually a solenoid?
+    boolean clampState = true; //When clampState is true then it is cube mode,false=cone.
 
     //todo is this claw or intake pick a name don't leave your babies unnamed
 
@@ -15,7 +16,7 @@ public class clawControl {
 
     public clawControl() {
         intakeWheels = new Spark(0);
-       
+        clampSolenoid = new Solenoid(null, 9);
     }
 
     //TODO - some way of indicating cube mode vs cone mode
@@ -32,6 +33,7 @@ public class clawControl {
     public void setIntake(boolean intake) {
         curIntakecmd = intake;
     }
+    
 
     public void update() {
         double speedCmd = 0;
@@ -41,5 +43,15 @@ public class clawControl {
             speedCmd = 1;
         }
         intakeWheels.set(speedCmd);
+        
     }
+
+    public void clawPos() {
+        if (clampState){
+            clampSolenoid.set(true);
+        } else {
+            clampSolenoid.set(false);
+        }
+    }
+
 }
