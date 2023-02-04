@@ -49,6 +49,7 @@ public class Robot extends TimedRobot {
   // Things
   RIOLoadMonitor loadMon;
   BatteryMonitor batMan;
+  PracticeArm pa;
 
   // Main Driver
   DriverInput di;
@@ -114,6 +115,8 @@ public class Robot extends TimedRobot {
 
     di = new DriverInput(0);
     stt.mark("Driver IO");
+
+    pa = new PracticeArm();
 
     dt = DrivetrainControl.getInstance();
     ad = new AutoDrive();
@@ -219,6 +222,7 @@ public class Robot extends TimedRobot {
       dt.setKnownPose(newPose);
     }
 
+    pa.update();
 
     stt.mark("Human Input Mapping");
 
