@@ -39,7 +39,7 @@ public class ArmControl {
         mp = new ArmManPosition();
         asl = new ArmSoftLimits();
         curMeasAngularStates = new ArmAngularState(0,0);
-        curDesState = ArmNamedPosition.STOW.pos;
+        curDesState = ArmNamedPosition.STOW.get();
     }
 
     public void setInactive(){

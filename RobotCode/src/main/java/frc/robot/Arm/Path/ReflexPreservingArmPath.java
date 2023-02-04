@@ -5,9 +5,11 @@ import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.spline.SplineParameterizer.MalformedSplineException;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryParameterizer.TrajectoryGenerationException;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.Constants;
@@ -67,26 +69,32 @@ public class ReflexPreservingArmPath implements ArmPath {
         if(end.safeY > 0){
             //If the end has a configured safe height, add in an additional waypoint to account for it
             // TODO - handle safe Y better
-            pathEndPos = end.pos.toPoseFromTop();
+            pathEndPos = end.get().toPoseFromTop();
         } else {
             // If we end outside the frame perimiter, approach from top.
             // Otherwise, just go straight to it.
-            if(end.pos.x > Constants.WHEEL_BASE_HALF_LENGTH_M){
-                pathEndPos = end.pos.toPoseFromTop();
+            if(end.get().x > Constants.WHEEL_BASE_HALF_LENGTH_M){
+                pathEndPos = end.get().toPoseFromTop();
             } else {
-                pathEndPos = end.pos.toPoseFromOther(start);
+                pathEndPos = end.get().toPoseFromOther(start);
             }
         }
 
 
-
-        if(end.pos.distTo(start) > MIN_PATHPLAN_DIST_M) {
+        var failed = true;
+        try {
             traj = TrajectoryGenerator.generateTrajectory(pathStartPos, interiorWaypoints, pathEndPos, cfg);
             totalDuration = traj.getTotalTimeSeconds();
-        } else {
-            //Error while planning. Just give up.
+            if(traj.getStates().size() > 1){
+                failed = false;
+            }
+        } catch (MalformedSplineException e){
+        } catch (TrajectoryGenerationException e){
+        } 
+
+        if(failed){
             totalDuration = 0.0;
-            DriverStation.reportWarning("Trajectory too small!", false);
+            DriverStation.reportWarning("Trajectory generation failed!", false);
         }
 
     }
@@ -98,10 +106,10 @@ public class ReflexPreservingArmPath implements ArmPath {
      */
     public ArmEndEffectorState sample(double time_sec){
         if(time_sec < totalDuration){
-            double curReflex = end.pos.reflexFrac;
+            double curReflex = end.get().reflexFrac;
             return ArmEndEffectorState.fromTrajState(traj, time_sec, curReflex);
         } else {
-            return end.pos;
+            return end.get();
         }
 
     }
@@ -115,7 +123,7 @@ public class ReflexPreservingArmPath implements ArmPath {
         var retList = new ArrayList<Translation2d>();
         retList.add(new Translation2d(start.x, start.y));
         retList.addAll(interiorWaypoints);
-        retList.add(new Translation2d(end.pos.x, end.pos.y));
+        retList.add(new Translation2d(end.get().x, end.get().y));
         return retList;
     }
 

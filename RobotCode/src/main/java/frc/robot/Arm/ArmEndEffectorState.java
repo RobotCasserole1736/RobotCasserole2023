@@ -96,7 +96,7 @@ public class ArmEndEffectorState {
     }
 
     public Pose2d toPoseToOther(ArmNamedPosition other){
-        var rot = new Rotation2d(other.pos.x - this.x, other.pos.y - this.y);
+        var rot = new Rotation2d(other.get().x - this.x, other.get().y - this.y);
         return new Pose2d(this.x, this.y, rot);
     }
 

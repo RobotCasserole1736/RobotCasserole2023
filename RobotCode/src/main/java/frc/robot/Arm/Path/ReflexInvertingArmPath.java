@@ -5,9 +5,11 @@ import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.spline.SplineParameterizer.MalformedSplineException;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryParameterizer.TrajectoryGenerationException;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -80,14 +82,20 @@ public class ReflexInvertingArmPath implements ArmPath {
             pathStartPos = start.toPoseToOther(end);
         }
 
-        if(reflexEndpoint.distTo(start) > MIN_PATHPLAN_DIST_M) {
+        var failed = true;
+        try {
             traj1 = TrajectoryGenerator.generateTrajectory(pathStartPos, interiorWaypoints1, reflexEndpoint.toPoseFromOther(start), cfg);
             duration1 = traj1.getTotalTimeSeconds();
-        } else {
-            //give up on first part
-            duration1 = 0;
-            DriverStation.reportWarning("Trajectory too small!", false);
+            failed = false;
+        } catch (MalformedSplineException e){
+        } catch (TrajectoryGenerationException e){
         }
+
+        if(failed){
+            duration1 = 0;
+            DriverStation.reportWarning("Trajectory 1 gen failed", false);
+        }
+        
 
         totalDuration += duration1;
 
@@ -100,25 +108,28 @@ public class ReflexInvertingArmPath implements ArmPath {
         if(end.safeY > 0){
             //If the end has a configured safe height, add in an additional waypoint to account for it
             // TODO - handle safe Y better
-            pathEndPos = end.pos.toPoseFromTop();
+            pathEndPos = end.get().toPoseFromTop();
         } else {
             // If we end outside the frame perimiter, approach from top.
             // Otherwise, just go straight to it.
-            if(end.pos.x > Constants.WHEEL_BASE_HALF_LENGTH_M){
-                pathEndPos = end.pos.toPoseFromTop();
+            if(end.get().x > Constants.WHEEL_BASE_HALF_LENGTH_M){
+                pathEndPos = end.get().toPoseFromTop();
             } else {
-                pathEndPos = end.pos.toPoseFromOther(start);
+                pathEndPos = end.get().toPoseFromOther(start);
             }
         }
 
 
 
-        if(end.pos.distTo(reflexEndpoint) > MIN_PATHPLAN_DIST_M) {
+        try {
             traj2 = TrajectoryGenerator.generateTrajectory(reflexEndpoint.toPoseToOther(end), interiorWaypoints2, pathEndPos, cfg);
             totalDuration += traj2.getTotalTimeSeconds();
-        } else {
-            // give up on second part
-            DriverStation.reportWarning("Trajectory too small!", false);
+        } catch (MalformedSplineException e){
+        } catch (TrajectoryGenerationException e){
+        }
+
+        if(failed){
+            DriverStation.reportWarning("Trajectory 2 generation failed!", false);
         }
 
     }
@@ -136,10 +147,10 @@ public class ReflexInvertingArmPath implements ArmPath {
         } else if(time_sec < totalDuration){
             //Within the second path, all done with the ending reflex
             var curTime = time_sec - duration1;
-            return ArmEndEffectorState.fromTrajState(traj2, curTime, end.pos.reflexFrac); 
+            return ArmEndEffectorState.fromTrajState(traj2, curTime, end.get().reflexFrac); 
         } else {
             //Past the end of the path
-            return end.pos;
+            return end.get();
         }
     }
 
@@ -154,7 +165,7 @@ public class ReflexInvertingArmPath implements ArmPath {
         retList.addAll(interiorWaypoints1);
         retList.add(new Translation2d(reflexEndPosX, reflexEndPosY));
         retList.addAll(interiorWaypoints2);
-        retList.add(new Translation2d(end.pos.x, end.pos.y));
+        retList.add(new Translation2d(end.get().x, end.get().y));
         return retList;
     }
 
