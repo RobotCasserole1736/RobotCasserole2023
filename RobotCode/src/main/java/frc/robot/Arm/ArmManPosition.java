@@ -1,5 +1,6 @@
 package frc.robot.Arm;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import frc.Constants;
 
 public class ArmManPosition {
@@ -10,12 +11,18 @@ public class ArmManPosition {
     boolean isActive_prev; //stores previous value of isActive state
     ArmEndEffectorState newDesPos;
 
+    SlewRateLimiter xVelLimiter;
+    SlewRateLimiter yVelLimiter;
+
     ArmManPosition(){
         
         des_x_vel = 0;
         des_y_vel = 0;
         isActive = false;
         isActive_prev = false;
+        xVelLimiter = new SlewRateLimiter(Constants.ARM_END_EFF_MAX_ACCEL_MPS2 * 0.75);
+        yVelLimiter = new SlewRateLimiter(Constants.ARM_END_EFF_MAX_ACCEL_MPS2 * 0.75);
+
         newDesPos = new ArmEndEffectorState(0,0,false);
     }
 
@@ -42,17 +49,16 @@ public class ArmManPosition {
         }
 
     
-        if(isActive){
-            //Calcuate the new desired position based on incoming velocity commands
-            newDesPos.xvel = des_x_vel;
-            newDesPos.yvel = des_y_vel;
-            newDesPos.x = curPosCmd.x + des_x_vel * Constants.Ts;
-            newDesPos.y = curPosCmd.y + des_y_vel * Constants.Ts;
-            newDesPos.reflexFrac = curPosCmd.reflexFrac;
-            return newDesPos;
-        } else {
-            return curPosCmd; //passthrough while inactive.
-        }
+        //Apply slew rate limit to the velocity commands
+        var desXVelLimited = xVelLimiter.calculate(des_x_vel);
+        var desYVelLimited = yVelLimiter.calculate(des_y_vel);
+        //Calcuate the new desired position based on incoming velocity commands
+        newDesPos.xvel = desXVelLimited;
+        newDesPos.yvel = desYVelLimited;
+        newDesPos.x = curPosCmd.x + desXVelLimited * Constants.Ts;
+        newDesPos.y = curPosCmd.y + desYVelLimited * Constants.Ts;
+        newDesPos.reflexFrac = curPosCmd.reflexFrac;
+        return newDesPos;
 
 
     }
