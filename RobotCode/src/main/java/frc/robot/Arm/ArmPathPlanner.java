@@ -21,7 +21,11 @@ public class ArmPathPlanner {
         this.curTargetPos = curTargetPos;
     }
 
-    public ArmEndEffectorState update(ArmEndEffectorState curDesState){
+    public ArmEndEffectorState update(ArmEndEffectorState cmdIn){
+
+        //copy input
+        var curPosCmd = new ArmEndEffectorState(cmdIn);
+
         // calculate if we need a new path
         boolean shouldRunRisingEdge = (shouldRun == true && shouldRunPrev == false);
         boolean targetPosChanged = (curTargetPos != null && prevTargetPos != null && !curTargetPos.equals(prevTargetPos) && shouldRun);
@@ -29,7 +33,7 @@ public class ArmPathPlanner {
 
         //If so, make a new path
         if(newPathNeeded){
-            curPath = ArmPathFactory.build(curDesState, curTargetPos);
+            curPath = ArmPathFactory.build(curPosCmd, curTargetPos);
             pathStartTime = Timer.getFPGATimestamp();
             ArmTelemetry.getInstance().setDesPath(curPath);
             motionActive = true;
@@ -43,7 +47,7 @@ public class ArmPathPlanner {
         } else {
             //No path started yet
             motionActive = false;
-            curPositionCmd = curDesState;
+            curPositionCmd = curPosCmd;
             curPositionCmd.xvel = 0; //ensure we command a "stopped" arm.
             curPositionCmd.yvel = 0;
         }

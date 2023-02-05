@@ -31,11 +31,14 @@ public class ArmManPosition {
 
     }
 
-    public ArmEndEffectorState update(ArmEndEffectorState curMeasPos){
-        //If we just went from inactive to active, reset the desired position to actual
+    public ArmEndEffectorState update(ArmEndEffectorState cmdIn){
 
+        //copy input
+        var curPosCmd = new ArmEndEffectorState(cmdIn);
+
+        //If we just went from inactive to active, reset the desired position to incoming command
         if(isActive_prev == false && isActive){
-            newDesPos = curMeasPos;
+            newDesPos = curPosCmd;
         }
 
     
@@ -43,12 +46,12 @@ public class ArmManPosition {
             //Calcuate the new desired position based on incoming velocity commands
             newDesPos.xvel = des_x_vel;
             newDesPos.yvel = des_y_vel;
-            newDesPos.x = curMeasPos.x + des_x_vel * Constants.Ts;
-            newDesPos.y = curMeasPos.y + des_y_vel * Constants.Ts;
-            newDesPos.reflexFrac = curMeasPos.reflexFrac;
+            newDesPos.x = curPosCmd.x + des_x_vel * Constants.Ts;
+            newDesPos.y = curPosCmd.y + des_y_vel * Constants.Ts;
+            newDesPos.reflexFrac = curPosCmd.reflexFrac;
             return newDesPos;
         } else {
-            return curMeasPos; //passthrough while inactive.
+            return curPosCmd; //passthrough while inactive.
         }
 
 

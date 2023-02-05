@@ -245,7 +245,7 @@ public class Robot extends TimedRobot {
       curOpPos = ArmNamedPosition.STOW;
     }
 
-    ac.setOpCmds(oi.curHorizontalCmd, oi.curVerticalCmd, curOpPos, oi.posCmdActive());
+    ac.setOpCmds(oi.curHorizontalCmd, oi.curVerticalCmd, curOpPos, oi.posCmdActive(), oi.codePlaceOffset);
     stt.mark("Arm Control");
 
 

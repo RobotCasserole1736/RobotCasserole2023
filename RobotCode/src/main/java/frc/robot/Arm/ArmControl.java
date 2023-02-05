@@ -2,7 +2,6 @@ package frc.robot.Arm;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
 import frc.Constants;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder.AbsoluteEncType;
@@ -22,9 +21,11 @@ public class ArmControl {
 
     ArmAngularState curMeasAngularStates;
     ArmEndEffectorState curDesState;
+    ArmEndEffectorState prevDesState;
 
     ArmPathPlanner pp;
     ArmManPosition mp;
+    ArmConePlaceOffset cpo;
 
     ArmSoftLimits asl;
 
@@ -37,19 +38,22 @@ public class ArmControl {
         ms = new MotorControlStick();
         pp = new ArmPathPlanner();
         mp = new ArmManPosition();
+        cpo = new ArmConePlaceOffset();
         asl = new ArmSoftLimits();
         curMeasAngularStates = new ArmAngularState(0,0);
         curDesState = ArmNamedPosition.STOW.get();
+        prevDesState = ArmNamedPosition.STOW.get();
     }
 
     public void setInactive(){
-        this.setOpCmds(0.0, 0.0, ArmNamedPosition.STOW, false);
+        this.setOpCmds(0.0, 0.0, ArmNamedPosition.STOW, false, false);
     }
 
-    public void setOpCmds(double desXVel, double desYVel, ArmNamedPosition posCmd, boolean posCmdActive){
+    public void setOpCmds(double desXVel, double desYVel, ArmNamedPosition posCmd, boolean posCmdActive, boolean placeOffsetCmd){
         var manVelCmd = (desXVel != 0.0 || desYVel != 0.0);
         mp.setOpVelCmds(manVelCmd, desXVel, desYVel);
         pp.setCommand(posCmdActive, posCmd);
+        cpo.setCmd(placeOffsetCmd);
     }
 
     public void update(){
@@ -62,16 +66,34 @@ public class ArmControl {
         curMeasAngularStates = new ArmAngularState(boomAngleDeg, stickAngleDeg); 
         ArmEndEffectorState curMeasState = ArmKinematics.forward(curMeasAngularStates);
 
+        curDesState = new ArmEndEffectorState();
+        ArmEndEffectorState curDesStateWithOffset;
+
         if(DriverStation.isDisabled()){
-            curDesState = curMeasState;
+            // While disabled, by default, we just maintain measured state
+            curDesState.x = curMeasState.x;
+            curDesState.y = curMeasState.y;
+            curDesState.reflexFrac = curMeasState.reflexFrac;
+        } else {
+            // While endabled, by default, the next desired state
+            // is just the position of the desired state position, with zero velocity
+            curDesState.x = prevDesState.x;
+            curDesState.y = prevDesState.y;
+            curDesState.reflexFrac = prevDesState.reflexFrac;
         }
 
+        // Allow the path planner top (optinoally) modify the desired state
         curDesState = pp.update(curDesState);
+
+        // Allow the manual motion module to (optionally) modify the desired state
         curDesState = mp.update(curDesState);
+
+        // Allow the offset module to (optionally) modify the desired state
+        curDesStateWithOffset = cpo.update(curDesState);
 
         //Apply soft limits
         //var curDesPosLimited = asl.applyLimit(curDesPosRaw);
-        var curDesStateLimited = curDesState;
+        var curDesStateLimited = curDesStateWithOffset;
 
         // Apply kinematics to get linkge positions
         var curDesAngularStates = ArmKinematics.inverse(curDesStateLimited);
@@ -86,6 +108,9 @@ public class ArmControl {
         // Update telemetry
         ArmTelemetry.getInstance().setDesired(curDesStateLimited, curDesAngularStates);
         ArmTelemetry.getInstance().setMeasured(curMeasState, curMeasAngularStates);
+
+        // Save previous
+        prevDesState = curDesState;
     }
 
     public boolean isPathPlanning(){

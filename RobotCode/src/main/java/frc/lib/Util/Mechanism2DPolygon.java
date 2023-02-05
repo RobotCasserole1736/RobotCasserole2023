@@ -74,7 +74,8 @@ public class Mechanism2DPolygon {
         Rotation2d prevAngle = new Rotation2d();
 
         if(this.isVisible){
-            for(int segIdx = 0; segIdx < this.polygon.size()-1; segIdx++){
+            var maxSeg = Math.min(this.polygon.size()-1, 20); //Hard limit number of segments to prevent NT issues
+            for(int segIdx = 0; segIdx < maxSeg; segIdx++){
                 var fromPoint = this.polygon.get(segIdx).plus(origin);
                 var toPoint = this.polygon.get(segIdx+1).plus(origin);
 

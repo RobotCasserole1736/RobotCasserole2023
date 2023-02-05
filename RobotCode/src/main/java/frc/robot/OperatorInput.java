@@ -11,7 +11,7 @@ public class OperatorInput {
 
     XboxController ctrl;
 
-    @Signal(units = "bool")
+    @Signal
     boolean isConnected;
 
     @Signal(units="mps")
@@ -19,6 +19,9 @@ public class OperatorInput {
 
     @Signal(units="mps")
     double curHorizontalCmd;
+
+    @Signal
+    boolean codePlaceOffset;
 
 
     @Signal
@@ -61,6 +64,9 @@ public class OperatorInput {
             armMidPosCmd = ctrl.getBButton();
             armHighPosCmd = ctrl.getYButton();
             armStowPosCmd = ctrl.getXButton();
+
+            codePlaceOffset = (ctrl.getPOV() == 180);
+
         } else {
             // Controller Unplugged Defaults
             curVerticalCmd = 0.0;
@@ -69,7 +75,9 @@ public class OperatorInput {
             armMidPosCmd = false;
             armHighPosCmd = false;
             armStowPosCmd = false;
+            codePlaceOffset = false;
         }
+
 
         disconFault.set(isConnected);
 

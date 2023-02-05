@@ -52,6 +52,14 @@ public class ArmEndEffectorState {
         this.reflexFrac = 0;
     }
 
+    ArmEndEffectorState(ArmEndEffectorState other){
+        this.x = other.x;
+        this.xvel = other.xvel;
+        this.y = other.y;
+        this.yvel = other.yvel;
+        this.reflexFrac = other.reflexFrac;
+    }
+
     public double distTo(ArmEndEffectorState other){
         double x2 = Math.pow(this.x - other.x, 2);
         double y2 = Math.pow(this.y - other.y, 2);
