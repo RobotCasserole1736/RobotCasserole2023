@@ -3,7 +3,6 @@ package frc.robot.Autonomous.Events;
 import edu.wpi.first.wpilibj.Timer;
 import frc.lib.AutoSequencer.AutoEvent;
 import frc.robot.ClawController;
-import frc.robot.Arm.ArmControl;
 import frc.robot.Arm.ArmNamedPosition;
 
 /**

@@ -1,7 +1,6 @@
 package frc.robot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import edu.wpi.first.math.geometry.Translation2d;

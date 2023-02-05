@@ -34,7 +34,6 @@ import org.json.JSONObject;
 
 import frc.lib.Logging.LogFile;
 import frc.lib.Logging.LogFileWrangler;
-import frc.lib.Signal.SignalWrangler;
 
 /**
  * DESCRIPTION: <br>
@@ -156,8 +155,6 @@ public class LogFileStreamerSocket extends WebSocketAdapter {
 
 
     private class PeriodicUpdateTask extends TimerTask {
-
-        boolean wasLogging = false;
 
         @Override
         public void run() {
