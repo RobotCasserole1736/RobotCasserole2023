@@ -304,7 +304,11 @@ public class Robot extends TimedRobot {
     }
     stt.mark("Drivetrain");
 
-    ac.update();
+    if(DriverStation.isTest() && !DriverStation.isDisabled()){
+      ac.testUpdate();
+    } else {
+      ac.update();
+    }
     stt.mark("Arm Controller");
 
     cc.update();
@@ -343,6 +347,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit(){
+    LiveWindow.setEnabled(false);
     // Tell the subsystems that care that we're entering test mode.
     dt.testInit();
   }

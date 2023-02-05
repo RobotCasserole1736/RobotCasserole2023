@@ -49,7 +49,7 @@ public class MotorControlStick {
         desAngVelDegPerSec = in.stickAngularVel;
     }
 
-    public void update(ArmAngularState act_in){
+    public void update(ArmAngularState act_in, boolean enabled){
 
         actAngleDeg = act_in.stickAngleDeg;
         actAngVelDegPerSec = act_in.stickAngularVel;
@@ -66,7 +66,11 @@ public class MotorControlStick {
 
         cmdFeedBack = m_pid.calculate(actAngleDeg, desAngleDeg);
 
-        motorCtrl.setVoltageCmd(cmdFeedForward + cmdFeedBack); 
+        if(enabled){
+            motorCtrl.setVoltageCmd(cmdFeedForward + cmdFeedBack); 
+        } else {
+            motorCtrl.setVoltageCmd(0.0);
+        }
 
     }
     

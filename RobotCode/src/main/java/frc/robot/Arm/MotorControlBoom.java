@@ -59,7 +59,7 @@ public class MotorControlBoom {
         desAngVelDegPerSec = in.boomAnglularVel;
     }    
 
-    public void update(ArmAngularState act_in){
+    public void update(ArmAngularState act_in, boolean enabled){
 
         actAngleDeg = act_in.boomAngleDeg;
         actAngVelDegPerSec = act_in.boomAnglularVel;
@@ -96,8 +96,13 @@ public class MotorControlBoom {
             brakeSol.set(false);
         }
 
-
         // Send total command to motor;
         motorCtrl.setVoltageCmd(motorCmdV); 
+
+        if(enabled){
+            motorCtrl.setVoltageCmd(cmdFeedForward + cmdFeedBack); 
+        } else {
+            motorCtrl.setVoltageCmd(0.0);
+        }
     }
 }

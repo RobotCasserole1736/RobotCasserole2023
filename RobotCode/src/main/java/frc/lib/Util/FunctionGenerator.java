@@ -12,6 +12,10 @@ public class FunctionGenerator {
 
     double startTime = 0;
 
+    double curOut = 0;
+    double prevOut = 0;
+    double curTime = Timer.getFPGATimestamp();
+    double prevTime = curTime;
 
     // Source for time-varying signals, used to calibrate closed loop control algorithms and systems
     public FunctionGenerator(String name, String units){
@@ -23,19 +27,31 @@ public class FunctionGenerator {
 
     public void reset(){
         startTime = Timer.getFPGATimestamp();
+        prevTime = curTime = 0.0;
+        prevOut = curOut;
+    }
+
+
+    public double getValDeriv(){
+        return (curOut - prevOut)/(curTime - prevTime);
+    }
+
+    public boolean isEnabled(){
+        return (int) sigType.get() != 0;
     }
 
     //Calcualtes the current value and returns it.
     public double getValue(){
 
-        double outVal = 0;
+        prevOut = curOut;
+        prevTime = curTime;
 
-        double time = Timer.getFPGATimestamp() - startTime;
+        curTime = Timer.getFPGATimestamp() - startTime;
 
         double cycleFrac;
         if(frequency.get() != 0.0){
             double period = 1.0/frequency.get();
-            cycleFrac = (time % period) / period;
+            cycleFrac = (curTime % period) / period;
         } else {
             cycleFrac = 0.0;
         }
@@ -45,39 +61,39 @@ public class FunctionGenerator {
             case 0:
             {
                 // No output
-                outVal = 0;
+                curOut = 0;
             }
             break;
             case 1: 
             {
                 // Square
                 double cycleGain = cycleFrac > 0.5 ? 0.5 : -0.5;
-                outVal = offset.get() + amplititude.get() * cycleGain;
+                curOut = offset.get() + amplititude.get() * cycleGain;
             }
             break;
             case 2: 
             {
                 // Sawtooth
-                outVal = offset.get() + amplititude.get() * cycleFrac;
+                curOut = offset.get() + amplititude.get() * cycleFrac;
             }
             break;
             case 3: 
             {
                 // Sine
-                outVal = offset.get() + amplititude.get() * Math.sin(2*Math.PI*cycleFrac);
+                curOut = offset.get() + amplititude.get() * Math.sin(2*Math.PI*cycleFrac);
             }
             break;
             case 4: 
             {
                 // Constant
-                outVal = offset.get();
+                curOut = offset.get();
             }
             break;
 
             // All others are OFF
         }
 
-        return outVal;
+        return curOut;
 
     }
     

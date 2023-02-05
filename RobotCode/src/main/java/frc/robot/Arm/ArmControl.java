@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.Constants;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder.AbsoluteEncType;
+import frc.lib.Util.FunctionGenerator;
 import frc.robot.ArmTelemetry;
 
 public class ArmControl {
@@ -33,6 +34,11 @@ public class ArmControl {
     WrapperedAbsoluteEncoder boomEncoder = new WrapperedAbsoluteEncoder(AbsoluteEncType.SRXEncoder, "Boom", Constants.ARM_BOOM_ENC_IDX, 0);
     WrapperedAbsoluteEncoder stickEncoder = new WrapperedAbsoluteEncoder(AbsoluteEncType.SRXEncoder, "Stick", Constants.ARM_STICK_ENC_IDX, 0);
 
+    // Test mode tools
+    // These help us inject specific waveforms into swerve modules to calibrate and test them.
+    FunctionGenerator boomFG;
+    FunctionGenerator stickFG;
+
     private ArmControl(){
         mb = new MotorControlBoom();
         ms = new MotorControlStick();
@@ -43,6 +49,10 @@ public class ArmControl {
         curMeasAngularStates = new ArmAngularState(0,0);
         curDesState = ArmNamedPosition.STOW.get();
         prevDesState = ArmNamedPosition.STOW.get();
+
+        boomFG = new FunctionGenerator("arm_boom", "deg");
+        stickFG = new FunctionGenerator("arm_stick", "deg");
+
     }
 
     public void setInactive(){
@@ -56,15 +66,19 @@ public class ArmControl {
         cpo.setCmd(vertOffsetCmd);
     }
 
-    public void update(){
-
+    private ArmEndEffectorState updateMeasState(){
         // Meas state and end effector position
         boomEncoder.update();
         stickEncoder.update();
         var boomAngleDeg = Units.radiansToDegrees(boomEncoder.getAngle_rad());
         var stickAngleDeg = Units.radiansToDegrees(stickEncoder.getAngle_rad());
-        curMeasAngularStates = new ArmAngularState(boomAngleDeg, stickAngleDeg); 
-        ArmEndEffectorState curMeasState = ArmKinematics.forward(curMeasAngularStates);
+        curMeasAngularStates = new ArmAngularState(boomAngleDeg, stickAngleDeg);      
+        return ArmKinematics.forward(curMeasAngularStates);   
+    }
+
+    public void update(){
+
+        ArmEndEffectorState curMeasState = updateMeasState();
 
         curDesState = new ArmEndEffectorState();
         ArmEndEffectorState curDesStateWithOffset;
@@ -100,10 +114,10 @@ public class ArmControl {
 
         // Send desired state to the motor control
         mb.setCmd(curDesAngularStates);
-        mb.update(curMeasAngularStates);
+        mb.update(curMeasAngularStates, true);
 
         ms.setCmd(curDesAngularStates);
-        ms.update(curMeasAngularStates);
+        ms.update(curMeasAngularStates, true);
 
         // Update telemetry
         ArmTelemetry.getInstance().setDesired(curDesStateLimited, curDesAngularStates);
@@ -111,6 +125,32 @@ public class ArmControl {
 
         // Save previous
         prevDesState = curDesState;
+    }
+
+    //Test-mode only for tuning
+    public void testUpdate(){
+
+        ArmEndEffectorState curMeasState = updateMeasState();
+
+        var testDesState = new ArmAngularState();
+
+        testDesState.boomAngleDeg = boomFG.getValue();
+        testDesState.boomAnglularVel = boomFG.getValDeriv();
+        testDesState.stickAngleDeg = stickFG.getValue();
+        testDesState.stickAngularVel = stickFG.getValDeriv();
+
+        mb.setCmd(testDesState);
+        mb.update(curMeasAngularStates, boomFG.isEnabled());
+
+        ms.setCmd(testDesState);
+        ms.update(curMeasAngularStates,stickFG.isEnabled());
+
+        var curTestState = ArmKinematics.forward(testDesState);
+
+        // Update telemetry
+        ArmTelemetry.getInstance().setDesired(curTestState, testDesState);
+        ArmTelemetry.getInstance().setMeasured(curMeasState, curMeasAngularStates);
+        
     }
 
     public boolean isPathPlanning(){
