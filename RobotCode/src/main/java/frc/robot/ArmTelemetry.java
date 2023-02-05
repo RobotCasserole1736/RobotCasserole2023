@@ -155,7 +155,10 @@ public class ArmTelemetry {
     public void setDesPath(ArmPath path){
         var pathPoly = new ArrayList<Translation2d>();
 
-        for(double time = 0.0; time < path.getDurationSec(); time += 0.2){
+        int NUM_INTERNAL_SEGMENTS = 15;
+        double deltaT = path.getDurationSec() / NUM_INTERNAL_SEGMENTS;
+
+        for(double time = 0.0; time < path.getDurationSec(); time += deltaT){
             var point = path.sample(time);
             pathPoly.add(new Translation2d(point.x + LEFT_MARGIN, point.y));
         }
