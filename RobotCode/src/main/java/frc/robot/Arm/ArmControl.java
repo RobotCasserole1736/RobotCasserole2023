@@ -156,5 +156,9 @@ public class ArmControl {
     public boolean isPathPlanning(){
         return pp.motionActive;
     }
+
+    public boolean isExtended(){
+        return curDesState.x > Constants.WHEEL_BASE_HALF_LENGTH_M;
+    }
     
 }

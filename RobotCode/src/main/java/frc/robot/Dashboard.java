@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.Constants;
 import frc.lib.Faults.FaultWrangler;
 import frc.lib.Signal.SignalUtils;
@@ -93,6 +94,7 @@ public class Dashboard {
         cubeShape = GamepieceModeManager.getInstance().isCubeMode();
         triangleShape = GamepieceModeManager.getInstance().isConeMode();
         armPathActive = ArmControl.getInstance().isPathPlanning();
+        dtSpeedLimited = DriverStation.isTeleop() && ArmControl.getInstance().isExtended();
         
       }
     

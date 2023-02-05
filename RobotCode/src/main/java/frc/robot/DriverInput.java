@@ -9,6 +9,7 @@ import frc.Constants;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Faults.Fault;
 import frc.lib.Signal.Annotations.Signal;
+import frc.robot.Arm.ArmControl;
 
 public class DriverInput {
     
@@ -24,6 +25,8 @@ public class DriverInput {
     Calibration sideToSideSlewRate;
     Calibration translateCmdScalar;
     Calibration rotateCmdScalar;
+    Calibration armExtenedLimitFactor;
+    
     
     @Signal(units="cmd")
     double curFwdRevCmd;
@@ -42,12 +45,12 @@ public class DriverInput {
     boolean clawIntake; 
 
    
-    @Signal (units="cmd")
-    double fwdRevSlewCmd;
-    @Signal (units="cmd")
-    double rotSlewCmd;
-    @Signal (units="cmd")
-    double sideToSideSlewCmd;
+    @Signal (units="mps")
+    double fwdRevSpdCmd;
+    @Signal (units="radPerSec")
+    double rotSpdCmd;
+    @Signal (units="mps")
+    double sideToSideSpdCmd;
 
     @Signal(units="bool")
     boolean spinMoveCmd;
@@ -73,11 +76,14 @@ public class DriverInput {
 
         stickDeadband = new Calibration(getName(controllerIdx) + "StickDeadBand", "", 0.1);
 
-        fwdRevSlewRate = new Calibration(getName(controllerIdx) + "fwdRevSlewRate_", "", 1);
-        rotSlewRate = new Calibration(getName(controllerIdx) + "rotSlewRate", "", 1);
-        sideToSideSlewRate = new Calibration(getName(controllerIdx) + "sideToSideSlewRate", "", 1);
-        translateCmdScalar = new Calibration(getName(controllerIdx) + "translateCmdScalar", "", 0.8);
-        rotateCmdScalar = new Calibration(getName(controllerIdx) + "rotateCmdScalar", "", 0.8);
+        fwdRevSlewRate = new Calibration(getName(controllerIdx) + "fwdRevSlewRate_", "", Constants.MAX_TRANSLATE_ACCEL_MPS2);
+        rotSlewRate = new Calibration(getName(controllerIdx) + "rotSlewRate", "", Constants.MAX_ROTATE_ACCEL_RAD_PER_SEC_2);
+        sideToSideSlewRate = new Calibration(getName(controllerIdx) + "sideToSideSlewRate", "", Constants.MAX_TRANSLATE_ACCEL_MPS2);
+
+        translateCmdScalar = new Calibration(getName(controllerIdx) + "translateCmdScalar", "", 1.0);
+        rotateCmdScalar = new Calibration(getName(controllerIdx) + "rotateCmdScalar", "", 1.0);
+
+        armExtenedLimitFactor = new Calibration(getName(controllerIdx) + "armExtendedSpdLimitFactor", "frac", 0.25);
 
         fwdRevSlewLimiter = new SlewRateLimiter(fwdRevSlewRate.get());
         rotSlewLimiter = new SlewRateLimiter(rotSlewRate.get());
@@ -90,35 +96,47 @@ public class DriverInput {
 
         if(isConnected){
             
+            //Read in raw -1 to 1 commands from the joysticks, re-orient
             curFwdRevCmd = -1.0 * driverController.getLeftY();
             curRotCmd = -1.0 * driverController.getRightX();
             curSideToSideCmd = -1.0 * driverController.getLeftX();
 
+            //Apply a deadband, then a scale factor to make the robot easier to drive in certain directions
             curFwdRevCmd = MathUtil.applyDeadband( curFwdRevCmd,stickDeadband.get()) * translateCmdScalar.get(); 
             curRotCmd = MathUtil.applyDeadband( curRotCmd,stickDeadband.get())  * rotateCmdScalar.get();
             curSideToSideCmd = MathUtil.applyDeadband( curSideToSideCmd,stickDeadband.get())  * translateCmdScalar.get();
 
-            if(driverController.getLeftStickButton()){
-                curFwdRevCmd = curFwdRevCmd / 2.0;
-                curSideToSideCmd = curSideToSideCmd / 2.0;
-            } else if(driverController.getRightStickButton()) {
-                curRotCmd = curRotCmd / 2.0;
-            }
-                
-            fwdRevSlewCmd = fwdRevSlewLimiter.calculate(curFwdRevCmd);
-            rotSlewCmd = rotSlewLimiter.calculate(curRotCmd);
-            sideToSideSlewCmd = sideToSideSlewLimiter.calculate(curSideToSideCmd);
-                
-            robotRelative = driverController.getRightBumper();
+            //Convert to raw meters per second, using drivetrain max theoretical speed
+            var curFwdRevSpdRaw = curFwdRevCmd * Constants.MAX_FWD_REV_SPEED_MPS;
+            var curRotSpdRaw = curRotCmd * Constants.MAX_ROTATE_SPEED_RAD_PER_SEC;
+            var curSideToSideSpdRaw = curSideToSideCmd * Constants.MAX_FWD_REV_SPEED_MPS;
 
+            //Scale back the speed command if the arm is extended too far.
+            if(ArmControl.getInstance().isExtended()){
+                var factor = armExtenedLimitFactor.get();
+                curFwdRevSpdRaw *= factor;
+                curRotSpdRaw *= factor;
+                curSideToSideSpdRaw *= factor;
+            }
+
+            // Slew rate limit the command to prevent jerky movement
+            fwdRevSpdCmd = fwdRevSlewLimiter.calculate(curFwdRevSpdRaw );
+            rotSpdCmd = rotSlewLimiter.calculate(curRotSpdRaw);
+            sideToSideSpdCmd = sideToSideSlewLimiter.calculate(curSideToSideSpdRaw);
+                
+            // Read in other drivetrain controls
+            robotRelative = driverController.getRightBumper();
             resetOdometry = resetOdoDbnc.calculate(driverController.getAButton());
 
+            // Read in Auto-drive commands
             spinMoveCmd = driverController.getBButton();
             driveToCenterCmd = driverController.getXButton();
 
+            // Read in claw intake/eject commands
             clawEject = driverController.getRightTriggerAxis() > .75;
             clawIntake = driverController.getLeftTriggerAxis() > .75;
 
+            //If both are pulled, make sure we don't do both at the same time
             if(clawEject && clawIntake) {
                 clawEject = false;
                 clawIntake = false;
@@ -127,16 +145,22 @@ public class DriverInput {
  
         } else {
             //Controller Unplugged Defaults
-            curFwdRevCmd = 0.0;
-            curRotCmd = 0.0; 
-            curSideToSideCmd = 0.0; 
+            fwdRevSpdCmd = 0.0;
+            rotSpdCmd = 0.0; 
+            sideToSideSpdCmd = 0.0; 
             robotRelative = false;
             resetOdometry = false;
+            spinMoveCmd = false;
+            driveToCenterCmd = false;
+            clawEject = false;
+            clawIntake = false;
         }
 
         disconFault.set(isConnected);
 
         
+        //Slew rate limiters don't have the ability to change the slew rate on the fly,
+        // so we'll just recreate them as new objects whenever the cal value is changed.
         if(fwdRevSlewRate.isChanged() ||
            rotSlewRate.isChanged() ||
            sideToSideSlewRate.isChanged()) {
@@ -154,35 +178,41 @@ public class DriverInput {
 
     /**
      * Gets the driver command for fwd/rev
-     * 1.0 means "fast as possible forward"
-     * 0.0 means stop
-     * -1.0 means "fast as possible reverse"
      * @return 
      */
     public double getFwdRevCmd_mps(){
-        return fwdRevSlewCmd * Constants.MAX_FWD_REV_SPEED_MPS;
+        return fwdRevSpdCmd;
     }
 
     /**
      * Gets the driver command for rotate
-     * 1.0 means "fast as possible to the left"
-     * 0.0 means stop
-     * -1.0 means "fast as possible to the right"
      * @return 
      */
     public double getRotateCmd_rps(){
-        return rotSlewCmd * Constants.MAX_ROTATE_SPEED_RAD_PER_SEC;
+        return rotSpdCmd;
     }
+
+    /**
+     * Gets the driver command for side to side strafing
+     * @return 
+     */
     public double getSideToSideCmd_mps(){
-        return sideToSideSlewCmd * Constants.MAX_FWD_REV_SPEED_MPS;
+        return sideToSideSpdCmd;
     }
 
 
+    /**
+     * @return True if the driver wants the speed commands to be relative to the robot's reference frame,
+     * False if the commands should be realtive to the field reference frame
+     */
     public boolean getRobotRelative(){
         return robotRelative;
     }
 
-
+    /**
+     * @return True if the driver wants to reset odometry to say the the robot is pointed
+     * downfield, false otherwise
+     */
     public boolean getOdoResetCmd(){
         return resetOdometry;
     }

@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 
 public class Constants {
@@ -23,18 +24,25 @@ public class Constants {
     static public final double ROBOT_MASS_kg = UnitUtils.lbsToKg(140);
     static public final double ROBOT_MOI_KGM2 = 1.0/12.0 * ROBOT_MASS_kg * Math.pow((WHEEL_BASE_HALF_WIDTH_M*2.2),2) * 2; //Model moment of intertia as a square slab slightly bigger than wheelbase with axis through center
 
-    // Drivetrain Performance Mechanical limits
-    static public final double MAX_FWD_REV_SPEED_MPS = Units.feetToMeters(16.0);
-    static public final double MAX_STRAFE_SPEED_MPS = Units.feetToMeters(16.0);
-    static public final double MAX_ROTATE_SPEED_RAD_PER_SEC = Units.degreesToRadians(360.0);
-    static public final double MAX_TRANSLATE_ACCEL_MPS2 = MAX_FWD_REV_SPEED_MPS/1.00; //0-full time of 0.25 second
-    static public final double MAX_ROTATE_ACCEL_RAD_PER_SEC_2 = MAX_ROTATE_SPEED_RAD_PER_SEC/.25; //0-full time of 0.25 second
-
     // See https://www.swervedrivespecialties.com/products/mk4i-swerve-module?variant=39598777172081
-    static public final double WHEEL_GEAR_RATIO = 6.75; //L2 gearing
+    static public final double WHEEL_GEAR_RATIO = 8.14; //L1 gearing
     static public final double AZMTH_GEAR_RATIO = 12.8;
     static public final double WHEEL_FUDGE_FACTOR = 0.9238; // carpet roughtop scrub factor
     static public final double WHEEL_RADIUS_IN = 4.0/2.0 * WHEEL_FUDGE_FACTOR; //four inch diameter wheels - https://www.swervedrivespecialties.com/collections/mk4i-parts/products/billet-wheel-4d-x-1-5w-bearing-bore
+
+
+    // Drivetrain Performance Mechanical limits
+    // Nominal calculations (ideal)
+    static private final double MAX_DT_MOTOR_SPEED_RPS = DCMotor.getNEO(1).freeSpeedRadPerSec;
+    static private final double MAX_DT_LINEAR_SPEED = MAX_DT_MOTOR_SPEED_RPS / WHEEL_GEAR_RATIO * Units.inchesToMeters(WHEEL_RADIUS_IN);
+    // Fudged max expected performance 
+    static public final double MAX_FWD_REV_SPEED_MPS = MAX_DT_LINEAR_SPEED * 0.9; //fudge factor due to gearbox losses
+    static public final double MAX_STRAFE_SPEED_MPS = MAX_DT_LINEAR_SPEED * 0.9;  //fudge factor due to gearbox losses
+    static public final double MAX_ROTATE_SPEED_RAD_PER_SEC = Units.degreesToRadians(360.0); //Fixed at the maximum rotational speed we'd want.
+    // Accelerations - also a total guess
+    static public final double MAX_TRANSLATE_ACCEL_MPS2 = MAX_FWD_REV_SPEED_MPS/0.50; //0-full time of 0.5 second - this is a guestimate
+    static public final double MAX_ROTATE_ACCEL_RAD_PER_SEC_2 = MAX_ROTATE_SPEED_RAD_PER_SEC/.25; //0-full time of 0.25 second - this is a guestaimate
+
 
     // Mechanical mounting offsets of the encoder & magnet within the shaft
     // Must be updated whenever the module is reassembled
@@ -50,11 +58,16 @@ public class Constants {
     static public final double BL_ENCODER_MOUNT_OFFSET_RAD = -2.180;
     static public final double BR_ENCODER_MOUNT_OFFSET_RAD = -0.803;
 
+    //////////////////////////////////////////////////////////////////
+    // Vision Processing
+    //////////////////////////////////////////////////////////////////
+
     // Location of vision cameras relative to robot center - currently two in front at 45 degrees, one in back center
     static public final Transform3d robotToFrontRightCameraTrans = new Transform3d(new Translation3d(WHEEL_BASE_HALF_LENGTH_M, -1.0*WHEEL_BASE_HALF_WIDTH_M, 0.25), new Rotation3d(0.0,0.0,-1.0*Math.PI/4.0));
     static public final Transform3d robotToFrontLeftCameraTrans = new Transform3d(new Translation3d(WHEEL_BASE_HALF_LENGTH_M, WHEEL_BASE_HALF_WIDTH_M, 0.25), new Rotation3d(0.0,0.0,Math.PI/4.0));
     static public final Transform3d robotToRearCameraTrans  = new Transform3d(new Translation3d(-1.0*WHEEL_BASE_HALF_LENGTH_M, 0, 0.25), new Rotation3d(0.0,0.0,Math.PI));
 
+    // Vision camera static IP addresses
     static public final String cameraFrontRightIP = "10.17.36.10";
     static public final String cameraFrontLeftIP  = "10.17.36.11";
     static public final String cameraRearIP = "10.17.36.12";
@@ -161,12 +174,6 @@ public class Constants {
     //static public final int UNUSED = 18;
     //static public final int UNUSED = 19;
     
-
-    //////////////////////////////////////////////////////////////////
-    // Time-based autonomous Constants
-    //////////////////////////////////////////////////////////////////
-    public static final double TAXI_DRIVE_TIME_S = 2.2;
-    public static final double TAXI_DRIVE_SPEED_MPS = 1.75;
 
     //////////////////////////////////////////////////////////////////
     // Nominal Sample Times

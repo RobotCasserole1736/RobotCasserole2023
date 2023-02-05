@@ -87,7 +87,7 @@ public class SignalWrangler {
             return; //Stop, no more tree to traverse
         }
 
-        if (rootPkg.toString().contains("frc.sim") || rootPkg.toString().contains("frc.robot") || rootPkg.toString().contains("frc.wrappers")) {
+        if (rootPkg.toString().contains("frc.sim") || rootPkg.toString().contains("frc.robot") || rootPkg.toString().contains("frc.hardwareWrappers")) {
             // If we've got a valid package name inside of our FRC code, go through all the
             // fields in the associated class.
             for (Field field : rootClass.getDeclaredFields()) {

@@ -8,10 +8,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.Constants;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
 import frc.lib.Util.FunctionGenerator;
+import frc.robot.Arm.ArmControl;
 
 public class DrivetrainControl {
     
@@ -58,6 +60,9 @@ public class DrivetrainControl {
     Calibration hdc_rotation_kI;
     Calibration hdc_rotation_kD;
 
+    // Limits drivetrain commandable speed while arm is extended in teleop.
+    Calibration armExtenedLimitFactor;
+
     //Gets set to true when we're attempting to servo the module angles prior to actually moving.
     boolean initAngleOnly;
 
@@ -68,6 +73,7 @@ public class DrivetrainControl {
     DrivetrainPoseEstimator pe;
 
     // Holonomic drive controller and its components
+    // This is used for autonomous to move the drivetrain to a commanded Pose2d on the field
     PIDController hdc_fwdrev;
     PIDController hdc_leftright;
     ProfiledPIDController hdc_rotate;
@@ -118,21 +124,24 @@ public class DrivetrainControl {
                     new TrapezoidProfile.Constraints(Constants.MAX_ROTATE_SPEED_RAD_PER_SEC * 0.8, 
                                                     Constants.MAX_ROTATE_ACCEL_RAD_PER_SEC_2 * 0.8));
         hdc_rotate.enableContinuousInput(-1.0 * Math.PI, Math.PI);
-
         hdc = new CustomHolonomicDriveController(hdc_fwdrev, hdc_leftright, hdc_rotate);
-
         hdc.setEnabled(true);
 
+        // Init all swerve drive modules
         moduleFL = new SwerveModuleControl("FL", Constants.FL_WHEEL_MOTOR_CANID,Constants.FL_AZMTH_MOTOR_CANID,Constants.FL_AZMTH_ENC_IDX, Constants.FL_ENCODER_MOUNT_OFFSET_RAD, true);
         moduleFR = new SwerveModuleControl("FR", Constants.FR_WHEEL_MOTOR_CANID,Constants.FR_AZMTH_MOTOR_CANID,Constants.FR_AZMTH_ENC_IDX, Constants.FR_ENCODER_MOUNT_OFFSET_RAD, false);
         moduleBL = new SwerveModuleControl("BL", Constants.BL_WHEEL_MOTOR_CANID,Constants.BL_AZMTH_MOTOR_CANID,Constants.BL_AZMTH_ENC_IDX, Constants.BL_ENCODER_MOUNT_OFFSET_RAD, true);
         moduleBR = new SwerveModuleControl("BR", Constants.BR_WHEEL_MOTOR_CANID,Constants.BR_AZMTH_MOTOR_CANID,Constants.BR_AZMTH_ENC_IDX, Constants.BR_ENCODER_MOUNT_OFFSET_RAD, false);          
 
+        // Make sure the pose estimator has been init'ed, and save a reference to it.
         pe = DrivetrainPoseEstimator.getInstance();
 
+        // Init the function generators, which are used in test mode to inject
+        // waveforms for helping do PID calibration
         azmthFG = new FunctionGenerator("dt_azmth", "deg");
         wheelFG = new FunctionGenerator("dt_wheel", "m/s");
 
+        // Make sure we've init'ed all PID calibration values once
         calUpdate(true);
 
     }
