@@ -27,15 +27,15 @@ public class AutoEventSetClawIntake extends AutoEvent {
 	@Override
 	public void userUpdate() {
 		// Just set control request the desired position
-		ClawController.getInstance().setIntake(true);
-		ClawController.getInstance().setEject(false);
+		ClawController.getInstance().setGrabCmd(true);
+		ClawController.getInstance().setReleaseCmd(false);
 	}
 
 	@Override
 	public void userForceStop() {
 		// Force arm into safe state
-		ClawController.getInstance().setIntake(false);
-		ClawController.getInstance().setEject(false);
+		ClawController.getInstance().setGrabCmd(false);
+		ClawController.getInstance().setReleaseCmd(false);
 	}
 
 	@Override

@@ -27,15 +27,15 @@ public class AutoEventSetClawEject extends AutoEvent {
 	@Override
 	public void userUpdate() {
 		// Just set control request the desired position
-		ClawController.getInstance().setIntake(false);
-		ClawController.getInstance().setEject(true);
+		ClawController.getInstance().setGrabCmd(false);
+		ClawController.getInstance().setReleaseCmd(true);
 	}
 
 	@Override
 	public void userForceStop() {
 		// Force arm into safe state
-		ClawController.getInstance().setIntake(false);
-		ClawController.getInstance().setEject(false);
+		ClawController.getInstance().setGrabCmd(false);
+		ClawController.getInstance().setReleaseCmd(false);
 	}
 
 	@Override

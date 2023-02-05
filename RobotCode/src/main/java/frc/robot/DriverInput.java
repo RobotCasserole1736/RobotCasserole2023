@@ -187,11 +187,11 @@ public class DriverInput {
         return resetOdometry;
     }
 
-    public boolean getClawEject(){
+    public boolean getRelease(){
         return clawEject;
     }
 
-    public boolean getClawIntake(){
+    public boolean getGrab(){
         return clawIntake;
     }
 

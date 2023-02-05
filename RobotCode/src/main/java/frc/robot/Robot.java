@@ -253,8 +253,8 @@ public class Robot extends TimedRobot {
     ac.setOpCmds(oi.curHorizontalCmd, oi.curVerticalCmd, curOpPos, oi.posCmdActive(), oi.armVertOffsetCmd);
     stt.mark("Arm Control");
 
-    cc.setIntake(di.getClawIntake());
-    cc.setEject(di.getClawEject());
+    cc.setGrabCmd(di.getGrab() || oi.grabCmd);
+    cc.setReleaseCmd(di.getRelease() || oi.releaseCmd);
     stt.mark("Claw Control");
 
 
@@ -305,8 +305,12 @@ public class Robot extends TimedRobot {
     stt.mark("Drivetrain");
 
     ac.update();
-    cw.update();
+    stt.mark("Arm Controller");
+
     cc.update();
+    stt.mark("Claw Controller");
+
+    cw.update();
     stt.mark("Cal Wrangler");
     db.updateDriverView();
     stt.mark("Dashboard");

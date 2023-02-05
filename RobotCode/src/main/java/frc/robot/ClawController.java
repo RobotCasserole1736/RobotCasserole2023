@@ -38,11 +38,11 @@ public class ClawController {
     // cube = spin motors for both, unclamped always.
 
 
-    public void setEject(boolean eject) {
+    public void setReleaseCmd(boolean eject) {
         curEjectcmd = eject;
     }
 
-    public void setIntake(boolean intake) {
+    public void setGrabCmd(boolean intake) {
         curIntakecmd = intake;
     }
 
