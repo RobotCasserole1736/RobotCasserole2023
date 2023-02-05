@@ -26,13 +26,13 @@ public class AutoEventArmMoveToPos extends AutoEvent {
 	@Override
 	public void userUpdate() {
 		// Just set control request the desired position
-		ArmControl.getInstance().setOpCmds(0, 0, posDes, true, false);
+		ArmControl.getInstance().setOpCmds(0, 0, posDes, true, 0.0);
 	}
 
 	@Override
 	public void userForceStop() {
 		// Force arm into safe state
-		ArmControl.getInstance().setOpCmds(0, 0, posDes, false, false);
+		ArmControl.getInstance().setOpCmds(0, 0, posDes, false, 0.0);
 	}
 
 	@Override

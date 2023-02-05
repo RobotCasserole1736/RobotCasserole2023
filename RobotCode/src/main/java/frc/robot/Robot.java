@@ -26,6 +26,7 @@ import frc.robot.AutoDrive.AutoDrive;
 import frc.robot.AutoDrive.AutoDrive.AutoDriveCmdState;
 import frc.robot.Autonomous.Autonomous;
 import frc.robot.Drivetrain.DrivetrainControl;
+import frc.robot.GamepieceModeManager.GamepieceMode;
 import frc.sim.RobotModel;
 
 /**
@@ -231,23 +232,26 @@ public class Robot extends TimedRobot {
     ad.update();
     stt.mark("Auto Drive Calculation");
 
+    if(oi.switchToConeModeCmd){
+      mm.setCurMode(GamepieceMode.CONE);
+    } else if (oi.switchToCubeModeCmd){
+      mm.setCurMode(GamepieceMode.CUBE);
+    } // else - leave mode unchanged
 
     var curOpPos = ArmNamedPosition.STOW;
-    
-    //TODO - support cube vs. cone
+
     if(oi.armHighPosCmd){
-      curOpPos = ArmNamedPosition.CONE_HIGH;
+      curOpPos = mm.isConeMode() ? ArmNamedPosition.CONE_HIGH : ArmNamedPosition.CUBE_HIGH;
     } else if(oi.armMidPosCmd){
-      curOpPos = ArmNamedPosition.CONE_MID;
+      curOpPos = mm.isConeMode() ? ArmNamedPosition.CONE_MID : ArmNamedPosition.CUBE_MID;
     } else if(oi.armLowPosCmd){
-      curOpPos = ArmNamedPosition.CONE_LOW;
+      curOpPos = mm.isConeMode() ? ArmNamedPosition.CONE_LOW : ArmNamedPosition.CUBE_LOW;
     } else if(oi.armStowPosCmd){
       curOpPos = ArmNamedPosition.STOW;
-    }
+    } //TODO - shelf location? or is Mid good enough?
 
-    ac.setOpCmds(oi.curHorizontalCmd, oi.curVerticalCmd, curOpPos, oi.posCmdActive(), oi.codePlaceOffset);
+    ac.setOpCmds(oi.curHorizontalCmd, oi.curVerticalCmd, curOpPos, oi.posCmdActive(), oi.armVertOffsetCmd);
     stt.mark("Arm Control");
-
 
     cc.setIntake(di.getClawIntake());
     cc.setEject(di.getClawEject());

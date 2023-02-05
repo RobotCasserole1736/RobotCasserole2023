@@ -20,8 +20,8 @@ public class OperatorInput {
     @Signal(units="mps")
     double curHorizontalCmd;
 
-    @Signal
-    boolean codePlaceOffset;
+    @Signal(units="frac")
+    double armVertOffsetCmd;
 
 
     @Signal
@@ -32,6 +32,16 @@ public class OperatorInput {
     boolean armHighPosCmd = false;
     @Signal
     boolean armStowPosCmd = false;
+
+    @Signal
+    boolean grabCmd = false;
+    @Signal
+    boolean releaseCmd = false;
+
+    @Signal
+    boolean switchToConeModeCmd = false;
+    @Signal
+    boolean switchToCubeModeCmd = false;
 
     Calibration stickDb;
     Calibration manMaxVel;
@@ -65,7 +75,13 @@ public class OperatorInput {
             armHighPosCmd = ctrl.getYButton();
             armStowPosCmd = ctrl.getXButton();
 
-            codePlaceOffset = (ctrl.getPOV() == 180);
+            armVertOffsetCmd = (ctrl.getLeftTriggerAxis() - ctrl.getRightTriggerAxis());
+
+            grabCmd = ctrl.getLeftBumper();
+            releaseCmd = ctrl.getRightBumper();
+
+            switchToConeModeCmd = ctrl.getBackButton();
+            switchToCubeModeCmd = ctrl.getStartButton();
 
         } else {
             // Controller Unplugged Defaults
@@ -75,7 +91,9 @@ public class OperatorInput {
             armMidPosCmd = false;
             armHighPosCmd = false;
             armStowPosCmd = false;
-            codePlaceOffset = false;
+            armVertOffsetCmd = 0.0;
+            grabCmd = false;
+            releaseCmd = false;
         }
 
 

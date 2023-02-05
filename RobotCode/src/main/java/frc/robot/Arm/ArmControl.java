@@ -46,14 +46,14 @@ public class ArmControl {
     }
 
     public void setInactive(){
-        this.setOpCmds(0.0, 0.0, ArmNamedPosition.STOW, false, false);
+        this.setOpCmds(0.0, 0.0, ArmNamedPosition.STOW, false, 0.0);
     }
 
-    public void setOpCmds(double desXVel, double desYVel, ArmNamedPosition posCmd, boolean posCmdActive, boolean placeOffsetCmd){
+    public void setOpCmds(double desXVel, double desYVel, ArmNamedPosition posCmd, boolean posCmdActive, double vertOffsetCmd){
         var manVelCmd = !posCmdActive;
         mp.setOpVelCmds(manVelCmd, desXVel, desYVel);
         pp.setCommand(posCmdActive, posCmd);
-        cpo.setCmd(placeOffsetCmd);
+        cpo.setCmd(vertOffsetCmd);
     }
 
     public void update(){
