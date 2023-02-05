@@ -125,7 +125,7 @@ public class SimSmartMotor extends AbstractSimmableMotorController {
 
     @Signal
     double curLimitFactor = 1.0;
-    final double CURRENT_LIM_I_GAIN = 0.02;
+    final double CURRENT_LIM_I_GAIN = 0.08;
     public void sim_updateCurrentLimit(){
         // whelp. Super rough aproximation of a current limit. Just an I gain on 
         // whether or not we're above the current limit. Should be updated faster
@@ -163,7 +163,7 @@ public class SimSmartMotor extends AbstractSimmableMotorController {
         
         var velErr_delta = (velError_RPM - velErr_prev)/Constants.Ts;
 
-        var pTerm = velError_RPM * kP;
+        var pTerm = velError_RPM * kP * 0.1;
         var dTerm = velErr_delta * kD;
         var iTerm = velErr_accum * kI;
 

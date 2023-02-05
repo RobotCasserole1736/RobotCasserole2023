@@ -36,8 +36,8 @@ public class Constants {
     static private final double MAX_DT_MOTOR_SPEED_RPS = DCMotor.getNEO(1).freeSpeedRadPerSec;
     static private final double MAX_DT_LINEAR_SPEED = MAX_DT_MOTOR_SPEED_RPS / WHEEL_GEAR_RATIO * Units.inchesToMeters(WHEEL_RADIUS_IN);
     // Fudged max expected performance 
-    static public final double MAX_FWD_REV_SPEED_MPS = MAX_DT_LINEAR_SPEED * 0.9; //fudge factor due to gearbox losses
-    static public final double MAX_STRAFE_SPEED_MPS = MAX_DT_LINEAR_SPEED * 0.9;  //fudge factor due to gearbox losses
+    static public final double MAX_FWD_REV_SPEED_MPS = MAX_DT_LINEAR_SPEED * 0.98; //fudge factor due to gearbox losses
+    static public final double MAX_STRAFE_SPEED_MPS = MAX_DT_LINEAR_SPEED * 0.98;  //fudge factor due to gearbox losses
     static public final double MAX_ROTATE_SPEED_RAD_PER_SEC = Units.degreesToRadians(360.0); //Fixed at the maximum rotational speed we'd want.
     // Accelerations - also a total guess
     static public final double MAX_TRANSLATE_ACCEL_MPS2 = MAX_FWD_REV_SPEED_MPS/0.50; //0-full time of 0.5 second - this is a guestimate
