@@ -114,7 +114,6 @@ public class ArmTelemetry {
                 10,
                 new Color8Bit(Color.kLimeGreen)));
 
-
     @Signal
     double desPosX;
     @Signal
@@ -147,7 +146,7 @@ public class ArmTelemetry {
 
 
         if(Robot.isReal()){
-            //Effectively hid the Act ligament if we're on a real robot
+            //Effectively hide the Act ligament if we're on a real robot
             m_boom_ligament_act.setLength(0);
             m_stick_ligament_act.setLength(0);
         }
@@ -188,6 +187,7 @@ public class ArmTelemetry {
         m_boom_ligament_act.setAngle(boomAngleDeg);
         m_stick_ligament_act.setAngle(stickAngleDeg);
     }
+
     public void setDesired(ArmEndEffectorState desPos, ArmAngularState desArmState){
         desEndEffPos.setLocation(new Translation2d(desPos.x + LEFT_MARGIN, desPos.y));
         m_boom_ligament_des.setAngle(desArmState.boomAngleDeg);
@@ -197,6 +197,7 @@ public class ArmTelemetry {
         desPosY = desPos.y;
         desReflexFrac = desPos.reflexFrac;
     }
+
     public void setMeasured(ArmEndEffectorState measPos, ArmAngularState measArmState){
         m_boom_ligament_meas.setAngle(measArmState.boomAngleDeg);
         m_stick_ligament_meas.setAngle(measArmState.stickAngleDeg);

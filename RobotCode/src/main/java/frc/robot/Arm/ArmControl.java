@@ -50,7 +50,7 @@ public class ArmControl {
     }
 
     public void setOpCmds(double desXVel, double desYVel, ArmNamedPosition posCmd, boolean posCmdActive, boolean placeOffsetCmd){
-        var manVelCmd = (desXVel != 0.0 || desYVel != 0.0);
+        var manVelCmd = !posCmdActive;
         mp.setOpVelCmds(manVelCmd, desXVel, desYVel);
         pp.setCommand(posCmdActive, posCmd);
         cpo.setCmd(placeOffsetCmd);

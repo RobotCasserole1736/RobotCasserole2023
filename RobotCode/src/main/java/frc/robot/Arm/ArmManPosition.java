@@ -48,17 +48,20 @@ public class ArmManPosition {
             newDesPos = curPosCmd;
         }
 
-    
-        //Apply slew rate limit to the velocity commands
-        var desXVelLimited = xVelLimiter.calculate(des_x_vel);
-        var desYVelLimited = yVelLimiter.calculate(des_y_vel);
-        //Calcuate the new desired position based on incoming velocity commands
-        newDesPos.xvel = desXVelLimited;
-        newDesPos.yvel = desYVelLimited;
-        newDesPos.x = curPosCmd.x + desXVelLimited * Constants.Ts;
-        newDesPos.y = curPosCmd.y + desYVelLimited * Constants.Ts;
-        newDesPos.reflexFrac = curPosCmd.reflexFrac;
-        return newDesPos;
+        if(isActive){
+            //Apply slew rate limit to the velocity commands
+            var desXVelLimited = xVelLimiter.calculate(des_x_vel);
+            var desYVelLimited = yVelLimiter.calculate(des_y_vel);
+            //Calcuate the new desired position based on incoming velocity commands
+            newDesPos.xvel = desXVelLimited;
+            newDesPos.yvel = desYVelLimited;
+            newDesPos.x = curPosCmd.x + desXVelLimited * Constants.Ts;
+            newDesPos.y = curPosCmd.y + desYVelLimited * Constants.Ts;
+            newDesPos.reflexFrac = curPosCmd.reflexFrac;
+            return newDesPos;
+        } else {
+            return curPosCmd;
+        }
 
 
     }
