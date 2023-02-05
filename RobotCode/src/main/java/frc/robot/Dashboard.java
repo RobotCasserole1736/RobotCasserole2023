@@ -8,6 +8,7 @@ import frc.lib.Signal.Annotations.Signal;
 import frc.lib.Webserver2.Webserver2;
 import frc.lib.Webserver2.DashboardConfig.DashboardConfig;
 import frc.lib.Webserver2.DashboardConfig.SwerveStateTopicSet;
+import frc.robot.Arm.ArmControl;
 import frc.robot.Autonomous.Autonomous;
 import frc.robot.Drivetrain.DrivetrainPoseEstimator;
 
@@ -28,6 +29,9 @@ public class Dashboard {
 
     @Signal(name="db_dtSpeedLimited")
     boolean dtSpeedLimited;
+
+    @Signal(name="db_armPathActive")
+    boolean armPathActive;
 
     @Signal(name="db_cubeShape")
     boolean cubeShape;
@@ -60,17 +64,20 @@ public class Dashboard {
         topicList[3] = new SwerveStateTopicSet("BR",3);
         d.addSwerveState(topicList, "SwerveState", RIGHT_COL+3.5, ROW1, 0.8);
         
-        d.addLineGauge(SignalUtils.nameToNT4ValueTopic("db_armXPos"), "Arm Reach", "in", -5, 50, 0, 48, CENTER_COL-11, ROW1-5, 1.0);
-        d.addLineGauge(SignalUtils.nameToNT4ValueTopic("db_armYPos"), "Arm Height", "in", -5, 50, 0, 48, CENTER_COL-11, ROW1+5, 1.0);
+        d.addLineGauge(SignalUtils.nameToNT4ValueTopic("db_armXPos"), "Arm Extension", "in", -20, 50, -16, 48, CENTER_COL-11, ROW1-5, 1.0);
+        d.addLineGauge(SignalUtils.nameToNT4ValueTopic("db_armYPos"), "Arm Height", "in", -5, 72, 0, 65, CENTER_COL-11, ROW1+5, 1.0);
         
         d.addCircularGauge(SignalUtils.nameToNT4ValueTopic("db_pneumaticsPressure"), "Pressure", "psi", 0, 140, 80, 130, CENTER_COL+10, ROW1, 1.0);
 
         d.addAutoChooser(Autonomous.getInstance().delayModeList, CENTER_COL, ROW2, 1.0);
         d.addAutoChooser(Autonomous.getInstance().mainModeList, CENTER_COL, ROW3, 1.0);
 
+        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_dtSpeedLimited"),"DT Speed Limit", "#FFFF00", "icons/speed.svg", CENTER_COL-12, ROW4, 1.0);
         d.addIcon(FaultWrangler.getInstance().getFaultActiveTopic(), "Faults", "#FF0000", "icons/alert.svg", CENTER_COL-6, ROW4, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_visionTargetVisible"),"Vision Target Visible", "#00FF00", "icons/vision.svg", CENTER_COL, ROW4, 1.0);
-        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_dtSpeedLimited"),"Shooter Spoolup", "#FFFF00", "icons/speed.svg", CENTER_COL-12, ROW4, 1.0);
+        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_armPathActive"),"Arm Path", "#00FFBB", "icons/autoAlign.svg", CENTER_COL+6, ROW4, 1.0);
+        
+        
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_cubeShape"),"Cube", "#b515ef", "icons/cube.svg", LEFT_COL+5, ROW1, 2.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_triangleShape"),"Triangle", "#FFFF00", "icons/triangle.svg", LEFT_COL-10, ROW1, 2.0);
         
@@ -81,10 +88,11 @@ public class Dashboard {
       public void updateDriverView() {
 
         visionTargetVisible = DrivetrainPoseEstimator.getInstance().getVisionTargetsVisible();
-        armXPos = Units.metersToInches(ArmTelemetry.getInstance().measPosX);
+        armXPos = Units.metersToInches(ArmTelemetry.getInstance().measPosX - Constants.WHEEL_BASE_HALF_LENGTH_M);
         armYPos = Units.metersToInches(ArmTelemetry.getInstance().measPosY);
         cubeShape = GamepieceModeManager.getInstance().isCubeMode();
         triangleShape = GamepieceModeManager.getInstance().isConeMode();
+        armPathActive = ArmControl.getInstance().isPathPlanning();
         
       }
     
