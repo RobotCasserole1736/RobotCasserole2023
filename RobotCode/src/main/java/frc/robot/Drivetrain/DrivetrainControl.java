@@ -8,12 +8,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.Constants;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
 import frc.lib.Util.FunctionGenerator;
-import frc.robot.Arm.ArmControl;
 
 public class DrivetrainControl {
     
@@ -88,6 +86,12 @@ public class DrivetrainControl {
     @Signal
     double desChSpdOmega;
 
+    //Auxilary states
+    @Signal
+    boolean bracePosition;
+    @Signal
+    boolean homePosition;
+
     // Current module desired states, translated out of chassis speeds or test inputs or whatever.
     SwerveModuleState[] desModState;
 
@@ -151,10 +155,11 @@ public class DrivetrainControl {
     // FwdRev commands along the fields's X axis (toward-opposite-alliance positive), in meters per second
     // strafeCmd commands along the field's Y axis (toward-your-alliance-driver-station-1 positive), in meters per second
     // rotateCmd commands rotation about the field's Z axis (when viewed top-down, counterclockwise positive), in radians per second.
-    public void setCmdFieldRelative(double fwdRevCmd, double strafeCmd, double rotateCmd){
+    public void setCmdFieldRelative(double fwdRevCmd, double strafeCmd, double rotateCmd, boolean braceCmd){
         desChSpd = ChassisSpeeds.fromFieldRelativeSpeeds(fwdRevCmd, strafeCmd, rotateCmd, pe.getGyroHeading());
         curDesPose = pe.getEstPose();
         initAngleOnly = false;
+        bracePosition = braceCmd;
         hdc_rotate.reset(pe.getGyroHeading().getRadians());
     }
 
@@ -162,10 +167,11 @@ public class DrivetrainControl {
     // FwdRev commands along the robot's X axis (forward positive), in meters per second
     // strafeCmd commands along the robot's Y axis (left positive), in meters per second
     // rotateCmd commands rotation about the robot's Z axis (when viewed top-down, counterclockwise positive), in radians per second.
-    public void setCmdRobotRelative(double fwdRevCmd, double strafeCmd, double rotateCmd){
+    public void setCmdRobotRelative(double fwdRevCmd, double strafeCmd, double rotateCmd, boolean braceCmd){
         desChSpd = new ChassisSpeeds(fwdRevCmd, strafeCmd, rotateCmd);
         curDesPose = pe.getEstPose();
         initAngleOnly = false;
+        bracePosition = braceCmd;
         hdc_rotate.reset(pe.getGyroHeading().getRadians());
     }
 
@@ -175,6 +181,7 @@ public class DrivetrainControl {
     // state along the trajectory.
     public void setCmdTrajectory(SwerveTrajectoryCmd cmd){
         setCmdTrajectory(cmd, false);
+        bracePosition = false;
     }
 
     // Autonomous-centric way to command the drivetrain via a Trajectory.
@@ -185,13 +192,14 @@ public class DrivetrainControl {
         desChSpd = hdc.calculate(pe.getEstPose(), cmd.desTrajState, cmd.desAngle, cmd.desAngVel);
         curDesPose = new Pose2d(cmd.desTrajState.poseMeters.getTranslation(), cmd.desAngle);
         this.initAngleOnly = initAngleOnly;
+        bracePosition = false;
     }
 
 
     // Helper function to command the drivetrain to stop in place. Azimuths will still servo to the "stopped" cross position
     // Helpful especially for auto routines or disabled to ensure the drivetrain is commanded to stop.
     public void stop(){
-        setCmdRobotRelative(0,0,0);
+        setCmdRobotRelative(0,0,0,false);
     }
 
     // Main periodic step function for Teleop, Autonomous, and Disabled
@@ -203,20 +211,29 @@ public class DrivetrainControl {
 
         boolean motionCommanded = Math.abs(desChSpdVx) > 0.01 | Math.abs(desChSpdVy) > 0.01 | Math.abs(desChSpdOmega) > 0.01;
 
-        if(motionCommanded | initAngleOnly){
-            //In motion
-            desModState = Constants.m_kinematics.toSwerveModuleStates(desChSpd);
-        } else {
+        homePosition = !motionCommanded && !initAngleOnly;
+
+        if(bracePosition){
+            //Brace Position
+            desModState = new SwerveModuleState[4];
+            desModState[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
+            desModState[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+            desModState[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+            desModState[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
+        } else if (homePosition) {
             //Home Position
             desModState = new SwerveModuleState[4];
             desModState[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
             desModState[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
             desModState[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
             desModState[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+        } else {
+            //In motion
+            desModState = Constants.m_kinematics.toSwerveModuleStates(desChSpd);
         }
 
-        if(initAngleOnly){
-            //Force module speeds to zero
+        if(initAngleOnly || bracePosition){
+            //Force module speeds to zero when not in motion
             desModState[0].speedMetersPerSecond = 0;
             desModState[1].speedMetersPerSecond = 0;
             desModState[2].speedMetersPerSecond = 0;

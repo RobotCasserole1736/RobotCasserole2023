@@ -37,6 +37,8 @@ public class DriverInput {
 
     @Signal(units="bool")
     boolean robotRelative;
+    @Signal(units="bool")
+    boolean braceCmd;
 
     @Signal(units="bool")
     boolean clawEject;
@@ -126,6 +128,7 @@ public class DriverInput {
                 
             // Read in other drivetrain controls
             robotRelative = driverController.getRightBumper();
+            braceCmd = driverController.getLeftBumper();
             resetOdometry = resetOdoDbnc.calculate(driverController.getAButton());
 
             // Read in Auto-drive commands
@@ -154,6 +157,7 @@ public class DriverInput {
             driveToCenterCmd = false;
             clawEject = false;
             clawIntake = false;
+            braceCmd = false;
         }
 
         disconFault.set(isConnected);
@@ -231,6 +235,10 @@ public class DriverInput {
 
     public boolean getDriveToCenterCmd(){
         return driveToCenterCmd;
+    }
+
+    public boolean getBracePositionCmd(){
+        return braceCmd;
     }
 
 }

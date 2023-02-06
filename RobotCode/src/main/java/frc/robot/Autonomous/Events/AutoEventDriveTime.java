@@ -74,7 +74,7 @@ public class AutoEventDriveTime extends AutoEvent {
             return;
         } else if(curTime <= INIT_TIME) {
             //Give modules time to align
-            dt_inst.setCmdRobotRelative(Math.signum(speed_mps) * 0.05, 0.0, 0.0);
+            dt_inst.setCmdRobotRelative(Math.signum(speed_mps) * 0.05, 0.0, 0.0, false);
             speedCmdRateLimit = spdRateLimit.calculate(0);
         } else {
             //normal drive
@@ -87,7 +87,7 @@ public class AutoEventDriveTime extends AutoEvent {
 
             speedCmdRateLimit = spdRateLimit.calculate(speedCmdRaw);
 
-            dt_inst.setCmdRobotRelative(speedCmdRateLimit, 0.0, 0.0);
+            dt_inst.setCmdRobotRelative(speedCmdRateLimit, 0.0, 0.0, false);
 
 
             //Populate desired pose from drivetrain - meh

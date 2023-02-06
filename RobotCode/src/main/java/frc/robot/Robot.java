@@ -228,7 +228,7 @@ public class Robot extends TimedRobot {
       ad.setCmd(AutoDriveCmdState.MANUAL);
     }
 
-    ad.setManualCommands(di.getFwdRevCmd_mps(), di.getSideToSideCmd_mps(), di.getRotateCmd_rps(), !di.getRobotRelative());
+    ad.setManualCommands(di.getFwdRevCmd_mps(), di.getSideToSideCmd_mps(), di.getRotateCmd_rps(), !di.getRobotRelative(), di.getBracePositionCmd());
     ad.update();
     stt.mark("Auto Drive Calculation");
 

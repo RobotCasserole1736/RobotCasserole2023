@@ -56,6 +56,7 @@ public class AutoDrive {
     double manualStrafeCmd = 0;
     double manualRotateCmd = 0;
     boolean manualFieldRelativeCmd = false;
+    boolean bracePosition = false;
 
     AutoDriveCmdState curCmd = AutoDriveCmdState.MANUAL;
     AutoDriveCmdState prevCmd = AutoDriveCmdState.MANUAL;
@@ -79,11 +80,12 @@ public class AutoDrive {
 
     }
 
-    public void setManualCommands(double fwdRevCmd, double strafeCmd, double rotateCmd, boolean fieldRelativeCmd){
-        manualFwdRevCmd = fwdRevCmd;
-        manualStrafeCmd = strafeCmd;
-        manualRotateCmd = rotateCmd;
-        manualFieldRelativeCmd = fieldRelativeCmd;
+    public void setManualCommands(double fwdRevCmd, double strafeCmd, double rotateCmd, boolean fieldRelativeCmd, boolean bracePosition){
+        this.manualFwdRevCmd = fwdRevCmd;
+        this.manualStrafeCmd = strafeCmd;
+        this.manualRotateCmd = rotateCmd;
+        this.manualFieldRelativeCmd = fieldRelativeCmd;
+        this.bracePosition = bracePosition;
     }
 
     public void setCmd(AutoDriveCmdState cmd){
@@ -150,9 +152,9 @@ public class AutoDrive {
         // Send outputs to the drivetrain
         if(curState == AutoDriveState.MANUAL || curState == AutoDriveState.GENERATING_TRAJECTORY){
             if(manualFieldRelativeCmd){
-                dt.setCmdFieldRelative(manualFwdRevCmd, manualStrafeCmd, manualRotateCmd);
+                dt.setCmdFieldRelative(manualFwdRevCmd, manualStrafeCmd, manualRotateCmd, bracePosition);
             } else {
-                dt.setCmdRobotRelative(manualFwdRevCmd, manualStrafeCmd, manualRotateCmd);
+                dt.setCmdRobotRelative(manualFwdRevCmd, manualStrafeCmd, manualRotateCmd, bracePosition);
             }
         } else if(curState == AutoDriveState.RUNNING_TRAJECTORY) {
             var curCmd = curTraj.getCurCmd();
@@ -163,7 +165,7 @@ public class AutoDrive {
             curAutoCmdRotDeg = curCmd.desAngle.getDegrees();
 
         } else {
-            dt.setCmdRobotRelative(0, 0, 0);
+            dt.setCmdRobotRelative(0, 0, 0, false);
         }
 
 
