@@ -378,6 +378,9 @@ public class DrivetrainControl {
         moduleBR.updateTelemetry();
     }
 
+    // Update the pose estimator to a known pose
+    // this should be called at the start of autonomous, or any other time when we 
+    // know for certain where we're at. 
     public void setKnownPose(Pose2d poseIn){
         curDesPose = poseIn;
         pe.setKnownPose(poseIn);

@@ -19,6 +19,10 @@ import frc.robot.Arm.ArmEndEffectorState;
 import frc.robot.Arm.Path.ArmPath;
 import frc.robot.Arm.ArmAngularState;
 
+/**
+ * Class to wrapper all the logic to create a ... uhh... very complex
+ * Mechanism2d widget which represents our arm's state. And lots of other stuff.
+ */
 public class ArmTelemetry {
 
     /* Singleton infratructure*/
@@ -28,6 +32,7 @@ public class ArmTelemetry {
             inst = new ArmTelemetry();
         return inst;
     }
+
     //All Dimensions in meters
     // https://firstfrc.blob.core.windows.net/frc2023/FieldAssets/2023FieldDrawings-CHARGEDUPSpecific.pdf page 10 for most of these
     private final double LEFT_MARGIN = Units.inchesToMeters(15);
@@ -37,8 +42,10 @@ public class ArmTelemetry {
     private final double HIGH_GOAL =  LOW_GOAL + Units.inchesToMeters(39.37);
     private final double HIGH_GOAL_HEIGHT = Units.inchesToMeters(46.0);
 
+    // Overall mechanism 2d which everything gets drawn on
     private final Mechanism2d m_mech2d = new Mechanism2d(HIGH_GOAL + LEFT_MARGIN, Units.feetToMeters(6.0));
 
+    // Fixed structures which always exist on the drawing
     private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", LEFT_MARGIN, Constants.ARM_BOOM_MOUNT_HIEGHT);
     private final MechanismLigament2d m_arm_tower =
         m_armPivot.append(new MechanismLigament2d("ArmTower", Constants.ARM_BOOM_MOUNT_HIEGHT, -90, 5, new Color8Bit(Color.kSilver)));
@@ -53,13 +60,19 @@ public class ArmTelemetry {
     private final MechanismLigament2d bumpers = bumperRoot.append(new MechanismLigament2d("Bumpers", LOW_GOAL, 0, 50, new Color8Bit(Color.kRed)));
     private final MechanismLigament2d nodeBase = bumpers.append(new MechanismLigament2d("Node Base", HIGH_GOAL - LOW_GOAL, 0, 100, new Color8Bit(Color.kWhite)));
 
+
+    // Marker to show where the end effector is desired to be at at all times
     private final Mechanism2DMarker desEndEffPos = new Mechanism2DMarker(m_mech2d, "DesEndEffPos", 0.02);
+    
+    // Smooth line which shows the most recently calculated path, and its constituent waypoints
     private final Mechanism2DPolygon desPath = new Mechanism2DPolygon(m_mech2d, "DesPath", new ArrayList<Translation2d>());
     private final List<Mechanism2DMarker> desPathWaypointMarkers = new ArrayList<Mechanism2DMarker>(10); //Hardcode max 10 waypoints. Hopefully we won't need more than that.
 
+    // Outline which shows where the soft limits logic should be limiting motion to
     private final Mechanism2DPolygon softLimits = new Mechanism2DPolygon(m_mech2d, "SoftLimits", new ArrayList<Translation2d>());
 
-
+    // Actual arm position ligaments to show the arm's location from
+    // simulation. This won't be available on the real robot.
     private final MechanismLigament2d m_boom_ligament_act =
         m_armPivot.append(
               new MechanismLigament2d(
@@ -78,6 +91,8 @@ public class ArmTelemetry {
                 3,
                 new Color8Bit(Color.kSteelBlue)));
 
+    // Ligaments to show the arm's location as measured by sensors.
+    // This will be available on the real robot.
     private final MechanismLigament2d m_boom_ligament_meas =
         m_armPivot.append(
                 new MechanismLigament2d(
@@ -96,6 +111,7 @@ public class ArmTelemetry {
                 5,
                 new Color8Bit(Color.kRed)));
 
+    // Partial ligaments to show the desired angles of each joint
     private final MechanismLigament2d m_boom_ligament_des =
     m_armPivot.append(
             new MechanismLigament2d(
@@ -114,6 +130,7 @@ public class ArmTelemetry {
                 10,
                 new Color8Bit(Color.kLimeGreen)));
 
+    // Temporary debug variables to put key measurements into NT
     @Signal
     double desPosX;
     @Signal
@@ -152,6 +169,8 @@ public class ArmTelemetry {
         }
     }
 
+    // Given an ArmPath object, this will create a polygon evenly sampled
+    // along the path and draw it.
     public void setDesPath(ArmPath path){
         var pathPoly = new ArrayList<Translation2d>();
 
@@ -182,15 +201,19 @@ public class ArmTelemetry {
 
     }
 
+    // Updates where the soft limits polygon is drawn on the display
     public void setSoftLimits(List<Translation2d> softLimitPoly){
         softLimits.setPolygon(softLimitPoly);
     }
 
+    // Updates the actual (simulated) position of the arm
     public void setActual(double boomAngleDeg, double stickAngleDeg){
         m_boom_ligament_act.setAngle(boomAngleDeg);
         m_stick_ligament_act.setAngle(stickAngleDeg);
     }
 
+    // Updates the control logic's desired angular position and end effector position
+    // as drawn on the mechanism 2d
     public void setDesired(ArmEndEffectorState desPos, ArmAngularState desArmState){
         desEndEffPos.setLocation(new Translation2d(desPos.x + LEFT_MARGIN, desPos.y));
         m_boom_ligament_des.setAngle(desArmState.boomAngleDeg);
@@ -201,6 +224,7 @@ public class ArmTelemetry {
         desReflexFrac = desPos.reflexFrac;
     }
 
+    // Update the control logic's measured angular and end effector position
     public void setMeasured(ArmEndEffectorState measPos, ArmAngularState measArmState){
         m_boom_ligament_meas.setAngle(measArmState.boomAngleDeg);
         m_stick_ligament_meas.setAngle(measArmState.stickAngleDeg);

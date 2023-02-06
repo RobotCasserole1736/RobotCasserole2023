@@ -23,6 +23,11 @@ import frc.robot.PoseTelemetry;
 import frc.robot.Drivetrain.Camera.FieldTags;
 import frc.robot.Drivetrain.Camera.PhotonCamWrapper;
 
+/**
+ * The pose estimator takes in measurements from drivetrain encoders and cameras
+ * and puts them into wpilib's kalman filter. In turn, this will return a best guess
+ * at where our robot is at on the field
+ */
 public class DrivetrainPoseEstimator {
 
     /* Singleton infrastructure */
@@ -34,12 +39,19 @@ public class DrivetrainPoseEstimator {
         return instance;
     }
 
+    // Current best-estimate of where we're at on the field.
+    // Start it out at an assumed default pose (though, this is very likely
+    // to get overridden by an autonomous routine)
     Pose2d curEstPose = new Pose2d(Constants.DFLT_START_POSE.getTranslation(), Constants.DFLT_START_POSE.getRotation());
 
+    // Gyroscope returns a measruement of the robot's angle relative to the field
     WrapperedGyro gyro;
 
+    // WPILib pose estimator
     SwerveDrivePoseEstimator m_poseEstimator;
 
+    // List of all photonvision cameras on the robot which gather
+    // information about apriltags on the field
     List<PhotonCamWrapper> cams = new ArrayList<PhotonCamWrapper>();
 
     //Trustworthiness of the internal model of how motors should be moving
@@ -51,21 +63,25 @@ public class DrivetrainPoseEstimator {
     Matrix<N3, N1>  visionMeasurementStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
 
 
-
+    // Mostly for debug or dashboard purposes, plot
+    // the robot's current speed on the field.
     @Signal(units = "ft/sec")
     double curSpeed = 0;
 
     private DrivetrainPoseEstimator(){
 
-        FieldTags.getInstance();//ensure files get loaded
+        // Invoke the fieldTags getInstance at least once
+        // to be sure the feild definition file is loaded.
+        FieldTags.getInstance();
 
+        // Create all vision processing cameras and add them to the list of cameras
         cams.add(new PhotonCamWrapper("FRONT_LEFT_CAM", Constants.robotToFrontLeftCameraTrans)); 
         cams.add(new PhotonCamWrapper("FRONT_RIGHT_CAM", Constants.robotToFrontRightCameraTrans)); 
         cams.add(new PhotonCamWrapper("REAR_CAM", Constants.robotToRearCameraTrans)); 
 
         gyro = new WrapperedGyro(GyroType.ADXRS453);
 
-        //Temp default - will poopulate with real valeus in the resetPosition method
+        //Temp default - will populate with real valeus in the resetPosition method
         SwerveModulePosition[] initialStates = {new SwerveModulePosition(),new SwerveModulePosition(),new SwerveModulePosition(),new SwerveModulePosition()};
 
         m_poseEstimator = new SwerveDrivePoseEstimator(
@@ -92,6 +108,10 @@ public class DrivetrainPoseEstimator {
         curEstPose = in;
     }
 
+    /**
+     * 
+     * @return the current best estimate of the robot's position on the field
+     */
     public Pose2d getEstPose(){ return curEstPose; }
 
     public void update(){
@@ -120,14 +140,26 @@ public class DrivetrainPoseEstimator {
 
     }
 
+    /**
+     * 
+     * @return representation of the robot's heading as measured by the gyroscope
+     */
     public Rotation2d getGyroHeading(){
         return gyro.getRotation2d();
     }
 
+    /**
+     * 
+     * @return the current linear speed of the robot in feet per second
+     */
     public double getSpeedFtpSec(){
         return curSpeed;
     }
 
+    /**
+     * 
+     * @return true if at least one camera sees one target, false otherwise
+     */
     public boolean getVisionTargetsVisible(){
         for(var cam:cams){
             if(cam.getCurTargetCount() > 0){

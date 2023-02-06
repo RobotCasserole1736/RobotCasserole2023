@@ -15,14 +15,28 @@ import frc.lib.Util.MapLookup2D;
 import frc.lib.Webserver2.DashboardConfig.SwerveStateTopicSet;
 import frc.robot.Robot;
 
+
+/**
+ * Logic to control one swerve drive module. A module consists of motors and gearing
+ * to point a wheel in a certain direction ("Azimuth") as well as spin that wheel. It also
+ * includes sensors to read the azimuth angle, and the wheel speed as well.
+ */
 class SwerveModuleControl {
 
+    // Motor that makes the wheel spin
     WrapperedCANMotorCtrl wheelMotorCtrl;
+    // Motor that makes the azimuth angle change
     WrapperedCANMotorCtrl azmthMotorCtrl;
+    // Absolute encoder which detects the azimuth angle
     WrapperedAbsoluteEncoder azmth_enc;
 
+    // Desired module state - incoming command for wheel speed and azimuth angle
     SwerveModuleState desState = new SwerveModuleState();
+    // Optimized module state - same as desired, but potentially with azimuth angle
+    // offset by 180 degrees and wheel speed flipped to reduce the time to align the wheel to desired
     SwerveModuleState optState = new SwerveModuleState();
+    // The observed state of the module, as measured by sensors in the motors and the 
+    // absolute encoder on the azimuth angle.
     SwerveModuleState actState = new SwerveModuleState();
 
     double motorDesSpd_radpersec;

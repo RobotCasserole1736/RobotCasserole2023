@@ -4,33 +4,41 @@ import edu.wpi.first.math.controller.PIDController;
 import frc.lib.Signal.Annotations.Signal;
 import frc.lib.Util.MapLookup2D;
 
-
+/**
+ * Wrapper for the logic to do PID control to control a module's azimuth
+ * angle
+ */
 public class AzimuthAngleController{
 
-    final double MAX_AZMTH_SPEED_DEG_PER_SEC = 720.0; // TODO, maybe go faster?
+    // Configure a maximum speed to control to. This is well under what the
+    // module could do, but Neo's are overkill for this application.
+    final double MAX_AZMTH_SPEED_DEG_PER_SEC = 720.0; 
 
     PIDController azmthPIDCtrl = new PIDController(0,0,0);
 
+    @Signal(units = "deg")
     double desAng = 0;
 
     @Signal(units="deg")
     double actAng = 0;
 
     @Signal(units = "deg")
-    double angSetpoint = 0;
-    @Signal(units = "deg")
     double desAngleRateLimit = 0;
 
+    // Ouput command to the motor (volts)
     double azmthMotorCmd = 0;
 
+    // Input from other control logic indicating the translational speed of the chassis.
     double netSpeed = 0;
 
     @Signal
     boolean invertWheelDirection = false;
 
+    // Table to define a limit on how fast the azimuth motor rotates when the robot
+    // is translating quickly. This should help prevent skidding of wheels.
     MapLookup2D azmthCmdLimitTbl;
 
-    double desAnglePrev = -123;
+    double desAnglePrev = -123; //Arbitrary and unlikely starting number. Hacky as all heck but works for now.
 
 
     public AzimuthAngleController(){
