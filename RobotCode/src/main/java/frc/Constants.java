@@ -115,7 +115,7 @@ public class Constants {
     //static public final int UNUSED = 9;
 
     // Analog Bank
-    //static public final int UNUSED = 0;
+    static public final int PRESSURE_SENSOR_ANALOG = 0;
     //static public final int UNUSED = 1;
     //static public final int UNUSED = 2;
     //static public final int UNUSED = 3;

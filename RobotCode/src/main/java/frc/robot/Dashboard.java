@@ -40,6 +40,10 @@ public class Dashboard {
     @Signal(name="db_triangleShape")
     boolean triangleShape;
 
+    @Signal(name = "db_masterCaution")
+    boolean masterCaution;
+    String masterCautionTxt;
+
     DashboardConfig d;
 
     public Dashboard (Webserver2 ws_in) {
@@ -73,6 +77,7 @@ public class Dashboard {
         d.addAutoChooser(Autonomous.getInstance().delayModeList, CENTER_COL, ROW2, 1.0);
         d.addAutoChooser(Autonomous.getInstance().mainModeList, CENTER_COL, ROW3, 1.0);
 
+        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_masterCaution"),"Master Caution", "#FF0000", "icons/alert.svg", CENTER_COL-6, ROW4, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_dtSpeedLimited"),"DT Speed Limit", "#FFFF00", "icons/speed.svg", CENTER_COL-12, ROW4, 1.0);
         d.addIcon(FaultWrangler.getInstance().getFaultActiveTopic(), "Faults", "#FF0000", "icons/alert.svg", CENTER_COL-6, ROW4, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_visionTargetVisible"),"Vision Target Visible", "#00FF00", "icons/vision.svg", CENTER_COL, ROW4, 1.0);
@@ -95,6 +100,19 @@ public class Dashboard {
         triangleShape = GamepieceModeManager.getInstance().isConeMode();
         armPathActive = ArmControl.getInstance().isPathPlanning();
         dtSpeedLimited = DriverStation.isTeleop() && ArmControl.getInstance().isExtended();
+        pnuemPressure = PneumaticsSupplyControl.getInstance().getStoragePressure();
+
+           //master caution handling
+           if ( pnuemPressure < 80.0 ) {
+            masterCautionTxt = "Low Pneumatic Pressure";
+            masterCaution = true;
+          //}else if( !Vision.getInstance().getCamOnline() ) {
+          //  masterCautionTxt = "Vision Camera Disconnected";
+          //  masterCaution = true;
+          } else {
+            masterCautionTxt = "";
+            masterCaution = false;
+          }
         
       }
     

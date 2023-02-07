@@ -40,7 +40,7 @@ public class Robot extends TimedRobot {
   public static double loopStartTime;
 
   ///////////////////////////////////////////////////////////////////
-  // Instatntiate new classes after here 
+  // Instantiate new classes after here 
   // ...
 
   // Website utilities
