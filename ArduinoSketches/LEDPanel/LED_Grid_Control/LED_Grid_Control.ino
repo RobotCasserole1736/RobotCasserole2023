@@ -178,8 +178,8 @@ void loop() {
     //purpleCube();
     //yellowCone();
     printArray(hatArray);
-    FastLED.show();
-    FastLED.delay(1000 / UPDATES_PER_SECOND);
+//    FastLED.show();
+//    FastLED.delay(1000 / UPDATES_PER_SECOND);
 }
 
 void yellowCone()
@@ -255,35 +255,20 @@ void purpleCube() {
 }
 
 void printArray(uint8_t arr[kMatrixWidth][kMatrixWidth]){
-
-  for(uint8_t s = 0; s < 16; s++){
-
-   for (uint8_t i = 0; i < kMatrixWidth; i++){
-        
-        for (uint8_t j = 0; j < kMatrixWidth; j++){ 
-          
+  for(int s = 13; s > -13; s--){
+    for (uint8_t i = 0; i < kMatrixWidth; i++){
+      for (uint8_t j = 0; j < kMatrixWidth; j++){ 
+        if ((j - s >= 0) && (j - s < kMatrixWidth))
+          led[XY(i,j)] = CRGB(0,arr[i][j - s] * 255,0);
+        else 
           led[XY(i,j)] = CRGB(0,0,0);
-          //FastLED.show();
-         // FastLED.delay(1000 / UPDATES_PER_SECOND); 
-          
-        }
-      }
-      FastLED.show(); 
-      for (uint8_t i = 0; i < kMatrixWidth; i++){
-        
-        for (uint8_t j = 0; j < kMatrixWidth; j++){  
-  
-           led[XY(i,j)] = CRGB(0,arr[i][j+s]*150,0); 
-  
-          }
-        }
-        
-         // Serial.print("waiting");
-          FastLED.show();
-          FastLED.delay(1000 / UPDATES_PER_SECOND);
-          delay(1000);
       }
     }
+    FastLED.show();
+    FastLED.delay(1000 / UPDATES_PER_SECOND);
+    delay(100);
+  }
+}
 //utlitiy function that was found online. It redifines the way our code views the LEDS. It maps the Led index number onto a grid like cordinate plane.
 uint16_t XY( uint8_t x, uint8_t y)
 {
