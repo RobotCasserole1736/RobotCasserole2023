@@ -120,7 +120,7 @@ public class ArmControl {
         ms.update(curMeasAngularStates, true);
 
         // Update telemetry
-        ArmTelemetry.getInstance().setDesired(curDesStateLimited, curDesAngularStates);
+        ArmTelemetry.getInstance().setDesired(curDesStateWithOffset, curDesAngularStates);
         ArmTelemetry.getInstance().setMeasured(curMeasState, curMeasAngularStates);
 
         // Save previous
