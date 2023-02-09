@@ -28,7 +28,7 @@ public class ArmControl {
     ArmManPosition mp;
     ArmConePlaceOffset cpo;
 
-    ArmSoftLimits asl;
+    public ArmSoftLimits asl;
 
     //TODO put offsets in for this
     WrapperedAbsoluteEncoder boomEncoder = new WrapperedAbsoluteEncoder(AbsoluteEncType.SRXEncoder, "Boom", Constants.ARM_BOOM_ENC_IDX, 0);

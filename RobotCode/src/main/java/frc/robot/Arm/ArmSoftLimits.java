@@ -16,6 +16,8 @@ public class ArmSoftLimits {
     double[] restrictionXPoints = { minX, minX, maxX, maxX };
     double[] restrictionYPoints = { minY, maxY, maxY, minY };
 
+    boolean isLimited = false;
+
     public ArmSoftLimits() {
 
         updateTelemetry();
@@ -42,12 +44,16 @@ public class ArmSoftLimits {
 
         var out = new ArmEndEffectorState();
 
+        isLimited = false;
+
         if (in.x > maxX) {
             out.x = maxX;
             out.xvel = 0;
+            isLimited = true;
         } else if (in.x < minX) {
             out.x = minX;
             out.xvel = 0;
+            isLimited = true;
         } else {
             out.x = in.x;
             out.xvel = in.xvel;
@@ -56,9 +62,11 @@ public class ArmSoftLimits {
         if (in.y > maxY) {
             out.y = maxY;
             out.yvel = 0;
+            isLimited = true;
         } else if (in.y < minY) {
             out.y = minY;
             out.yvel = 0;
+            isLimited = true;
         } else {
             out.y = in.y;
             out.yvel = in.yvel;
@@ -68,6 +76,10 @@ public class ArmSoftLimits {
 
         return out;
 
+    }
+
+    public boolean isLimited(){
+        return isLimited;
     }
 
 }
