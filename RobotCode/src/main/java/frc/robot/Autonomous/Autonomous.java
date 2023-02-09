@@ -5,7 +5,9 @@ import edu.wpi.first.networktables.IntegerPublisher;
 import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.IntegerTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.lib.AutoSequencer.AutoSequencer;
 import frc.lib.Autonomous.AutoMode;
 import frc.lib.Autonomous.AutoModeList;
@@ -62,6 +64,7 @@ public class Autonomous {
 
     AutoMode prevDelayMode = null;
     AutoMode prevMainMode = null;
+    Alliance prevAlliance = null;
 
     
     /* Singleton infratructure*/
@@ -116,10 +119,13 @@ public class Autonomous {
         desMainMode  = desMainModeSubscriber.get();
         curDelayMode = delayModeList.get((int)desDelayMode);
         curMainMode = mainModeList.get((int)desMainMode);	
-        if(curDelayMode != prevDelayMode || curMainMode != prevMainMode){
+        var curAlliance = DriverStation.getAlliance();
+
+        if(curDelayMode != prevDelayMode || curMainMode != prevMainMode || curAlliance != prevAlliance){
             loadSequencer();
             prevDelayMode = curDelayMode;
             prevMainMode = curMainMode;
+            prevAlliance = curAlliance;
         }
 
         if(RobotController.getUserButton()) {

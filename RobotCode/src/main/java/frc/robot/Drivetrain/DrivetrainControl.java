@@ -8,6 +8,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.AllianceTransformUtils;
 import frc.Constants;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
@@ -156,6 +159,8 @@ public class DrivetrainControl {
     // strafeCmd commands along the field's Y axis (toward-your-alliance-driver-station-1 positive), in meters per second
     // rotateCmd commands rotation about the field's Z axis (when viewed top-down, counterclockwise positive), in radians per second.
     public void setCmdFieldRelative(double fwdRevCmd, double strafeCmd, double rotateCmd, boolean braceCmd){
+        fwdRevCmd *= (DriverStation.getAlliance() == Alliance.Red)? -1.0 : 1.0;
+        strafeCmd *= (DriverStation.getAlliance() == Alliance.Red)? -1.0 : 1.0;
         desChSpd = ChassisSpeeds.fromFieldRelativeSpeeds(fwdRevCmd, strafeCmd, rotateCmd, pe.getGyroHeading());
         curDesPose = pe.getEstPose();
         initAngleOnly = false;

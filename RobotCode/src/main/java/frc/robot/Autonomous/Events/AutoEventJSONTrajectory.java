@@ -1,5 +1,6 @@
 package frc.robot.Autonomous.Events;
 
+import frc.AllianceTransformUtils;
 import frc.Constants;
 
 /*
@@ -33,6 +34,7 @@ import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -59,7 +61,7 @@ public class AutoEventJSONTrajectory extends AutoEvent {
 
         path = PathPlanner.loadPath(jsonFileName, 
                                     Constants.MAX_FWD_REV_SPEED_MPS * speedScalar, 
-                                    Constants.MAX_TRANSLATE_ACCEL_MPS2 * speedScalar * speedScalar);       
+                                    Constants.MAX_TRANSLATE_ACCEL_MPS2 * speedScalar * speedScalar);   
                                     
         trajStartTime = MODULE_ANGLE_INIT_TIME_SEC;
         trajEndTime = MODULE_ANGLE_INIT_TIME_SEC + path.getTotalTimeSeconds();
@@ -85,6 +87,10 @@ public class AutoEventJSONTrajectory extends AutoEvent {
             // Extract current step
             PathPlannerState curState = (PathPlannerState)  path.sample(curTime - trajStartTime);
             PathPlannerState nextState = (PathPlannerState)  path.sample(curTime - trajStartTime + Constants.Ts);
+
+            curState  = AllianceTransformUtils.transform(curState);
+            nextState = AllianceTransformUtils.transform(nextState);
+
             Rotation2d curHeading = curState.holonomicRotation;
             Rotation2d nextHeading = nextState.holonomicRotation;
             Rotation2d curHeadingVel = nextHeading.minus(curHeading).times(1.0 / (Constants.Ts));
@@ -101,6 +107,8 @@ public class AutoEventJSONTrajectory extends AutoEvent {
 
             // Extract current step
             PathPlannerState curState = (PathPlannerState)  path.sample(0.0);
+            curState = AllianceTransformUtils.transform(curState);
+
             Rotation2d curHeading = curState.holonomicRotation;
 
             SwerveTrajectoryCmd cmd = new SwerveTrajectoryCmd(curState, curHeading, new Rotation2d());
@@ -144,7 +152,7 @@ public class AutoEventJSONTrajectory extends AutoEvent {
 
 
     public Pose2d getInitialPose(){
-        return path.getInitialHolonomicPose();
+        return AllianceTransformUtils.transform(path.getInitialHolonomicPose());
     }
 
 }

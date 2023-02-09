@@ -4,6 +4,7 @@
 
 package frc.robot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.photonvision.PhotonCamera;
@@ -260,7 +261,8 @@ public class Robot extends TimedRobot {
 
     if(di.getOdoResetCmd()){
       //Reset pose estimate to angle 0, but at the same translation we're at
-      Pose2d newPose = new Pose2d(dt.getCurEstPose().getTranslation(), new Rotation2d(0.0));
+      var angle = (DriverStation.getAlliance() == Alliance.Red) ? 180.0 : 0.0;
+      Pose2d newPose = new Pose2d(dt.getCurEstPose().getTranslation(), Rotation2d.fromDegrees(angle));
       dt.setKnownPose(newPose);
     }
 
