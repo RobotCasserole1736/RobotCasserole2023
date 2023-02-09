@@ -89,11 +89,9 @@ public class Constants {
     //////////////////////////////////////////////////////////////////
 
     // PWM Bank
-    public static final int LED_MODE_PORT = 1;
-    public static final int LED_DECORATIVE_PORT = 2;
-    //static public final int UNUSED = 0;
-    //static public final int UNUSED = 1;
-    //static public final int UNUSED = 2;
+    public static final int LED_MODE_PORT = 0;
+    public static final int LED_DECORATIVE_PORT = 1;
+    static public final int CLAW_INTAKE = 2;
     //static public final int UNUSED = 3;
     //static public final int UNUSED = 4;
     //static public final int UNUSED = 5;
@@ -133,7 +131,7 @@ public class Constants {
     static public final int BR_AZMTH_MOTOR_CANID = 9;
     static public final int ARM_BOOM_MOTOR_CANID = 10;
     static public final int ARM_STICK_MOTOR_CANID = 11;
-    //static public final int UNUSED = 12;
+    static public final int GAMEPIECE_DIST_SENSOR_CANID = 12;
     //static public final int UNUSED = 13;
     //static public final int UNUSED = 14;
     //static public final int UNUSED = 15;
