@@ -106,8 +106,8 @@ public class ArmControl {
         curDesStateWithOffset = cpo.update(curDesState);
 
         //Apply soft limits
-        //var curDesPosLimited = asl.applyLimit(curDesPosRaw);
-        var curDesStateLimited = curDesStateWithOffset;
+        var curDesStateLimited = asl.applyLimit(curDesStateWithOffset);
+        //var curDesStateLimited = curDesStateWithOffset;
 
         // Apply kinematics to get linkge positions
         var curDesAngularStates = ArmKinematics.inverse(curDesStateLimited);
@@ -120,7 +120,7 @@ public class ArmControl {
         ms.update(curMeasAngularStates, true);
 
         // Update telemetry
-        ArmTelemetry.getInstance().setDesired(curDesStateLimited, curDesAngularStates);
+        ArmTelemetry.getInstance().setDesired(curDesStateWithOffset, curDesAngularStates);
         ArmTelemetry.getInstance().setMeasured(curMeasState, curMeasAngularStates);
 
         // Save previous
