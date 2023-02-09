@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.Constants;
 import frc.lib.Faults.FaultWrangler;
 import frc.lib.Signal.SignalUtils;
@@ -40,6 +41,12 @@ public class Dashboard {
     @Signal(name="db_triangleShape")
     boolean triangleShape;
 
+    @Signal(name="db_isRedAlliance")
+    boolean isRedAlliance;
+
+    @Signal(name="db_isBlueAlliance")
+    boolean isBlueAlliance;
+
     DashboardConfig d;
 
     public Dashboard (Webserver2 ws_in) {
@@ -77,6 +84,8 @@ public class Dashboard {
         d.addIcon(FaultWrangler.getInstance().getFaultActiveTopic(), "Faults", "#FF0000", "icons/alert.svg", CENTER_COL-6, ROW4, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_visionTargetVisible"),"Vision Target Visible", "#00FF00", "icons/vision.svg", CENTER_COL, ROW4, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_armPathActive"),"Arm Path", "#00FFBB", "icons/autoAlign.svg", CENTER_COL+6, ROW4, 1.0);
+        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_isRedAlliance"),"Arm Path", "#FF3333", "icons/upperLimit.svg", CENTER_COL+12, ROW4, 1.0);
+        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_isBlueAlliance"),"Arm Path", "#3333FF", "icons/lowerLimit.svg", CENTER_COL+18, ROW4, 1.0);
         
         
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_cubeShape"),"Cube", "#b515ef", "icons/cube.svg", LEFT_COL+5, ROW1, 2.0);
@@ -95,6 +104,8 @@ public class Dashboard {
         triangleShape = GamepieceModeManager.getInstance().isConeMode();
         armPathActive = ArmControl.getInstance().isPathPlanning();
         dtSpeedLimited = DriverStation.isTeleop() && ArmControl.getInstance().isExtended();
+        isRedAlliance = DriverStation.getAlliance() == Alliance.Red;
+        isBlueAlliance = DriverStation.getAlliance() == Alliance.Blue;
         
       }
     
