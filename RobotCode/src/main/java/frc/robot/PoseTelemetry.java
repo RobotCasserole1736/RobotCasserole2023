@@ -9,6 +9,11 @@ import edu.wpi.first.wpilibj.smartdashboard.Field3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.Signal.Signal;
 
+/**
+ * Class to populate a Field2d with the desired & estimated 
+ * position of the robot on the field. Also reports Actual position 
+ * from simulation.
+ */
 public class PoseTelemetry {
 
     /* Singleton infratructure*/

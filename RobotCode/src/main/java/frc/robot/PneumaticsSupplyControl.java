@@ -35,7 +35,7 @@ public class PneumaticsSupplyControl {
     }
 
     private PneumaticsSupplyControl() {
-        phCompressor = new Compressor(1, PneumaticsModuleType.CTREPCM);
+        phCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
         phCompressor.enableDigital();
 
         pressureSensor = new AnalogInput(Constants.PRESSURE_SENSOR_ANALOG);

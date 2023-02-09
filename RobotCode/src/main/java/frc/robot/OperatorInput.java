@@ -7,6 +7,10 @@ import frc.lib.Calibration.Calibration;
 import frc.lib.Faults.Fault;
 import frc.lib.Signal.Annotations.Signal;
 
+/**
+ * Class to read input from whatever controller the operator is using, 
+ * and convert it to operator commands
+ */
 public class OperatorInput {
 
     XboxController ctrl;
@@ -14,16 +18,20 @@ public class OperatorInput {
     @Signal
     boolean isConnected;
 
+    // Manual up/down velocity command
     @Signal(units="mps")
     double curVerticalCmd;
 
+    // Manual in/out velocity command
     @Signal(units="mps")
     double curHorizontalCmd;
 
+    // Manual "offset up/down" position command
     @Signal(units="frac")
     double armVertOffsetCmd;
 
 
+    // Automatic positioning commands
     @Signal
     boolean armLowPosCmd = false;
     @Signal
@@ -33,19 +41,25 @@ public class OperatorInput {
     @Signal
     boolean armStowPosCmd = false;
 
+    // Manipulator grab/release
     @Signal
     boolean grabCmd = false;
     @Signal
     boolean releaseCmd = false;
 
+    // Cone/Cube mode switch commands
     @Signal
     boolean switchToConeModeCmd = false;
     @Signal
     boolean switchToCubeModeCmd = false;
 
+    // Deadband for controller sticks
     Calibration stickDb;
+
+    // Maximum velocity for manual commands
     Calibration manMaxVel;
 
+    // Fault for controller disconnected
     Fault disconFault = new Fault("Operator Controller", "Unplugged");
 
     String getName(int idx) {
@@ -95,7 +109,6 @@ public class OperatorInput {
             grabCmd = false;
             releaseCmd = false;
         }
-
 
         disconFault.set(isConnected);
 

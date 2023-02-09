@@ -11,14 +11,22 @@ import frc.lib.Faults.Fault;
 import frc.lib.Signal.Annotations.Signal;
 import frc.robot.Arm.ArmControl;
 
+/**
+ * Class to read whatever physical controller the driver has
+ * and convert it into actual commands from the driver
+ */
 public class DriverInput {
     
+    // the controller itself
     XboxController driverController;
 
+    // Slew rate limits so the driver's commands
+    // to the drivetrain don't change too fast
     SlewRateLimiter fwdRevSlewLimiter;
     SlewRateLimiter rotSlewLimiter;
     SlewRateLimiter sideToSideSlewLimiter;
 
+    // Calibrations impacting driver feel
     Calibration stickDeadband;
     Calibration fwdRevSlewRate;
     Calibration rotSlewRate;
@@ -27,7 +35,7 @@ public class DriverInput {
     Calibration rotateCmdScalar;
     Calibration armExtenedLimitFactor;
     
-    
+    // Drivetrain movement commands (from joysticks)
     @Signal(units="cmd")
     double curFwdRevCmd;
     @Signal(units="cmd")
@@ -35,18 +43,7 @@ public class DriverInput {
     @Signal(units="cmd")
     double curSideToSideCmd;
 
-    @Signal(units="bool")
-    boolean robotRelative;
-    @Signal(units="bool")
-    boolean braceCmd;
-
-    @Signal(units="bool")
-    boolean clawEject;
-
-    @Signal(units="bool")
-    boolean clawIntake; 
-
-   
+    // Drivetrain movement commands (in physical units)
     @Signal (units="mps")
     double fwdRevSpdCmd;
     @Signal (units="radPerSec")
@@ -54,17 +51,34 @@ public class DriverInput {
     @Signal (units="mps")
     double sideToSideSpdCmd;
 
+    // Switch the robot into robot relative mode
+    @Signal(units="bool")
+    boolean robotRelative;
+
+    // Command the wheels to assume a brace position
+    @Signal(units="bool")
+    boolean braceCmd;
+
+    // Auxilary intake/eject commands
+    @Signal(units="bool")
+    boolean clawEject;
+    @Signal(units="bool")
+    boolean clawIntake; 
+
+
+    // Auto-drive commands
     @Signal(units="bool")
     boolean spinMoveCmd;
     @Signal(units="bool")
     boolean driveToCenterCmd;
 
+    // Press-and-hold to reset odometry to be pointing downfield.
     @Signal(units="bool")
     boolean resetOdometry;
+    Debouncer resetOdoDbnc = new Debouncer(0.5, DebounceType.kRising);
+
     @Signal(units="bool")
     boolean isConnected;
-
-    Debouncer resetOdoDbnc = new Debouncer(0.5, DebounceType.kRising);
 
     Fault disconFault = new Fault("Driver Controller", "Unplugged");
 

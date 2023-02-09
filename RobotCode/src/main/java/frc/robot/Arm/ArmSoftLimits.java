@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import frc.Constants;
 import frc.robot.ArmTelemetry;
 
 public class ArmSoftLimits {

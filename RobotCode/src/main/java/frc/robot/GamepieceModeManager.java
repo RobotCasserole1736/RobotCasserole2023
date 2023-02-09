@@ -2,19 +2,16 @@ package frc.robot;
 import edu.wpi.first.wpilibj.PWM;
 import frc.Constants;
 
+/**
+ * Class to track what gamepiece mode we're in.
+ */
 public class GamepieceModeManager {
 
     /* Singleton infratructure*/
     private static GamepieceModeManager inst = null;
     public enum GamepieceMode{
-        CUBE,
-        CONE;
-    }
-    
-    // Mignt not need this
-    public enum LEDGameModePatterns{
-        purpleCube,
-        yellowCone;
+        CUBE, //picking and placing cubes
+        CONE; //picking and placing cones
     }
 
     private GamepieceMode curMode;
