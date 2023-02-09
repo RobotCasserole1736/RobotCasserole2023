@@ -203,6 +203,7 @@ public class ArmTelemetry {
 
     // Updates where the soft limits polygon is drawn on the display
     public void setSoftLimits(List<Translation2d> softLimitPoly){
+        softLimits.setOrigin(new Translation2d(LEFT_MARGIN, 0));
         softLimits.setPolygon(softLimitPoly);
     }
 

@@ -7,12 +7,10 @@ import edu.wpi.first.math.util.Units;
 import frc.Constants;
 import frc.robot.ArmTelemetry;
 
-import frc.robot.Arm.ArmEndEffectorState;
-
 public class ArmSoftLimits {
 
     double minX = Units.inchesToMeters(5);
-    double maxX = Units.inchesToMeters(62.75);
+    double maxX = Units.inchesToMeters(60.75);
     double minY = Units.inchesToMeters(5);
     double maxY = Units.inchesToMeters(72);
 
@@ -29,7 +27,7 @@ public class ArmSoftLimits {
         var softLimitPoly = new ArrayList<Translation2d>();
         for (int idx = 0; idx < restrictionXPoints.length; idx++) {
             // Pack x/y coordinates into Translation2d's
-            var x = restrictionXPoints[idx] + Constants.WHEEL_BASE_HALF_LENGTH_M;
+            var x = restrictionXPoints[idx];
             var y = restrictionYPoints[idx];
             softLimitPoly.add(new Translation2d(x, y));
         }
@@ -53,7 +51,7 @@ public class ArmSoftLimits {
             out.xvel = 0;
         } else {
             out.x = in.x;
-            out.yvel = in.yvel;
+            out.xvel = in.xvel;
         }
 
         if (in.y > maxY) {
