@@ -53,7 +53,7 @@ public class ArmSoftLimits {
             out.xvel = 0;
         } else {
             out.x = in.x;
-            out.yvel = in.yvel;
+            out.xvel = in.xvel;
         }
 
         if (in.y > maxY) {
