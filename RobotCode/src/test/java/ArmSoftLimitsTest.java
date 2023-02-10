@@ -14,7 +14,7 @@ class ArmSoftLimitsTest {
 
     ArmSoftLimits asl = new ArmSoftLimits();
 
-    ArmEndEffectorState testPos = new ArmEndEffectorState(5, 5);
+    ArmEndEffectorState testPos = new ArmEndEffectorState(15, 5);
     var retVal = asl.applyLimit(testPos);
 
     // Confirm the position was not limited
