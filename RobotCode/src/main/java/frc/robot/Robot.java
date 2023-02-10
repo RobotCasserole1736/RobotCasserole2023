@@ -54,6 +54,7 @@ public class Robot extends TimedRobot {
   BatteryMonitor batMan;
   ArmControl ac;
   ClawController cc;
+  DriverCamera dc;
 
   GamepieceModeManager mm;
 
@@ -107,7 +108,7 @@ public class Robot extends TimedRobot {
 
     /* Init website utilties */
     webserver = new Webserver2();
-    DriverCamera.getInstance();
+    dc = DriverCamera.getInstance();
     stt.mark("Webserver2");
 
     cw = CalWrangler.getInstance();
@@ -321,6 +322,8 @@ public class Robot extends TimedRobot {
     stt.mark("Cal Wrangler");
     db.updateDriverView();
     stt.mark("Dashboard");
+    dc.update();
+    stt.mark("Driver Camera");
     telemetryUpdate();
     stt.mark("Telemetry");
     stt.end();
