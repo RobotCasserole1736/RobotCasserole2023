@@ -3,6 +3,7 @@ package frc.hardwareWrappers.AbsoluteEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.UnitUtils;
 import frc.hardwareWrappers.AbsoluteEncoder.CANCoder.RealCANCoder;
+import frc.hardwareWrappers.AbsoluteEncoder.RevThroughBore.RealRevThroughBoreEncoder;
 import frc.hardwareWrappers.AbsoluteEncoder.SRXEncoder.RealSRXEncoder;
 import frc.hardwareWrappers.AbsoluteEncoder.Sim.SimAbsoluteEncoder;
 import frc.hardwareWrappers.AbsoluteEncoder.ThriftyEncoder.RealThriftyEncoder;
@@ -17,6 +18,7 @@ public class WrapperedAbsoluteEncoder  {
     public enum AbsoluteEncType {
         SRXEncoder,
         CANCoder,
+        RevThroughBore,
         Thrifty
     }
 
@@ -40,6 +42,10 @@ public class WrapperedAbsoluteEncoder  {
                 case Thrifty:
                     //ID = Analog Input
                     enc = new RealThriftyEncoder(id);
+                    break;
+                case RevThroughBore:
+                    //ID = digital input
+                    enc = new RealRevThroughBoreEncoder(id);
                     break;
             }
         } else {
