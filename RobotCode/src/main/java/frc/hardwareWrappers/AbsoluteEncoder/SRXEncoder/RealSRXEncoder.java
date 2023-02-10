@@ -25,10 +25,16 @@ public class RealSRXEncoder extends AbstractAbsoluteEncoder {
     @Override
     public double getRawAngle_rad() {
         freq = m_dutyCycle.getFrequency(); //Track this for fault mode detection
-        disconFault.set(freq < 10); //TODO - does this actually work?
-        double pulsetime = m_dutyCycle.getOutput() * (1.0 / freq);
-        double anglerad = ((pulsetime - 1E-6) / (4.096E-3 - 1E-6)) * 2 * Math.PI;
-        return anglerad;
+        var faulted = (freq < 10);
+        disconFault.set(faulted);
+        if(faulted){
+            return 0.0;
+        } else {        
+            double pulsetime = m_dutyCycle.getOutput() * (1.0 / freq);
+            double anglerad = ((pulsetime - 1E-6) / (4.096E-3 - 1E-6)) * 2 * Math.PI;
+            return anglerad;
+        }
+
     }
 
     
