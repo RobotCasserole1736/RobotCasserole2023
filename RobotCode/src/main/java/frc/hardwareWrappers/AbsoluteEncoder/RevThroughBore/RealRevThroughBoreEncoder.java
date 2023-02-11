@@ -1,4 +1,4 @@
-package frc.hardwareWrappers.AbsoluteEncoder.SRXEncoder;
+package frc.hardwareWrappers.AbsoluteEncoder.RevThroughBore;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycle;
@@ -6,7 +6,7 @@ import frc.hardwareWrappers.AbsoluteEncoder.AbstractAbsoluteEncoder;
 import frc.lib.Faults.Fault;
 import frc.lib.Signal.Annotations.Signal;
 
-public class RealSRXEncoder extends AbstractAbsoluteEncoder {
+public class RealRevThroughBoreEncoder extends AbstractAbsoluteEncoder {
 
     DigitalInput m_digitalInput;
     DutyCycle m_dutyCycle;
@@ -19,7 +19,7 @@ public class RealSRXEncoder extends AbstractAbsoluteEncoder {
 
     Fault disconFault;
 
-    public RealSRXEncoder(int port){
+    public RealRevThroughBoreEncoder(int port){
         m_digitalInput = new DigitalInput(port);
         m_dutyCycle = new DutyCycle(m_digitalInput);
         disconFault = new Fault("Encoder " + Integer.toString(port), "Disconnected");
@@ -35,7 +35,7 @@ public class RealSRXEncoder extends AbstractAbsoluteEncoder {
             return 0.0;
         } else {        
             pulsetime = m_dutyCycle.getOutput() * (1.0 / freq);
-            double anglerad = ((pulsetime - 1E-6) / (4.096E-3 - 1E-6)) * 2 * Math.PI;
+            double anglerad = ((pulsetime - 1E-6) / (1.024E-3 - 1E-6)) * 2 * Math.PI;
             return anglerad;
         }
 
