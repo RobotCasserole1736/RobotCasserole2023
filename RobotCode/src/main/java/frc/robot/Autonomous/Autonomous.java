@@ -16,6 +16,7 @@ import frc.robot.Autonomous.Modes.DoNothing;
 import frc.robot.Autonomous.Modes.DriveFwd;
 import frc.robot.Autonomous.Modes.ScoreTwoTop;
 import frc.robot.Autonomous.Modes.Wait;
+import frc.robot.Autonomous.Modes.leaveComUp;
 import frc.robot.Autonomous.Modes.SteakAuto2023;
 import frc.robot.Drivetrain.DrivetrainControl;
 
@@ -90,7 +91,7 @@ public class Autonomous {
         mainModeList.add(new DriveFwd(3.0));
         mainModeList.add(new SteakAuto2023());
         mainModeList.add(new DoNothing());
-        
+        mainModeList.add(new leaveComUp());
 
         // Create and subscribe to NT4 topics
         NetworkTableInstance inst = NetworkTableInstance.getDefault();
