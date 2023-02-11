@@ -31,8 +31,8 @@ public class ArmControl {
     public ArmSoftLimits asl;
 
     //TODO put offsets in for this
-    WrapperedAbsoluteEncoder boomEncoder = new WrapperedAbsoluteEncoder(AbsoluteEncType.SRXEncoder, "Boom", Constants.ARM_BOOM_ENC_IDX, 0);
-    WrapperedAbsoluteEncoder stickEncoder = new WrapperedAbsoluteEncoder(AbsoluteEncType.SRXEncoder, "Stick", Constants.ARM_STICK_ENC_IDX, 0);
+    WrapperedAbsoluteEncoder boomEncoder = new WrapperedAbsoluteEncoder(AbsoluteEncType.RevThroughBore, "Boom", Constants.ARM_BOOM_ENC_IDX, 0);
+    WrapperedAbsoluteEncoder stickEncoder = new WrapperedAbsoluteEncoder(AbsoluteEncType.RevThroughBore, "Stick", Constants.ARM_STICK_ENC_IDX, 0);
 
     // Test mode tools
     // These help us inject specific waveforms into swerve modules to calibrate and test them.
