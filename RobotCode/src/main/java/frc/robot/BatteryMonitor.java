@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.lib.Faults.Fault;
 import frc.lib.Signal.Annotations.Signal;
+import frc.Constants;
 
 public class BatteryMonitor {
 	private PowerDistribution pd;
@@ -27,13 +28,34 @@ public class BatteryMonitor {
 	double busRail6v;
 
 	@Signal(units="A")
-	double upperElevatorCurrent;
+	double cubeBlower;
 
 	@Signal(units="A")
-	double lowerElevatorCurrent;
+	double boomCurrent;
+	@Signal(units="A")
+	double stickCurrent;
 
 	@Signal(units="A")
-	double intakeCurrent;
+	double intakeCurrentLeft;
+	@Signal(units="A")
+	double intakeCurrentRight;
+
+	@Signal(units="A")
+	double wheelCurrentFL;
+	@Signal(units="A")
+	double azmthCurrentFL;
+	@Signal(units="A")
+	double wheelCurrentFR;
+	@Signal(units="A")
+	double azmthCurrentFR;
+	@Signal(units="A")
+	double wheelCurrentBL;
+	@Signal(units="A")
+	double azmthCurrentBL;
+	@Signal(units="A")
+	double wheelCurrentBR;
+	@Signal(units="A")
+	double azmthCurrentBR;
 
 	@Signal(units="count")
 	double canRXErrors;
@@ -106,6 +128,19 @@ public class BatteryMonitor {
 		rio3v3RailFault.set(!RobotController.getEnabled3V3() && !rioBrownOutStatus);
 		rio5vRailFault.set(!RobotController.getEnabled5V() && !rioBrownOutStatus);
 		rio6vRailFault.set(!RobotController.getEnabled6V() && !rioBrownOutStatus);
-	}
 
+		cubeBlower = pd.getCurrent(frc.Constants.CUBE_BLOWER_CURRENT_CHANNEL);
+		boomCurrent = pd.getCurrent(frc.Constants.BOOM_CURRENT_CHANNEL);
+		stickCurrent = pd.getCurrent(frc.Constants.STICK_CURRENT_CHANNEL);
+		intakeCurrentLeft = pd.getCurrent(frc.Constants.STICK_CURRENT_CHANNEL);
+		intakeCurrentRight = pd. getCurrent(frc.Constants.RIGHT_INTAKE_CURRENT_CHANNEL);
+		wheelCurrentFL = pd.getCurrent(frc.Constants.FL_WHEEL_CURRENT_CHANNEL);
+		azmthCurrentFL = pd.getCurrent(frc.Constants.FL_AZMTH_CURRENT_CHANNEL);
+		wheelCurrentFR = pd.getCurrent(frc.Constants.FR_WHEEL_CURRENT_CHANNEL);
+		azmthCurrentFR = pd.getCurrent(frc.Constants.FR_AZMTH_CURRENT_CHANNEL);
+		wheelCurrentBL = pd.getCurrent(frc.Constants.BL_WHEEL_CURRENT_CHANNEL);
+		azmthCurrentBL = pd.getCurrent(frc.Constants.BL_AZMTH_CURRENT_CHANNEL);
+		wheelCurrentBR = pd.getCurrent(frc.Constants.BR_WHEEL_CURRENT_CHANNEL);
+		azmthCurrentBR = pd.getCurrent(frc.Constants.BR_AZMTH_CURRENT_CHANNEL);
+	}
 }

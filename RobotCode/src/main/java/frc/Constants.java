@@ -151,19 +151,19 @@ public class Constants {
     //static public final int UNUSED = 9; 
 
     // PDP Channels - for current measurement
-    //static public final int UNUSED = 0;
-    //static public final int UNUSED = 1;
-    //static public final int UNUSED = 2;
-    //static public final int UNUSED = 3;
-    //static public final int UNUSED = 4;
-    //static public final int UNUSED = 5;
-    //static public final int UNUSED = 6;
-    //static public final int UNUSED = 7;
-    //static public final int UNUSED = 8;
-    //static public final int UNUSED = 9;
-    //static public final int UNUSED = 10;
-    //static public final int UNUSED = 11;
-    //static public final int UNUSED = 12;
+    static public final int CUBE_BLOWER_CURRENT_CHANNEL = 0;
+    static public final int BOOM_CURRENT_CHANNEL = 1;
+    static public final int STICK_CURRENT_CHANNEL = 2;
+	static public final int LEFT_INTAKE_CURRENT_CHANNEL = 3;
+    static public final int RIGHT_INTAKE_CURRENT_CHANNEL = 4;
+    static public final int FL_WHEEL_CURRENT_CHANNEL = 5;
+    static public final int FL_AZMTH_CURRENT_CHANNEL = 6;
+    static public final int FR_WHEEL_CURRENT_CHANNEL = 7;
+    static public final int FR_AZMTH_CURRENT_CHANNEL = 8;
+    static public final int BL_WHEEL_CURRENT_CHANNEL = 9;
+    static public final int BL_AZMTH_CURRENT_CHANNEL = 10;
+    static public final int BR_WHEEL_CURRENT_CHANNEL = 11;
+    static public final int BR_AZMTH_CURRENT_CHANNEL = 12;
     //static public final int UNUSED = 13;
     //static public final int UNUSED = 14;
     //static public final int UNUSED = 15;
