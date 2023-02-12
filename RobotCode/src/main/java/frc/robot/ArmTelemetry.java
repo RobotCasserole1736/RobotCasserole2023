@@ -72,22 +72,23 @@ public class ArmTelemetry {
             .append(new MechanismLigament2d("Node Base", HIGH_GOAL - LOW_GOAL, 0, 100, new Color8Bit(Color.kWhite)));
 
     // Marker to show where the end effector is desired to be at at all times
-    private final Mechanism2DMarker desEndEffPos = new Mechanism2DMarker(m_mech2d, "DesEndEffPos", 0.02);
+    private final Mechanism2DMarker desEndEffPos = new Mechanism2DMarker(m_mech2d, "de", 0.02);
 
     // Smooth line which shows the most recently calculated path, and its
     // constituent waypoints
-    private final Mechanism2DPolygon desPath = new Mechanism2DPolygon(m_mech2d, "DesPath",
+    private final Mechanism2DPolygon desPath = new Mechanism2DPolygon(m_mech2d, "dp",
             new ArrayList<Translation2d>());
-    private final List<Mechanism2DMarker> desPathWaypointMarkers = new ArrayList<Mechanism2DMarker>(10); // Hardcode max
-                                                                                                         // 10
-                                                                                                         // waypoints.
-                                                                                                         // Hopefully we
-                                                                                                         // won't need
-                                                                                                         // more than
-                                                                                                         // that.
+            //Decimate down to just 8 waypoints, hopefully nothing more than that needed
+    private final List<Mechanism2DMarker> desPathWaypointMarkers = new ArrayList<Mechanism2DMarker>(8);
+                                                                                                        
+                                                                                                        
+                                                                                                        
+                                                                                                        
+                                                                                                        
+                                                                                                        
 
     // Outline which shows where the soft limits logic should be limiting motion to
-    private final Mechanism2DPolygon softLimits = new Mechanism2DPolygon(m_mech2d, "SoftLimits",
+    private final Mechanism2DPolygon softLimits = new Mechanism2DPolygon(m_mech2d, "sl",
             new ArrayList<Translation2d>());
 
     // Actual arm position ligaments to show the arm's location from
@@ -160,8 +161,8 @@ public class ArmTelemetry {
         SmartDashboard.putData("Arm", m_mech2d);
 
         // Init all waypoint markers
-        for (int i = 0; i < 10; i++) {
-            desPathWaypointMarkers.add(new Mechanism2DMarker(m_mech2d, "desPathMarker" + Integer.toString(i), 0.015));
+        for (int i = 0; i < 8; i++) {
+            desPathWaypointMarkers.add(new Mechanism2DMarker(m_mech2d, "dpm" + Integer.toString(i), 0.015));
         }
 
         // configure styles
@@ -185,7 +186,7 @@ public class ArmTelemetry {
     public void setDesPath(ArmPath path) {
         var pathPoly = new ArrayList<Translation2d>();
 
-        int NUM_INTERNAL_SEGMENTS = 15;
+        int NUM_INTERNAL_SEGMENTS = 8;
         double deltaT = path.getDurationSec() / NUM_INTERNAL_SEGMENTS;
 
         for (double time = 0.0; time < path.getDurationSec(); time += deltaT) {

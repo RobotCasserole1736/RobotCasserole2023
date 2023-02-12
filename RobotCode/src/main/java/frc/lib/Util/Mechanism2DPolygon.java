@@ -74,7 +74,7 @@ public class Mechanism2DPolygon {
         Rotation2d prevAngle = new Rotation2d();
 
         if(this.isVisible){
-            var maxSeg = Math.min(this.polygon.size()-1, 20); //Hard limit number of segments to prevent NT issues
+            var maxSeg = Math.min(this.polygon.size()-1, 10); //Hard limit number of segments to prevent NT issues
             for(int segIdx = 0; segIdx < maxSeg; segIdx++){
                 var fromPoint = this.polygon.get(segIdx).plus(origin);
                 var toPoint = this.polygon.get(segIdx+1).plus(origin);
@@ -120,11 +120,11 @@ public class Mechanism2DPolygon {
     }
 
     private String rootName(){
-        return this.name + "_PolyRoot";
+        return this.name + "r";
     }
 
     private String ligName(int idx){
-        return this.name + "_PolyEdge" + Integer.toString(idx);
+        return this.name + "e" + Integer.toString(idx);
     }
     
 }
