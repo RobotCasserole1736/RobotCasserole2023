@@ -91,7 +91,7 @@ public class FaultWrangler {
 
         boolean ledActive = (numActiveFaults > 0);
         if (ledActive) {
-            ledBrightness = Math.pow(Math.sin(2 * Math.PI * Timer.getFPGATimestamp() * BLINK_FREQ_HZ / 2.0), 2);
+            ledBrightness = Math.abs(Math.sin(2 * Math.PI * Timer.getFPGATimestamp() * BLINK_FREQ_HZ / 2.0));
             ledOut.updateDutyCycle(ledBrightness);
         } else {
             ledBrightness = 0;
