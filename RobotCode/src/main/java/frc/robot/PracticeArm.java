@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl;
@@ -12,6 +14,7 @@ public class PracticeArm {
     WrapperedCANMotorCtrl boomMotor = new WrapperedCANMotorCtrl("Stick", 10, CANMotorCtrlType.SPARK_MAX);
     VictorSP intake = new VictorSP(6);
     double speedCmd;
+    Solenoid claw = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
 
     public void update(){
 
@@ -31,6 +34,11 @@ public class PracticeArm {
         }
         intake.set(speedCmd);
 
+        if(op.getRightBumper()){
+            claw.set(false);
+        } else if (op.getLeftBumper()){
+            claw.set(true);
+        }
     }
     
 }
