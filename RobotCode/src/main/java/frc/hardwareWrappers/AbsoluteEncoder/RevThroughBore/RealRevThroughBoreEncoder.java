@@ -19,16 +19,19 @@ public class RealRevThroughBoreEncoder extends AbstractAbsoluteEncoder {
 
     Fault disconFault;
 
+    public boolean faulted;
+
     public RealRevThroughBoreEncoder(int port){
         m_digitalInput = new DigitalInput(port);
         m_dutyCycle = new DutyCycle(m_digitalInput);
         disconFault = new Fault("Encoder " + Integer.toString(port), "Disconnected");
     }
 
+
     @Override
     public double getRawAngle_rad() {
         freq = m_dutyCycle.getFrequency(); //Track this for fault mode detection
-        var faulted = (freq < 10);
+        faulted = (freq < 10);
         disconFault.set(faulted);
         if(faulted){
             pulsetime = -1;
@@ -39,6 +42,13 @@ public class RealRevThroughBoreEncoder extends AbstractAbsoluteEncoder {
             return anglerad;
         }
 
+    }
+
+
+    @Override
+    public boolean isFaulted() {
+        // TODO Auto-generated method stub
+        return false;
     }
 
     

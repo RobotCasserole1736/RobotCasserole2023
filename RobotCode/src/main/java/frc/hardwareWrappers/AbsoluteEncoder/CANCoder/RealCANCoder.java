@@ -46,5 +46,11 @@ public class RealCANCoder extends AbstractAbsoluteEncoder {
         return cancoder.getAbsolutePosition();
     }
 
+    @Override
+    public boolean isFaulted() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
     
 }
