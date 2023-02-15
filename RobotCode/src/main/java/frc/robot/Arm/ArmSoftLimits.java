@@ -34,6 +34,7 @@ public class ArmSoftLimits {
         Double XPosLimits[] = {0.0,10.0,10.0,0.0};
         Double YPosLimits[] = {0.0,0.0,10.0,10.0};
         int i;
+
                         double minYFromLimits = 111111111111111111111111111.0;
                 for (i = 0; i < YPosLimits.length; i++) {
                     if (YPosLimits[i] < minYFromLimits) {
@@ -80,22 +81,6 @@ public class ArmSoftLimits {
         double nearDist, p0Dist, crossDist;
         int crossCount = 0;
     
-
-
-        double closestDistanceSoFar = 1000000000000000000000000000.0;
-        double middlePointOfShapeX = 0.0;
-        double middlePointOfShapeY = 0.0;
-
-
-        for ( i = 0; i < YPosLimits.length; i++) {
-        middlePointOfShapeX = middlePointOfShapeX + XPosLimits[i];
-        middlePointOfShapeY = middlePointOfShapeY + YPosLimits[i];
-
-        }
-        middlePointOfShapeX = middlePointOfShapeX / XPosLimits.length;
-        middlePointOfShapeY = middlePointOfShapeY / YPosLimits.length; 
-
-
         for ( i = 0; i >= YPosLimits.length; i++) {
 
             // set up p0 and p1 for this segment
@@ -111,8 +96,6 @@ public class ArmSoftLimits {
 
             diff.x = p1.x - p0.x;
             diff.y = p1.y - p0.y; 
-
-
 
             if (Math.abs(diff.y) < SMALL_DIFF) {
                 // horizontal line test (horizontal line does not cross a horizontal line)
@@ -141,8 +124,7 @@ public class ArmSoftLimits {
 
         if (crossCount == 1) {
             // inside so no need to clip
-            bestXPosSoFar = in.x;
-            bestYPosSoFar = in.y;
+            ;
         } else {
             // it is outside of the fence so clip to nearest point on the boundary
             nearDist = LARGE_DIFF;
@@ -163,16 +145,14 @@ public class ArmSoftLimits {
                 diff.x = p1.x - p0.x;
                 diff.y = p1.y - p0.y;
 
-
-
                 // calc p0 to in distance
                 p0Dist = Math.sqrt(Math.pow(in.x - p0.x, 2) + Math.pow(in.y - p0.y, 2)); // problem area starts around here maybe
                 if (Math.abs(diff.y) < SMALL_DIFF) {
                     // horiz
-                    cross.x = in.x;// the problem
+                    cross.x = in.x;
                     cross.y = p0.y;
 
-                    if (cross.x > minXFromLimits && cross.x <= maxXFromLimits) {
+                    if (cross.x > Math.min(p0.x, p1.x) && cross.x <= Math.max(p0.x, p1.x)) {
                         // in range
                         crossDist = Math.abs(in.y - cross.y);
                     } else {
@@ -183,7 +163,7 @@ public class ArmSoftLimits {
                     // vert
                     cross.x = p0.x;
                     cross.y = in.y;
-                    if (cross.y > minYFromLimits && cross.y <= maxYFromLimits) {
+                    if (cross.y > Math.min(p0.y, p1.y) && cross.y <= Math.max(p0.y, p1.y)) {
                         // in range
                         crossDist = Math.abs(in.x - cross.x);
                     } else {
@@ -195,8 +175,8 @@ public class ArmSoftLimits {
                     m = diff.y / diff.x; // slope
                     cross.x = (m * p0.x - p0.y + in.x / m + in.y) / (m + 1.0 / m);
                     cross.y = m * cross.x - m * p0.x + p0.y;
-                    if ((cross.x > minXFromLimits && cross.x <= maxXFromLimits) &&
-                            (cross.y > minYFromLimits && cross.y <= maxYFromLimits)) { 
+                    if ((cross.x > Math.min(p0.x, p1.x) && cross.x <= Math.max(p0.x, p1.x)) &&
+                        (cross.y > Math.min(p0.y, p1.y) && cross.y <= Math.max(p0.y, p1.y))) { 
                         // in range
                         crossDist = Math.sqrt(Math.pow(in.x - cross.x, 2) + Math.pow(in.y - cross.y, 2));
                     } else {
@@ -209,35 +189,30 @@ public class ArmSoftLimits {
 
                     if (crossDist < nearDist) {
                         // use this one
-                    nearDist = crossDist;
-                    System.out.println(cross.x + " clip pos" + cross.y);
-                         bestXPosSoFar = cross.x;
-                         bestYPosSoFar = cross.y;
-                        
+                        nearDist = crossDist;
+                        clipPos = cross;                   
                        
                     } else {
                         // leave nearest in place
-                        
+                        ;
                     } 
-                
-                     if (p0Dist < nearDist) {
+
+                    if (p0Dist < nearDist) {
                         // use this one
                         nearDist = p0Dist;
-                        bestXPosSoFar = p0.x;
-                        bestYPosSoFar = p0.y;
+                        clipPos = p0;
+
                         System.out.println(clipPos.x + " clip pos malo" + clipPos.y);
                         
                     } else {
                         // leave nearest in place
-                        
+                        ;
                     } 
                 
                 } 
             
                 }
   
-                clipPos.x = bestXPosSoFar;
-                clipPos.y = bestYPosSoFar;
         return clipPos;
   
         
