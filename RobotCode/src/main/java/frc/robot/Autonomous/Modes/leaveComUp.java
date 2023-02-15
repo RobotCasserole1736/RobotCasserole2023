@@ -10,7 +10,7 @@ public class leaveComUp extends AutoMode {
     
     @Override
     public void addStepsToSequencer(AutoSequencer seq) {
-        driveEvent1 = new AutoEventJSONTrajectory("Leave communtiy upper", 0.7);
+        driveEvent1 = new AutoEventJSONTrajectory("Leave community upper", 0.7);
         seq.addEvent(driveEvent1);
     }
 
