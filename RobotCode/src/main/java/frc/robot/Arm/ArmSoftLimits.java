@@ -8,8 +8,6 @@ public class ArmSoftLimits {
     private final double SMALL_DIFF = 0.01;
     private final double LARGE_DIFF = Double.MAX_VALUE;
 
-    private List<ArmEndEffectorState> ArmLim = new ArrayList<ArmEndEffectorState>();
-
     public ArmSoftLimits() {
 
         // Init a new set of bounding box coordinates
@@ -40,8 +38,7 @@ public class ArmSoftLimits {
         ArmEndEffectorState p0 = new ArmEndEffectorState();
         ArmEndEffectorState p1 = new ArmEndEffectorState();
         ArmEndEffectorState cross = new ArmEndEffectorState();
-        double bestXPosSoFar = 0.0;
-        double bestYPosSoFar = 0.0;
+
         double m;
         double nearDist, p0Dist, crossDist;
         int crossCount = 0;
@@ -176,7 +173,7 @@ public class ArmSoftLimits {
                 
                 } 
             
-                }
+            }
   
         return clipPos;
   
