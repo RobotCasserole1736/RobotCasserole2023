@@ -35,41 +35,6 @@ public class ArmSoftLimits {
         Double YPosLimits[] = {0.0,0.0,10.0,10.0};
         int i;
 
-                        double minYFromLimits = 111111111111111111111111111.0;
-                for (i = 0; i < YPosLimits.length; i++) {
-                    if (YPosLimits[i] < minYFromLimits) {
-                        minYFromLimits = YPosLimits[i];
-                    } else {
-
-                    }
-                }
-
-                double minXFromLimits = 111111111111111111111111111.0;
-                for (i = 0; i < XPosLimits.length; i++) {
-                    if (XPosLimits[i] < minXFromLimits) {
-                        minXFromLimits = XPosLimits[i];
-                    } else {
-
-                    }
-                }
-
-                double maxYFromLimits = 0.0;
-                for (i = 0; i < YPosLimits.length; i++) {
-                    if (YPosLimits[i] > maxYFromLimits) {
-                        maxYFromLimits = YPosLimits[i];
-                    } else {
-
-                    }
-                }
-
-                double maxXFromLimits = 0.0;
-                for (i = 0; i < XPosLimits.length; i++) {
-                    if (XPosLimits[i] > maxXFromLimits) {
-                        maxXFromLimits = XPosLimits[i];
-                    } else {
-
-                    }
-                }
         ArmEndEffectorState clipPos = in;
         ArmEndEffectorState diff = new ArmEndEffectorState();
         ArmEndEffectorState p0 = new ArmEndEffectorState();
