@@ -51,57 +51,92 @@ const uint16_t sevenArray[16] = {0b0011111111111100, //0
                                  0b1100000000000000, //14
                                  0b0000000000000000};//15
                              
-const uint16_t threeArray[16] = {0b0000000110000000, //0
-                                 0b0000001110000000, //1
-                                 0b0000011110000000, //2
-                                 0b0000110110000000, //3
-                                 0b0001100110000000, //4
-                                 0b0011000110000000, //5
-                                 0b0010000110000000, //6
-                                 0b0000000110000000, //7
-                                 0b0000000110000000, //8
-                                 0b0000000110000000, //9
-                                 0b0000000110000000, //10
-                                 0b0000000110000000, //11
-                                 0b0000000110000000, //12
-                                 0b0000000110000000, //13
+const uint16_t threeArray[16] = {0b0011111111111000, //0
+                                 0b0011111111111100, //1
+                                 0b0000000000011100, //2
+                                 0b0000000000001100, //3
+                                 0b0000000000001100, //4
+                                 0b0000000000011100, //5
+                                 0b0011111111111100, //6
+                                 0b0011111111111100, //7
+                                 0b0000000000011100, //8
+                                 0b0000000000001100, //9
+                                 0b0000000000001100, //10
+                                 0b0000000000001100, //11
+                                 0b0000000000001100, //12
+                                 0b0000000000011100, //13
                                  0b0011111111111100, //14
-                                 0b0011111111111100};//15         
+                                 0b0011111111111000};//15        
                                                  
-const uint16_t sixArray[16] =   {0b0000000110000000, //0
-                                 0b0000001110000000, //1
-                                 0b0000011110000000, //2
-                                 0b0000110110000000, //3
-                                 0b0001100110000000, //4
-                                 0b0011000110000000, //5
-                                 0b0010000110000000, //6
-                                 0b0000000110000000, //7
-                                 0b0000000110000000, //8
-                                 0b0000000110000000, //9
-                                 0b0000000110000000, //10
-                                 0b0000000110000000, //11
-                                 0b0000000110000000, //12
-                                 0b0000000110000000, //13
+const uint16_t sixArray[16] =   {0b0001111111111000, //0
+                                 0b0011111111111100, //1
+                                 0b0011000000000000, //2
+                                 0b0011000000000000, //3
+                                 0b0011000000000000, //4
+                                 0b0011000000000000, //5
+                                 0b0011000000000000, //6
+                                 0b0011111111111000, //7
+                                 0b0011111111111100, //8
+                                 0b0011000000001100, //9
+                                 0b0011000000001100, //10
+                                 0b0011000000001100, //11
+                                 0b0011000000001100, //12
+                                 0b0011000000001100, //13
                                  0b0011111111111100, //14
-                                 0b0011111111111100};//15  
-                                 
-                                // 0 1 2 3 4 5 6 7 8 9 1 1 2 3 4 5 
-const uint8_t hatArray[16][16] PROGMEM = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //0
-                                          {0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0},  //1
-                                          {0,0,0,0,1,1,1,1,0,0,0,1,1,0,0,0},  //2
-                                          {0,0,0,1,0,1,0,1,0,0,0,0,1,0,0,0},  //3
-                                          {0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0},  //4
-                                          {0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0},  //5
-                                          {0,0,0,1,1,1,0,0,0,1,0,0,0,1,0,0},  //6
-                                          {0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0},  //7
-                                          {0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0},  //8
-                                          {0,0,1,1,0,0,0,0,1,1,0,0,0,1,1,0},  //9
-                                          {0,0,0,1,1,1,1,0,0,0,1,0,1,0,1,0},  //10
-                                          {0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,0},  //11
-                                          {0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0},  //12
-                                          {0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0},  //13
-                                          {0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0},  //14
-                                          {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}}; //15
+                                 0b0001111111111000};//15
+
+const uint16_t teamNumberArray[16] = {0b0000100001111111, //0
+                                      0b0001100000000010, //1
+                                      0b0010100000000100, //2
+                                      0b0100100000001000, //3
+                                      0b0000100000010000, //4
+                                      0b0000100000100000, //5
+                                      0b1111111001000000, //6
+                                      0b0000000000000000, //7
+                                      0b0000000000000000, //8
+                                      0b1111111001111111, //9
+                                      0b0000001001000000, //10
+                                      0b0000001001000000, //11
+                                      0b1111111001111111, //12
+                                      0b0000001001000001, //13
+                                      0b0000001001000001, //14
+                                      0b1111111001111111};//15
+									 
+										//  0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF
+const uint64_t longTeamNumberArray[64] = {0b0000000110000000001111111111110000111111111110000001111111111000, //0
+                    										  0b0000001110000000001111111111110000111111111111000011111111111100, //1
+                    										  0b0000011110000000000000000000110000000000000111000011000000000000, //2
+                    										  0b0000110110000000000000000001100000000000000011000011000000000000, //3
+                    										  0b0001100110000000000000000011000000000000000011000011000000000000, //4
+                    										  0b0011000110000000000000000110000000000000000111000011000000000000, //5
+                    										  0b0010000110000000000000001100000000111111111111000011000000000000, //6
+                    										  0b0000000110000000000000011000000000111111111111000011111111111000, //7
+                    										  0b0000000110000000000000110000000000000000000111000011111111111100, //8
+                    										  0b0000000110000000000001100000000000000000000011000011000000001100, //9
+                    										  0b0000000110000000000011000000000000000000000011000011000000001100, //10
+                    										  0b0000000110000000000110000000000000000000000011000011000000001100, //11
+                    										  0b0000000110000000001100000000000000000000000011000011000000001100, //12
+                    										  0b0000000110000000011000000000000000000000000111000011000000001100, //13
+                    										  0b0011111111111100110000000000000000111111111111000011111111111100, //14
+                    										  0b0011111111111100110000000000000000111111111110000001111111111000};//15
+  	
+                                //  0123456789ABCDEF 
+const uint16_t hatArray[16] =    {0b0000000000110000, //0
+                                  0b0000000011001100, //1
+                                  0b0000011100000010, //2
+                                  0b0001100000000010, //3
+                                  0b0010000100001010, //4
+                                  0b0100100010010010, //5
+                                  0b0100010010010100, //6
+                                  0b0100001010010100, //7
+                                  0b0011001001111000, //8
+                                  0b0000101110000100, //9
+                                  0b0000010000000100, //10
+                                  0b0000010001110100, //11
+                                  0b0000010110001000, //12
+                                  0b0000001000110000, //13
+                                  0b0000000111000000, //14
+                                  0b0000000000000000};//15
 
 void setup() {
     Serial.begin(9600);
@@ -127,11 +162,17 @@ void loop() {
   
 //    purpleCube();
 //    yellowCone();
-//    printArray(hatArray, -15, 13);
-      printArray(oneArray);
+//   fire(); //This is optional
+//    printArray(hatArray);
+ /*     printArray(oneArray);
       printArray(sevenArray);
       printArray(threeArray);
-      printArray(sixArray);
+     printArray(sixArray);
+*/
+// The teamNumberArray will print the full team number aka its optional 
+//    printArray(teamNumberArray);
+// This will print one long continues array
+//    .   printLongArray(longTeamNumberArray);
 //    FastLED.show();
 //    FastLED.delay(1000 / UPDATES_PER_SECOND);
 }
@@ -208,6 +249,19 @@ void purpleCube() {
     }
 }
 
+void fire(){
+  
+    static double f = 0;
+
+    for (uint8_t i = 0; i<kMatrixWidth; i++){
+      f = f + 1;
+        for (uint8_t j = 0; j<kMatrixWidth; j--){
+          
+            led[XY(i,j)] = CRGB(0,155,155);
+        }
+    }
+}
+
 //PrintArray implements a complete scroll of a single image across the entire LED display. The image is represented by an array
 //The function does not return until the entire image has completed scrolling acroos the display 
 //Rightoffset is applied to the starting postion of the image to ensure it starts off the right side of the display
@@ -220,7 +274,8 @@ void printArray(const uint16_t arr[]){
 	uint16_t mask = 0b1000000000000000;
 
   //Set up an internal buffer to hold the "scrolled" image array
-  uint16_t img[16] =    {0b0000000000000000, //0
+//                        0123456789ABCDEF
+  uint16_t img[16] =   {0b0000000000000000, //0
                         0b0000000000000000, //0
                         0b0000000000000000, //0
                         0b0000000000000000, //0
@@ -271,6 +326,77 @@ void printArray(const uint16_t arr[]){
 		FastLED.show();
 		FastLED.delay(1000 / UPDATE_RATE_HZ);
 	}
+}
+
+// The printLongArray should do the same thing as the printArray function but with a longer message
+//PrintArray implements a complete scroll of a single image across the entire LED display. The image is represented by an array
+//The function does not return until the entire image has completed scrolling acroos the display 
+//Rightoffset is applied to the starting postion of the image to ensure it starts off the right side of the display
+//Leftoffset used to stop the scroll when the image has scrolled fully off of the left side of the display
+void printLongArray(const uint64_t arr[]){
+  
+  //TODO: Make this thing show a single image and move the scrolling into the main arduino Loop() function
+  Serial.println("***********long*************");
+//                  0123456789ABCDEF
+  uint64_t mask = 0b1000000000000000;
+
+  //Set up an internal buffer to hold the "scrolled" image array
+//					              0123456789ABCDEF
+  uint16_t img[16] =   {0b0000000000000000,  //0
+                        0b0000000000000000,  //1
+                        0b0000000000000000,  //2
+                        0b0000000000000000,  //3
+                        0b0000000000000000,  //4  
+                        0b0000000000000000,  //5
+                        0b0000000000000000,  //6
+                        0b0000000000000000,  //7 
+                        0b0000000000000000,  //8
+                        0b0000000000000000,  //9
+                        0b0000000000000000,  //A
+                        0b0000000000000000,  //B
+                        0b0000000000000000,  //C    
+                        0b0000000000000000,  //D
+                        0b0000000000000000,  //E
+                        0b0000000000000000}; //F
+        
+ //Loop to handle scrolling the image. Each iteration of this loop moves the image one increment across the display
+ //S represents the current left-right "position" of the image on the LED display 
+  for(int s = kMatrixWidth*4; s > -kMatrixWidth*4; s--){
+      
+    //Shift the image to the left or right to create the scrolling effect
+    //First shift the image off to the right of the display then unshift it once per loop until it reaches the default unshifted position
+    //Then start shifting it left to move it off the left side of the display
+    for(uint8_t i = 0; i < kMatrixWidth; i++){
+      if(s >= 0) 
+        {img[i] = arr[i] >> s;}
+      else 
+        {img[i] = arr[i] << -s;}
+    }
+
+
+  //These two loops scan through the display to set each LED on or off as defined image array
+  //i represents the current ROW of the display
+  //j represents the current COLUMN of the display
+    for (uint8_t i = 0; i < kMatrixWidth; i++){
+      for (uint8_t j = 0; j < kMatrixWidth; j++){
+      
+      //Check if the current row/column LED should be lit by comparing the current mask value to the array row
+      //Compare current mask to bit-packed image array. If current bit is TRUE, set the LED ON, otherwise set it OFF
+        if((mask&img[i]) > 0){
+          led[XY(i,j)] = CRGB(0,255,0); 
+        } else {
+          led[XY(i,j)] = CRGB(0,0,0);   
+        }
+        mask = mask >> 1; //rotate the mask for the next column. NOTE: in arduino API, << is a shift operator, NOT rotate
+      }
+//              0123456789ABCDEF
+      mask = 0b10000000000000000; //reset the mask for the next row
+    }// end of outer loop
+
+   //Show the image and wait for the next update
+    FastLED.show();
+    FastLED.delay(1000 / UPDATE_RATE_HZ);
+  }
 }
 
 //utility function that was found online. It redifines the way our code views the LEDS. It maps the Led index number onto a grid like cordinate plane.
