@@ -22,18 +22,29 @@ public class ScoreTwoTop extends AutoMode {
 
     @Override
     public void addStepsToSequencer(AutoSequencer seq) {
+
+        //Place first cone upper
         seq.addEvent(new AutoEventSelectConeMode());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
         seq.addEvent(new AutoEventSetClawEject());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
+
+        //Drive to center
         initDrive = new AutoEventJSONTrajectory("Score two top pt 1", 1.0);
         seq.addEvent(initDrive);
+
+        //Intake cone
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_LOW));
         var drivePickup = new AutoEventDriveTime(2.0, 0.25);
         drivePickup.addChildEvent(new AutoEventSetClawIntake());
         seq.addEvent(drivePickup);
+    
+
+        //Drive to grid
         initDrive = new AutoEventJSONTrajectory("Score two top pt 2", 1.0);
         seq.addEvent(initDrive);
+
+        //Place cone upper
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
         seq.addEvent(new AutoEventSetClawEject());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
