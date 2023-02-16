@@ -43,7 +43,7 @@ public class ArmSoftLimits {
         double nearDist, p0Dist, crossDist;
         int crossCount = 0;
     
-        for ( i = 0; i >= YPosLimits.length; i++) {
+        for ( i = 0; i < YPosLimits.length; i++) {
 
             // set up p0 and p1 for this segment
             p0.x = XPosLimits[i];
