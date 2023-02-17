@@ -7,12 +7,14 @@
 #define LED_TYPE    WS2812B
 #define COLOR_ORDER RGB
 #define UPDATE_RATE_HZ 25
+#define FADE_RATE 60
 CRGB led[NUM_LEDS];
 
 using namespace std;
 
 const uint8_t kMatrixWidth = 16;
 //const uint8_t kMatrixHeight = 16;
+uint8_t fader = BRIGHTNESS;
 //**************************************************************
 // Pattern: Array that prints One with printArray function.
 //**************************************************************
@@ -102,8 +104,8 @@ const uint16_t teamNumberArray[16] = {0b0000100001111111, //0
                                       0b0000001001000001, //14
                                       0b1111111001111111};//15
 									 
-										//  0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF
-const uint64_t longTeamNumberArray[64] = {0b0000000110000000001111111111110000111111111110000001111111111000, //0
+							                    			//  0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF
+const uint64_t longTeamNumberArray[64]  = {0b0000000110000000001111111111110000111111111110000001111111111000, //0
                     										  0b0000001110000000001111111111110000111111111111000011111111111100, //1
                     										  0b0000011110000000000000000000110000000000000111000011000000000000, //2
                     										  0b0000110110000000000000000001100000000000000011000011000000000000, //3
@@ -137,7 +139,6 @@ const uint16_t hatArray[16] =    {0b0000000000110000, //0
                                   0b0000001000110000, //13
                                   0b0000000111000000, //14
                                   0b0000000000000000};//15
-
 void setup() {
     Serial.begin(9600);
     delay( 3000 ); // power-up safety delay
@@ -159,94 +160,76 @@ void setup() {
 }
 
 void loop() {
-  
 //    purpleCube();
 //    yellowCone();
-//   fire(); //This is optional
-//    printArray(hatArray);
- /*     printArray(oneArray);
-      printArray(sevenArray);
-      printArray(threeArray);
-     printArray(sixArray);
-*/
-// The teamNumberArray will print the full team number aka its optional 
-//    printArray(teamNumberArray);
+     printArray(hatArray);
+ 
+// The teamNumberArray will print the full team number 
 // This will print one long continues array
-//    .   printLongArray(longTeamNumberArray);
-//    FastLED.show();
-//    FastLED.delay(1000 / UPDATES_PER_SECOND);
+ //       printLongArray(longTeamNumberArray);
 }
 
 void yellowCone()
 {
-
-    static double y = 0;
-    static boolean yellowfade;
+    //Records if image is fading in or fading out; must be declared static to prevent it going out of scope when function exits
+    static boolean yellowfade = true;
     
-    if(y<=0){
+    if(fader<=0){
         yellowfade = true;
     }
-    else if(100<=y){
+    else if(100<=fader){
         yellowfade = false;
-        FastLED.delay(1000);
-        
     }
     
     if (yellowfade==true){
-        y+=10.0;
+        fader+=10.0;
     }
     else if(yellowfade==false){
-        y-=10.0;
+        fader-=10.0;
     }
 
     uint8_t upperBound = 7;
     uint8_t lowerBound = 8;
-
     
-    for (uint8_t i = 0; i < kMatrixWidth; i++)
-    {
-         for (uint8_t j = 0; j < kMatrixWidth; j++)
-         {
-              if (j >= upperBound && j <= lowerBound)
-              {
-                  led[XY(i,j)] = CRGB(y*0.5,y*1.5,0);
+    for (uint8_t i = 0; i < kMatrixWidth; i++){
+         for (uint8_t j = 0; j < kMatrixWidth; j++){
+              if (j >= upperBound && j <= lowerBound){
+                  led[XY(i,j)] = CRGB(fader*0.5,fader*1.5,0);
               }
          }
-          if (i % 2 == 1 && upperBound > 0 && lowerBound < 15)
-          {
-              upperBound--;
-              lowerBound++;
-          }
+        if (i % 2 == 1 && upperBound > 0 && lowerBound < 15)
+        {
+            upperBound--;
+            lowerBound++;
+        }
     }
+    FastLED.delay(FADE_RATE);
 }
 
 void purpleCube() {
 
-    static double p = 0;
     static boolean purplefade;
     
-    if(p<=0){
+    if(fader<=0){
         purplefade = true;
     }
-    else if(100<=p){
-       purplefade = false;
-        FastLED.delay(1000);
-        
+    else if(100<=fader){
+       purplefade = false;      
     }
     
-    if (purplefade==true){
-        p+=10.0;
+    if (purplefade==true){ 
+      fader+=10.0;
     }
     else if(purplefade==false){
-        p-=10.0;
+        fader-=10.0;
     }
 
     for (uint8_t i = 0; i<kMatrixWidth; i++){
-        for (uint8_t j = 0; j<kMatrixWidth; j++){
-          
-            led[XY(i,j)] = CRGB(0,p*1.5,p*1.5);
+        for (uint8_t j = 0; j<kMatrixWidth; j++){   
+            led[XY(i,j)] = CRGB(0,fader*1.5,fader*1.5);
         }
     }
+    FastLED.delay(FADE_RATE);
 }
 
 void fire(){
@@ -334,11 +317,8 @@ void printArray(const uint16_t arr[]){
 //Rightoffset is applied to the starting postion of the image to ensure it starts off the right side of the display
 //Leftoffset used to stop the scroll when the image has scrolled fully off of the left side of the display
 void printLongArray(const uint64_t arr[]){
-  
-  //TODO: Make this thing show a single image and move the scrolling into the main arduino Loop() function
-  Serial.println("***********long*************");
 //                  0123456789ABCDEF
-  uint64_t mask = 0b1000000000000000;
+  uint16_t mask = 0b1000000000000000;
 
   //Set up an internal buffer to hold the "scrolled" image array
 //					              0123456789ABCDEF
@@ -361,7 +341,7 @@ void printLongArray(const uint64_t arr[]){
         
  //Loop to handle scrolling the image. Each iteration of this loop moves the image one increment across the display
  //S represents the current left-right "position" of the image on the LED display 
-  for(int s = kMatrixWidth*4; s > -kMatrixWidth*4; s--){
+  for(int s = kMatrixWidth*4; s > -kMatrixWidth; s--){
       
     //Shift the image to the left or right to create the scrolling effect
     //First shift the image off to the right of the display then unshift it once per loop until it reaches the default unshifted position
@@ -381,16 +361,16 @@ void printLongArray(const uint64_t arr[]){
       for (uint8_t j = 0; j < kMatrixWidth; j++){
       
       //Check if the current row/column LED should be lit by comparing the current mask value to the array row
-      //Compare current mask to bit-packed image array. If current bit is TRUE, set the LED ON, otherwise set it OFF
+      //Compare current mask to bit-packed image array. If current bit is TRUE, set the LED ON, otherwise set it OFF      
         if((mask&img[i]) > 0){
-          led[XY(i,j)] = CRGB(0,255,0); 
+          led[XY(i,j)] = CRGB(0,255,0);              
         } else {
-          led[XY(i,j)] = CRGB(0,0,0);   
+          led[XY(i,j)] = CRGB(0,0,0);            
         }
-        mask = mask >> 1; //rotate the mask for the next column. NOTE: in arduino API, << is a shift operator, NOT rotate
+        mask = mask >> 1; //rotate the mask for the next column. NOTE: in arduino API, << is a shift operator, NOT rotate 
       }
-//              0123456789ABCDEF
-      mask = 0b10000000000000000; //reset the mask for the next row
+      
+      mask = 0b1000000000000000; //reset the mask for the next ro
     }// end of outer loop
 
    //Show the image and wait for the next update
