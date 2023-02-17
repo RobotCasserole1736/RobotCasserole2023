@@ -8,11 +8,16 @@
 #define COLOR_ORDER RGB
 #define UPDATE_RATE_HZ 25
 #define FADE_RATE 60
+#define CMD_INPUT_PIN 7
 CRGB led[NUM_LEDS];
 
 const uint8_t kMatrixWidth = 16;
 //const uint8_t kMatrixHeight = 16;
 uint8_t fader = BRIGHTNESS;
+const long pulseLengthYellowCone = 1000; //pulse length in microseconds to command yellow cone display
+const long pulseLengthPurpleCube = 1500; //pulse length in microseconds to command purple cube display
+const long pulseLengthTolerance = 100; //command pulse length tolerance
+
 //**************************************************************
 // Pattern: Array that prints '1' with printArray function
 //**************************************************************
@@ -168,13 +173,19 @@ void setup() {
 // powered on
 //**************************************************************
 void loop() {
-//    purpleCube();
+  //Read in command PWM from RoboRIO - value is pulse length in microseconds
+  unsigned long cmdPWM = pulseIn(CMD_INPUT_PIN, HIGH, 1000);
+  Serial.println(cmdPWM);
+
+  //Decode command PWM and display commanded image - default is team number + logo
+  if(cmdPWM <= (pulseLengthYellowCone + pulseLengthTolerance) && cmdPWM >= (pulseLengthYellowCone - pulseLengthTolerance)){
     yellowCone();
- //    printArray(hatArray);
- 
-// The teamNumberArray will print the full team number 
-// This will print one long continues array
- //       printLongArray(longTeamNumberArray);
+  } else if(cmdPWM <= (pulseLengthPurpleCube + pulseLengthTolerance) && cmdPWM >= (pulseLengthPurpleCube - pulseLengthTolerance)){
+    purpleCube();
+  } else {
+    printLongArray(longTeamNumberArray);
+    printArray(hatArray);
+  }
 }
 
 void yellowCone()
