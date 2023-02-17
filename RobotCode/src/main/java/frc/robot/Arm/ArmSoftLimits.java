@@ -35,11 +35,6 @@ public class ArmSoftLimits {
         double minY = Units.inchesToMeters(5);
         double maxY = Units.inchesToMeters(72);
 
-        /* 
-        double[] restrictionXPoints = { minX, minX, maxX, maxX };
-        double[] restrictionYPoints = { minY, maxY, maxY, minY };
-        */
-
         Double XPosLimits[] = {minX, minY, maxX, maxX};
         Double YPosLimits[] = {minY, maxY, maxY, minY};
         int i;
