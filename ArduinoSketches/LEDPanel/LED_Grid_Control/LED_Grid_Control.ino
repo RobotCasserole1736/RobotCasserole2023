@@ -1,6 +1,6 @@
 #include <FastLED.h>
 
-#define LED_PIN     5
+#define LED_PIN          5
 #define ROBORIO_DATA_PIN 2
 #define NUM_LEDS    256
 #define BRIGHTNESS  40
@@ -10,13 +10,11 @@
 #define FADE_RATE 60
 CRGB led[NUM_LEDS];
 
-using namespace std;
-
 const uint8_t kMatrixWidth = 16;
 //const uint8_t kMatrixHeight = 16;
 uint8_t fader = BRIGHTNESS;
 //**************************************************************
-// Pattern: Array that prints One with printArray function.
+// Pattern: Array that prints '1' with printArray function
 //**************************************************************
                               // 0123456789ABCDEF
 const uint16_t oneArray[16] = {0b0000000110000000, //0
@@ -29,13 +27,17 @@ const uint16_t oneArray[16] = {0b0000000110000000, //0
                                0b0000000110000000, //7
                                0b0000000110000000, //8
                                0b0000000110000000, //9
-                               0b0000000110000000, //10
-                               0b0000000110000000, //11
-                               0b0000000110000000, //12
-                               0b0000000110000000, //13
-                               0b0011111111111100, //14
-                               0b0011111111111100};//15
+                               0b0000000110000000, //A
+                               0b0000000110000000, //B
+                               0b0000000110000000, //C
+                               0b0000000110000000, //D
+                               0b0011111111111100, //E
+                               0b0011111111111100};//F
 
+//**************************************************************
+// Pattern: Array that prints '7' with printArray function
+//**************************************************************
+                                // 0123456789ABCDEF
 const uint16_t sevenArray[16] = {0b0011111111111100, //0
                                  0b0011111111111100, //1
                                  0b0000000000001100, //2
@@ -140,25 +142,31 @@ const uint16_t hatArray[16] =    {0b0000000000110000, //0
                                   0b0000000111000000, //14
                                   0b0000000000000000};//15
 void setup() {
-    Serial.begin(9600);
-    delay( 3000 ); // power-up safety delay
+    delay(3000);        // power-up safety delay
+    Serial.begin(9600); // begin serial communication with arduino
 
-    //Configure the fast LED Library for our display
-    FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(led, NUM_LEDS).setCorrection( TypicalLEDStrip );
-    FastLED.setBrightness(  BRIGHTNESS ); 
-  
-    //Configure the roboRIO communication pin to recieve data
+    // Configure the fast LED Library for our display
+    FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(led, NUM_LEDS).setCorrection(TypicalLEDStrip);
+    FastLED.setBrightness(BRIGHTNESS);
+
+    // Configure the roboRIO communication pin to recieve data
     pinMode(ROBORIO_DATA_PIN, INPUT);
 
-    //Initialize the FastLED display buffer array  to blank out the display
+    // Initialize the FastLED display buffer array  to blank out the display
     for (uint8_t i = 0; i<kMatrixWidth; i++){
         for (uint8_t j = 0; j<kMatrixWidth; j++){
             led[XY(i,j)] = CRGB(0,0,0);
         }
     }
-    FastLED.show(); //Ensure we get one LED update in prior to periodic - should blank out all LED's
+
+    // Ensure we get one LED update in prior to periodic - should blank out all LED's
+    FastLED.show();
 }
 
+//**************************************************************
+// Function: Main loop that runs continually when the arduino is
+// powered on
+//**************************************************************
 void loop() {
 //    purpleCube();
 //    yellowCone();
@@ -206,8 +214,10 @@ void yellowCone()
     FastLED.delay(FADE_RATE);
 }
 
+//**************************************************************
+// Function: Display a purple cube when in Cube Mode
+//**************************************************************
 void purpleCube() {
-
     static boolean purplefade;
     
     if(fader<=0){
@@ -245,16 +255,22 @@ void fire(){
     }
 }
 
-//PrintArray implements a complete scroll of a single image across the entire LED display. The image is represented by an array
-//The function does not return until the entire image has completed scrolling acroos the display 
-//Rightoffset is applied to the starting postion of the image to ensure it starts off the right side of the display
-//Leftoffset used to stop the scroll when the image has scrolled fully off of the left side of the display
+//**************************************************************
+// Function: PrintArray implements a complete scroll of a single
+// image across the entire LED display. The image is represented
+// by an array.
+// The function does not return until the entire image has
+// completed scrolling across the display. Rightoffset is
+// applied to the starting postion of the image to ensure it
+// starts off the right side of the display Leftoffset used to 
+// stop the scroll when the image has scrolled fully off of the
+// left side of the display.
+//**************************************************************
 void printArray(const uint16_t arr[]){
-  
-  //TODO: Make this thing show a single image and move the scrolling into the main arduino Loop() function
-  Serial.println("***********SCROLLING*************");
+    // TODO: Make this thing show a single image and move the scrolling into the main arduino Loop() function
+    Serial.println("***********SCROLLING*************");
 
-	uint16_t mask = 0b1000000000000000;
+    uint16_t mask = 0b1000000000000000;
 
   //Set up an internal buffer to hold the "scrolled" image array
 //                        0123456789ABCDEF
@@ -286,29 +302,50 @@ void printArray(const uint16_t arr[]){
       else {img[i] = arr[i] << -s;}
     }
 
-
-  //These two loops scan through the display to set each LED on or off as defined image array
-  //i represents the current ROW of the display
-  //j represents the current COLUMN of the display
-		for (uint8_t i = 0; i < kMatrixWidth; i++){
-			for (uint8_t j = 0; j < kMatrixWidth; j++){
-      
-      //Check if the current row/column LED should be lit by comparing the current mask value to the array row
-      //Compare current mask to bit-packed image array. If current bit is TRUE, set the LED ON, otherwise set it OFF
-				if((mask&img[i]) > 0){
-				  led[XY(i,j)] = CRGB(0,255,0); 
-				} else {
-          led[XY(i,j)] = CRGB(0,0,0);   
+    // Loop to handle scrolling the image. Each iteration of this loop
+    // moves the image one increment across the display
+    // S represents the current left-right "position" of the image on 
+    // the LED display 
+    for(int s = kMatrixWidth; s > -kMatrixWidth; s--){
+        // Shift the image to the left or right to create the scrolling effect
+        // First shift the image off to the right of the display then unshift 
+        // it once per loop until it reaches the default unshifted position
+        // Then start shifting it left to move it off the left side of the display
+        for(uint8_t i = 0; i < kMatrixWidth; i++){
+            if(s >= 0) {
+                img[i] = arr[i] >> s;
+            }
+            else {
+                img[i] = arr[i] << -s;
+            }
         }
-				mask = mask >> 1; //rotate the mask for the next column. NOTE: in arduino API, << is a shift operator, NOT rotate
-			}
-      mask = 0b1000000000000000; //reset the mask for the next row
-		}// end of outer loop
 
-   //Show the image and wait for the next update
-		FastLED.show();
-		FastLED.delay(1000 / UPDATE_RATE_HZ);
-	}
+        // These two loops scan through the display to set each LED on or off as defined image array
+        // i represents the current ROW of the display
+        // j represents the current COLUMN of the display
+        for (uint8_t i = 0; i < kMatrixWidth; i++){
+            for (uint8_t j = 0; j < kMatrixWidth; j++){
+                // Check if the current row/column LED should be lit by comparing the current 
+                // mask value to the array row
+                // Compare current mask to bit-packed image array. 
+                // If current bit is TRUE, set the LED ON, otherwise set it OFF
+                if((mask&img[i]) > 0){
+                    led[XY(i,j)] = CRGB(0,255,0); 
+                }
+                else {
+                    led[XY(i,j)] = CRGB(0,0,0);
+                }
+                // Rotate the mask for the next column. 
+                // NOTE: in arduino API, << is a shift operator, NOT rotate
+                mask = mask >> 1; 
+            }
+            mask = 0b1000000000000000; //reset the mask for the next row
+        } // end of outer loop
+
+        // Show the image and wait for the next update
+        FastLED.show();
+        FastLED.delay(1000 / UPDATE_RATE_HZ);
+    } // end of s offset loop
 }
 
 // The printLongArray should do the same thing as the printArray function but with a longer message
@@ -383,14 +420,12 @@ void printLongArray(const uint64_t arr[]){
 uint16_t XY( uint8_t x, uint8_t y)
 {
     uint16_t i;
-    if( y & 0x01)
-    {
+    if( y & 0x01) {
         // Odd rows run backwards
         uint8_t reverseX = (kMatrixWidth - 1) - x;
         i = (y * kMatrixWidth) + reverseX;
     } 
-    else
-    {
+    else {
         // Even rows run forwards
         i = (y * kMatrixWidth) + x;
     } 
