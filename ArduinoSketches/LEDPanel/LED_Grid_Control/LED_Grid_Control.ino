@@ -169,8 +169,8 @@ void setup() {
 //**************************************************************
 void loop() {
 //    purpleCube();
-//    yellowCone();
-     printArray(hatArray);
+    yellowCone();
+ //    printArray(hatArray);
  
 // The teamNumberArray will print the full team number 
 // This will print one long continues array
@@ -301,24 +301,6 @@ void printArray(const uint16_t arr[]){
       if(s >= 0) {img[i] = arr[i] >> s;}
       else {img[i] = arr[i] << -s;}
     }
-
-    // Loop to handle scrolling the image. Each iteration of this loop
-    // moves the image one increment across the display
-    // S represents the current left-right "position" of the image on 
-    // the LED display 
-    for(int s = kMatrixWidth; s > -kMatrixWidth; s--){
-        // Shift the image to the left or right to create the scrolling effect
-        // First shift the image off to the right of the display then unshift 
-        // it once per loop until it reaches the default unshifted position
-        // Then start shifting it left to move it off the left side of the display
-        for(uint8_t i = 0; i < kMatrixWidth; i++){
-            if(s >= 0) {
-                img[i] = arr[i] >> s;
-            }
-            else {
-                img[i] = arr[i] << -s;
-            }
-        }
 
         // These two loops scan through the display to set each LED on or off as defined image array
         // i represents the current ROW of the display
