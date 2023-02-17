@@ -3,6 +3,8 @@ package frc.robot.Arm;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wpi.first.math.util.Units;
+
 public class ArmSoftLimits {
 
     private final double SMALL_DIFF = 0.01;
@@ -28,9 +30,18 @@ public class ArmSoftLimits {
         // on the fence to the input point as clipped position.
 
 
+        double minX = Units.inchesToMeters(5);
+        double maxX = Units.inchesToMeters(62.75);
+        double minY = Units.inchesToMeters(5);
+        double maxY = Units.inchesToMeters(72);
 
-        Double XPosLimits[] = {0.0,10.0,10.0,0.0};
-        Double YPosLimits[] = {0.0,0.0,10.0,10.0};
+        /* 
+        double[] restrictionXPoints = { minX, minX, maxX, maxX };
+        double[] restrictionYPoints = { minY, maxY, maxY, minY };
+        */
+
+        Double XPosLimits[] = {minX, minY, maxX, maxX};
+        Double YPosLimits[] = {minY, maxY, maxY, minY};
         int i;
 
         ArmEndEffectorState clipPos = new ArmEndEffectorState();
@@ -183,12 +194,11 @@ public class ArmSoftLimits {
             }
   
         return clipPos;
-  
-        
-    
-    
 
+    }
 
+    public boolean isLimited() {
+        return false;
     }
 
 }
