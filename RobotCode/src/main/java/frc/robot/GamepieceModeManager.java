@@ -7,6 +7,9 @@ import frc.Constants;
  */
 public class GamepieceModeManager {
 
+    private final double PWM_CONE = -1.0;
+    private final double PWM_CUBE = 0.0;
+
     /* Singleton infratructure*/
     private static GamepieceModeManager inst = null;
     public enum GamepieceMode{
@@ -24,12 +27,14 @@ public class GamepieceModeManager {
     }
 
     private GamepieceModeManager(){
-        curMode = GamepieceMode.CONE; //pick a default
         LEDPanelModeCtrl = new PWM(Constants.LED_MODE_PORT);
+
+        setCurMode(GamepieceMode.CONE); //pick a default
     }
 
     public void setCurMode(GamepieceMode in){
         curMode = in;
+        LEDPanelModeCtrl.setSpeed(curMode==GamepieceMode.CONE ? PWM_CONE : PWM_CUBE);
     }   
 
     public GamepieceMode getCurMode(){
@@ -46,9 +51,9 @@ public class GamepieceModeManager {
 
     public void toggleMode(){
         if(isConeMode()){
-            curMode = GamepieceMode.CUBE;
+            setCurMode(GamepieceMode.CUBE);
         } else {
-            curMode = GamepieceMode.CONE;
+            setCurMode(GamepieceMode.CONE);
         }
     }
 }

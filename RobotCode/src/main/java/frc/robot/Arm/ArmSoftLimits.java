@@ -158,8 +158,6 @@ public class ArmSoftLimits {
                     }
                 }
                 
-                System.out.println(crossx + " cross " + crossy);
-
                     if (crossDist < nearDist) {
                         // use this one
                         nearDist = crossDist;
@@ -177,7 +175,6 @@ public class ArmSoftLimits {
                         clipPos.x = p0x;
                         clipPos.y = p0y;
 
-                        System.out.println(clipPos.x + " clip pos malo" + clipPos.y);
                         
                     } else {
                         // leave nearest in place

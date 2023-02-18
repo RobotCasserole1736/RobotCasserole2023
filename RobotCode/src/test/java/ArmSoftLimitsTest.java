@@ -18,7 +18,7 @@ class ArmSoftLimitsTest {
     var retVal = asl.applyLimit(testPos);
 
     //    assertEquals(testPos, retVal); used to be here but it caused an error so I removed it
- System.out.println(retVal.x + " (output) " + retVal.y);
+ //System.out.println(retVal.x + " (output) " + retVal.y);
 
   }
 
