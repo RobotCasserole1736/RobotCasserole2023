@@ -405,9 +405,15 @@ void printLongArray(const uint64_t arr[]){
 //utility function that was found online. It redifines the way our code views the LEDS. It maps the Led index number onto a grid like cordinate plane.
 uint16_t XY( uint8_t x, uint8_t y)
 {
+
+  //Perform rotation for display
+  uint8_t tmp = x;
+  x = 15-y;
+  y = tmp;
+  
     uint16_t i;
     if( y & 0x01) {
-        // Odd rows run backwards
+        //  electrically, Odd rows run backwards
         uint8_t reverseX = (kMatrixWidth - 1) - x;
         i = (y * kMatrixWidth) + reverseX;
     } 
