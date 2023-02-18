@@ -7,6 +7,9 @@ import frc.Constants;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
 import com.playingwithfusion.TimeOfFlight;
+import com.revrobotics.ColorSensorV3;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.util.Color;
 
 
 public class ClawController {
@@ -15,6 +18,8 @@ public class ClawController {
     boolean curReleaseCmd;
     Solenoid clawSolenoid;
     TimeOfFlight gamepieceDistSensor;
+    public boolean clawHasCube;
+    public boolean clawHasCone;
 
     @Signal
     boolean clawCloseCmd = true;
@@ -60,7 +65,48 @@ public class ClawController {
         curReleaseCmd = grab;
     }
 
+    private final I2C.Port i2cPort = I2C.Port.kOnboard;
+    private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
+
     public void update() {
+
+        Color detectedColor = m_colorSensor.getColor();
+
+        int proximityForGamePiece = m_colorSensor.getProximity();
+
+        
+
+        System.out.println(proximityForGamePiece);
+        System.out.println(detectedColor.red + " " + detectedColor.green + " " + detectedColor.blue);
+        
+        boolean doWeHaveGamePeice = false;
+        String coneOrCubeOrNothing = "Nothing";
+        boolean hasCube = false;
+        boolean hasCone = false;
+        
+
+        if (proximityForGamePiece >= 135) {
+            doWeHaveGamePeice = true;
+            if (Math.abs(detectedColor.red - detectedColor.blue) > Math.abs(detectedColor.green - detectedColor.blue)  ) {
+                coneOrCubeOrNothing = "Cube";
+                hasCube = true;
+                hasCone = false;
+               
+            }else {
+                coneOrCubeOrNothing = "Cone";
+                hasCone = true;
+                hasCube = false;
+            }
+
+        } else {
+            doWeHaveGamePeice = false;
+        }
+        
+        clawHasCone = hasCone;
+        clawHasCube = hasCube;
+        
+        System.out.println(coneOrCubeOrNothing + doWeHaveGamePeice);
+
         var gpmm = GamepieceModeManager.getInstance();
 
         gamepieceDistSensorMeas = gamepieceDistSensor.getRange()/25.40; //Convert from mm to inches
@@ -98,6 +144,11 @@ public class ClawController {
     }
 
     public boolean hasGamepeice() {
+        if (clawHasCone == true || clawHasCube == true) {
+            gamepiecePresent = true;
+        } else {
+            gamepiecePresent = false;
+        }
         return gamepiecePresent; 
     }
 
