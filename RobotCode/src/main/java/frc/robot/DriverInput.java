@@ -65,6 +65,9 @@ public class DriverInput {
     @Signal(units="bool")
     boolean clawIntake; 
 
+    @Signal(units="bool")
+    boolean balanceAssistence;
+
 
     // Auto-drive commands
     @Signal(units="bool")
@@ -148,6 +151,8 @@ public class DriverInput {
             // Read in Auto-drive commands
             spinMoveCmd = driverController.getBButton();
             driveToCenterCmd = driverController.getXButton();
+
+            balanceAssistence = driverController.getYButton();
 
             // Read in claw intake/eject commands
             clawEject = driverController.getRightTriggerAxis() > .75;
@@ -233,6 +238,10 @@ public class DriverInput {
      */
     public boolean getOdoResetCmd(){
         return resetOdometry;
+    }
+
+    public boolean getBalanceCmd(){
+        return balanceAssistence;
     }
 
     public boolean getRelease(){

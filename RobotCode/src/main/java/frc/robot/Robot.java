@@ -65,6 +65,7 @@ public class Robot extends TimedRobot {
   //Drivetrain and drivetrain accessories
   DrivetrainControl dt;
   AutoDrive ad;
+  BalanceAssistence ba; 
 
   // Autonomous Control Utilities
   Autonomous auto;
@@ -230,6 +231,10 @@ public class Robot extends TimedRobot {
     } else {
       ad.setCmd(AutoDriveCmdState.MANUAL);
     }
+
+    
+    ba.setBalanceCmd(di.getBalanceCmd());
+
 
     ad.setManualCommands(di.getFwdRevCmd_mps(), di.getSideToSideCmd_mps(), di.getRotateCmd_rps(), !di.getRobotRelative(), di.getBracePositionCmd());
     ad.update();
