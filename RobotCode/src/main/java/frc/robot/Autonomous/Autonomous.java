@@ -16,9 +16,7 @@ import frc.robot.Autonomous.Modes.DoNothing;
 import frc.robot.Autonomous.Modes.DriveFwd;
 import frc.robot.Autonomous.Modes.ScoreTwoTop;
 import frc.robot.Autonomous.Modes.Wait;
-import frc.robot.Autonomous.Modes.leaveComTop;
-import frc.robot.Autonomous.Modes.placeBalanceMid;
-import frc.robot.Autonomous.Modes.placeTop;
+
 import frc.robot.Autonomous.Modes.SteakAuto2023;
 import frc.robot.Drivetrain.DrivetrainControl;
 
@@ -93,9 +91,9 @@ public class Autonomous {
         mainModeList.add(new DriveFwd(3.0));
         mainModeList.add(new SteakAuto2023());
         mainModeList.add(new DoNothing());
-        mainModeList.add(new leaveComTop());
-        mainModeList.add(new placeBalanceMid());
-        mainModeList.add(new placeTop());
+        //mainModeList.add(new leaveComTop());
+        //mainModeList.add(new placeBalanceMid());
+        //mainModeList.add(new placeTop());
         mainModeList.add(new ScoreTwoTop());
 
         // Create and subscribe to NT4 topics

@@ -1,14 +1,13 @@
 #include <FastLED.h>
 
 #define LED_PIN          5
-#define ROBORIO_DATA_PIN 2
+#define CMD_INPUT_PIN 7
 #define NUM_LEDS    256
 #define BRIGHTNESS  40
 #define LED_TYPE    WS2812B
 #define COLOR_ORDER RGB
 #define UPDATE_RATE_HZ 25
 #define FADE_RATE 60
-#define CMD_INPUT_PIN 7
 CRGB led[NUM_LEDS];
 
 const uint8_t kMatrixWidth = 16;
@@ -147,15 +146,14 @@ const uint16_t hatArray[16] =    {0b0000000000110000, //0
                                   0b0000000111000000, //14
                                   0b0000000000000000};//15
 void setup() {
-    delay(3000);        // power-up safety delay
-    Serial.begin(9600); // begin serial communication with arduino
+    Serial.begin(115200); // begin serial communication with arduino
 
     // Configure the fast LED Library for our display
     FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(led, NUM_LEDS).setCorrection(TypicalLEDStrip);
     FastLED.setBrightness(BRIGHTNESS);
 
     // Configure the roboRIO communication pin to recieve data
-    pinMode(ROBORIO_DATA_PIN, INPUT);
+    pinMode(CMD_INPUT_PIN, INPUT);
 
     // Initialize the FastLED display buffer array  to blank out the display
     for (uint8_t i = 0; i<kMatrixWidth; i++){
@@ -164,18 +162,20 @@ void setup() {
         }
     }
 
-    // Ensure we get one LED update in prior to periodic - should blank out all LED's
-    FastLED.show();
 }
 
 //**************************************************************
 // Function: Main loop that runs continually when the arduino is
 // powered on
 //**************************************************************
+int cmdPWM =0;
 void loop() {
   //Read in command PWM from RoboRIO - value is pulse length in microseconds
-  unsigned long cmdPWM = pulseIn(CMD_INPUT_PIN, HIGH, 1000);
-  Serial.println(cmdPWM);
+
+  EVERY_N_MILLISECONDS(250)
+  {
+      cmdPWM = pulseIn(CMD_INPUT_PIN, HIGH, 50000);
+  }
 
   //Decode command PWM and display commanded image - default is team number + logo
   if(cmdPWM <= (pulseLengthYellowCone + pulseLengthTolerance) && cmdPWM >= (pulseLengthYellowCone - pulseLengthTolerance)){
@@ -184,8 +184,11 @@ void loop() {
     purpleCube();
   } else {
     printLongArray(longTeamNumberArray);
-    printArray(hatArray);
+    //printArray(hatArray);
   }
+
+    FastLED.delay(1000 / UPDATE_RATE_HZ);
+
 }
 
 void yellowCone()
@@ -214,6 +217,8 @@ void yellowCone()
          for (uint8_t j = 0; j < kMatrixWidth; j++){
               if (j >= upperBound && j <= lowerBound){
                   led[XY(i,j)] = CRGB(fader*0.5,fader*1.5,0);
+              } else {
+                  led[XY(i,j)] = CRGB(0,0,0);
               }
          }
         if (i % 2 == 1 && upperBound > 0 && lowerBound < 15)
@@ -222,7 +227,7 @@ void yellowCone()
             lowerBound++;
         }
     }
-    FastLED.delay(FADE_RATE);
+
 }
 
 //**************************************************************
@@ -250,22 +255,10 @@ void purpleCube() {
             led[XY(i,j)] = CRGB(0,fader*1.5,fader*1.5);
         }
     }
-    FastLED.delay(FADE_RATE);
+
 }
 
-void fire(){
-  
-    static double f = 0;
-
-    for (uint8_t i = 0; i<kMatrixWidth; i++){
-      f = f + 1;
-        for (uint8_t j = 0; j<kMatrixWidth; j--){
-          
-            led[XY(i,j)] = CRGB(0,155,155);
-        }
-    }
-}
-
+int s = kMatrixWidth; // scroll idx
 //**************************************************************
 // Function: PrintArray implements a complete scroll of a single
 // image across the entire LED display. The image is represented
@@ -278,9 +271,6 @@ void fire(){
 // left side of the display.
 //**************************************************************
 void printArray(const uint16_t arr[]){
-    // TODO: Make this thing show a single image and move the scrolling into the main arduino Loop() function
-    Serial.println("***********SCROLLING*************");
-
     uint16_t mask = 0b1000000000000000;
 
   //Set up an internal buffer to hold the "scrolled" image array
@@ -300,11 +290,14 @@ void printArray(const uint16_t arr[]){
                         0b0000000000000000, //0
                         0b0000000000000000, //0
                         0b0000000000000000}; //0
-        
- //Loop to handle scrolling the image. Each iteration of this loop moves the image one increment across the display
+
+ 
+ //Update to handle scrolling the image. Each iteration of this loop moves the image one increment across the display
  //S represents the current left-right "position" of the image on the LED display 
-	for(int s = kMatrixWidth; s > -kMatrixWidth; s--){
-      
+ if(s <= -kMatrixWidth){
+  s = kMatrixWidth;
+ } 
+  
     //Shift the image to the left or right to create the scrolling effect
     //First shift the image off to the right of the display then unshift it once per loop until it reaches the default unshifted position
     //Then start shifting it left to move it off the left side of the display
@@ -335,10 +328,8 @@ void printArray(const uint16_t arr[]){
             mask = 0b1000000000000000; //reset the mask for the next row
         } // end of outer loop
 
-        // Show the image and wait for the next update
-        FastLED.show();
-        FastLED.delay(1000 / UPDATE_RATE_HZ);
-    } // end of s offset loop
+  s--;
+
 }
 
 // The printLongArray should do the same thing as the printArray function but with a longer message
@@ -368,11 +359,15 @@ void printLongArray(const uint64_t arr[]){
                         0b0000000000000000,  //D
                         0b0000000000000000,  //E
                         0b0000000000000000}; //F
-        
- //Loop to handle scrolling the image. Each iteration of this loop moves the image one increment across the display
+
+ 
+ //Update to handle scrolling the image. Each iteration of this loop moves the image one increment across the display
  //S represents the current left-right "position" of the image on the LED display 
-  for(int s = kMatrixWidth*4; s > -kMatrixWidth; s--){
-      
+ if(s <= -kMatrixWidth){
+  s = kMatrixWidth*4;
+ } 
+  
+        
     //Shift the image to the left or right to create the scrolling effect
     //First shift the image off to the right of the display then unshift it once per loop until it reaches the default unshifted position
     //Then start shifting it left to move it off the left side of the display
@@ -403,18 +398,22 @@ void printLongArray(const uint64_t arr[]){
       mask = 0b1000000000000000; //reset the mask for the next ro
     }// end of outer loop
 
-   //Show the image and wait for the next update
-    FastLED.show();
-    FastLED.delay(1000 / UPDATE_RATE_HZ);
-  }
+    s--;
+
 }
 
 //utility function that was found online. It redifines the way our code views the LEDS. It maps the Led index number onto a grid like cordinate plane.
 uint16_t XY( uint8_t x, uint8_t y)
 {
+
+  //Perform rotation for display
+  uint8_t tmp = x;
+  x = 15-y;
+  y = tmp;
+  
     uint16_t i;
     if( y & 0x01) {
-        // Odd rows run backwards
+        //  electrically, Odd rows run backwards
         uint8_t reverseX = (kMatrixWidth - 1) - x;
         i = (y * kMatrixWidth) + reverseX;
     } 
