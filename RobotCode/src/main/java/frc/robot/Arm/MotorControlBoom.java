@@ -53,10 +53,10 @@ public class MotorControlBoom {
         motorCtrl.setBrakeMode(true);
     }
 
-    public void setCmd(ArmAngularState in){
+    public void setCmd(ArmAngularState testDesState){
         //todo - save off the right angles and velocities for this motor
-        desAngleDeg = in.boomAngleDeg;
-        desAngVelDegPerSec = in.boomAnglularVel;
+        desAngleDeg = testDesState.boomAngleDeg;
+        desAngVelDegPerSec = testDesState.boomAnglularVel;
     }    
 
     public void update(ArmAngularState act_in, boolean enabled){
@@ -105,4 +105,5 @@ public class MotorControlBoom {
             motorCtrl.setVoltageCmd(0.0);
         }
     }
+
 }

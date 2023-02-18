@@ -21,5 +21,11 @@ public class SimAbsoluteEncoder extends AbstractAbsoluteEncoder {
     public double getRawAngle_rad() {
         return Math.round(curAngle_rad * STEPS_PER_REV/2/Math.PI) * 2*Math.PI/STEPS_PER_REV;
     }
+
+    @Override
+    public boolean isFaulted() {
+        // TODO Auto-generated method stub
+        return false;
+    }
     
 }

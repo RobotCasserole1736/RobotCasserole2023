@@ -52,4 +52,7 @@ public class AutoEventSetClawEject extends AutoEvent {
 		return maxTimeElapsed ||
 		      (minTimeElapsed && !ClawController.getInstance().hasGamepeice());
 	}
+
+	public class setReleaseCmd {
+	}
 }

@@ -70,6 +70,8 @@ public class ArmControl {
         // Meas state and end effector position
         boomEncoder.update();
         stickEncoder.update();
+        boomEncoder.isFaulted();
+        stickEncoder.isFaulted();
         var boomAngleDeg = Units.radiansToDegrees(boomEncoder.getAngle_rad());
         var stickAngleDeg = Units.radiansToDegrees(stickEncoder.getAngle_rad());
         curMeasAngularStates = new ArmAngularState(boomAngleDeg, stickAngleDeg);      
@@ -114,17 +116,28 @@ public class ArmControl {
 
         // Send desired state to the motor control
         mb.setCmd(curDesAngularStates);
-        mb.update(curMeasAngularStates, true);
+        if(isFaulted() == true){
+            mb.update(curMeasAngularStates, false);
+        } else {
+            mb.update(curMeasAngularStates, true);
+        }
 
         ms.setCmd(curDesAngularStates);
-        ms.update(curMeasAngularStates, true);
-
+        if(isFaulted() == true){
+            ms.update(curMeasAngularStates, false);
+        } else {
+            ms.update(curMeasAngularStates, true);
+        }
         // Update telemetry
         ArmTelemetry.getInstance().setDesired(curDesStateWithOffset, curDesAngularStates);
         ArmTelemetry.getInstance().setMeasured(curMeasState, curMeasAngularStates);
 
         // Save previous
         prevDesState = curDesState;
+    }
+
+    private boolean isFaulted() {
+        return false;
     }
 
     //Test-mode only for tuning
@@ -153,7 +166,7 @@ public class ArmControl {
         
     }
 
-    public boolean isPathPlanning(){
+        public boolean isPathPlanning(){
         return pp.motionActive;
     }
 

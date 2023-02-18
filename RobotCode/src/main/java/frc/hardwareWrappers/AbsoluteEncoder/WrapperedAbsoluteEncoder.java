@@ -65,5 +65,9 @@ public class WrapperedAbsoluteEncoder  {
     public Rotation2d getRotation2d() {
         return new Rotation2d(this.getAngle_rad());
     }
+
+    public boolean isFaulted(){
+        return enc.isFaulted();
+    }
     
 }

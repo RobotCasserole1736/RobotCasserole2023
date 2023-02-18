@@ -24,5 +24,11 @@ public class RealThriftyEncoder extends AbstractAbsoluteEncoder {
         return m_encoder.getAbsolutePosition();
     }
 
+    @Override
+    public boolean isFaulted() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
     
 }
