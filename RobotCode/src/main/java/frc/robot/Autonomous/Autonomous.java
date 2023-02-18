@@ -14,11 +14,13 @@ import frc.lib.Autonomous.AutoModeList;
 import frc.lib.Util.CrashTracker;
 import frc.robot.Autonomous.Modes.DoNothing;
 import frc.robot.Autonomous.Modes.DriveFwd;
+import frc.robot.Autonomous.Modes.ScoreLeaveBalBottom;
 import frc.robot.Autonomous.Modes.ScoreTwoTop;
 import frc.robot.Autonomous.Modes.Wait;
 import frc.robot.Autonomous.Modes.leaveComTop;
 import frc.robot.Autonomous.Modes.placeBalanceMid;
 import frc.robot.Autonomous.Modes.placeTop;
+import frc.robot.Autonomous.Modes.scoreLeavePickBottom;
 import frc.robot.Autonomous.Modes.SteakAuto2023;
 import frc.robot.Drivetrain.DrivetrainControl;
 
@@ -96,7 +98,8 @@ public class Autonomous {
         mainModeList.add(new leaveComTop());
         mainModeList.add(new placeBalanceMid());
         mainModeList.add(new placeTop());
-        mainModeList.add(new ScoreTwoTop());
+        mainModeList.add(new ScoreLeaveBalBottom());
+        mainModeList.add(new scoreLeavePickBottom());
 
         // Create and subscribe to NT4 topics
         NetworkTableInstance inst = NetworkTableInstance.getDefault();
