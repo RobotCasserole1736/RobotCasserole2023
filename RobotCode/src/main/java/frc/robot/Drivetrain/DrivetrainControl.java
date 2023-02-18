@@ -5,12 +5,12 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.AllianceTransformUtils;
 import frc.Constants;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
@@ -210,6 +210,7 @@ public class DrivetrainControl {
     // Main periodic step function for Teleop, Autonomous, and Disabled
     public void update(){
 
+
         desChSpdVx = desChSpd.vxMetersPerSecond;
         desChSpdVy = desChSpd.vyMetersPerSecond;
         desChSpdOmega = desChSpd.omegaRadiansPerSecond;
@@ -268,6 +269,8 @@ public class DrivetrainControl {
     }
 
     private void updateCommon(){
+
+        SwerveDriveKinematics.desaturateWheelSpeeds(desModState, Constants.MAX_FWD_REV_SPEED_MPS);
         
         moduleFL.setDesiredState(desModState[0]);
         moduleFR.setDesiredState(desModState[1]);
