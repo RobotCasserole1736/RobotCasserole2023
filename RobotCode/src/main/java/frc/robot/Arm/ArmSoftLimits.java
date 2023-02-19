@@ -1,22 +1,35 @@
 package frc.robot.Arm;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.ArmTelemetry;
 
 public class ArmSoftLimits {
 
     private final double SMALL_DIFF = 0.01;
     private final double LARGE_DIFF = Double.MAX_VALUE;
 
+    double minX = Units.inchesToMeters(5);
+    double maxX = Units.inchesToMeters(62.75);
+    double minY = Units.inchesToMeters(5);
+    double maxY = Units.inchesToMeters(72);
+
+    Double XPosLimits[] = {minX, minY, maxX, maxX};
+    Double YPosLimits[] = {minY, maxY, maxY, minY};
+
+    boolean isLimited;
+
     public ArmSoftLimits() {
 
-        // Init a new set of bounding box coordinates
-
-
-
-
+        //One time, set up telemetry for limits
+        var softLimitPoly = new ArrayList<Translation2d>();
+        for(var i = 0; i < XPosLimits.length; i++){
+            softLimitPoly.add(new Translation2d(XPosLimits[i], YPosLimits[i]));
+        }
+        softLimitPoly.add(new Translation2d(XPosLimits[0], YPosLimits[0])); //one more to close to the start
+        ArmTelemetry.getInstance().setSoftLimits(softLimitPoly);
     }
 
     public ArmEndEffectorState applyLimit(ArmEndEffectorState in) {
@@ -30,16 +43,11 @@ public class ArmSoftLimits {
         // on the fence to the input point as clipped position.
 
 
-        double minX = Units.inchesToMeters(5);
-        double maxX = Units.inchesToMeters(62.75);
-        double minY = Units.inchesToMeters(5);
-        double maxY = Units.inchesToMeters(72);
 
-        Double XPosLimits[] = {minX, minY, maxX, maxX};
-        Double YPosLimits[] = {minY, maxY, maxY, minY};
         int i;
 
-        ArmEndEffectorState clipPos = new ArmEndEffectorState();
+        //Default the clipped state to be the same as the input state
+        ArmEndEffectorState clipPos = new ArmEndEffectorState(in);
         double diffx = 0.0;
         double diffy = 0.0;
         double p0x;
@@ -96,8 +104,8 @@ public class ArmSoftLimits {
 
         if (crossCount == 1) {
             // inside so no need to clip
-            clipPos.x = in.x;
-            clipPos.y = in.y;
+            // Do nothing, clipPos is already copied from in
+
         } else {
             // it is outside of the fence so clip to nearest point on the boundary
             nearDist = LARGE_DIFF;
@@ -162,7 +170,9 @@ public class ArmSoftLimits {
                         // use this one
                         nearDist = crossDist;
                         clipPos.x = crossx;
-                        clipPos.y = crossy;                  
+                        clipPos.y = crossy;    
+                        clipPos.xvel = 0;              
+                        clipPos.yvel = 0;              
                        
                     } else {
                         // leave nearest in place
@@ -174,7 +184,8 @@ public class ArmSoftLimits {
                         nearDist = p0Dist;
                         clipPos.x = p0x;
                         clipPos.y = p0y;
-
+                        clipPos.xvel = 0;              
+                        clipPos.yvel = 0;   
                         
                     } else {
                         // leave nearest in place
@@ -184,13 +195,16 @@ public class ArmSoftLimits {
                 } 
             
             }
+
+        // if we've clipped the position, 
+        isLimited = !in.equals(clipPos);
   
         return clipPos;
 
     }
 
     public boolean isLimited() {
-        return false;
+        return isLimited;
     }
 
 }

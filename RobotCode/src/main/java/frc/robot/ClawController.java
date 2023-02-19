@@ -75,10 +75,6 @@ public class ClawController {
         int proximityForGamePiece = m_colorSensor.getProximity();
 
         
-
-        System.out.println(proximityForGamePiece);
-        System.out.println(detectedColor.red + " " + detectedColor.green + " " + detectedColor.blue);
-        
         boolean doWeHaveGamePeice = false;
         String coneOrCubeOrNothing = "Nothing";
         boolean hasCube = false;
@@ -105,8 +101,6 @@ public class ClawController {
         clawHasCone = hasCone;
         clawHasCube = hasCube;
         
-        System.out.println(coneOrCubeOrNothing + doWeHaveGamePeice);
-
         var gpmm = GamepieceModeManager.getInstance();
 
         gamepieceDistSensorMeas = gamepieceDistSensor.getRange()/25.40; //Convert from mm to inches
