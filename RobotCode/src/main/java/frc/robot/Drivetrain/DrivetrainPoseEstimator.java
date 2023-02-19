@@ -77,7 +77,7 @@ public class DrivetrainPoseEstimator {
         // Create all vision processing cameras and add them to the list of cameras
         cams.add(new PhotonCamWrapper("FRONT_LEFT_CAM", Constants.robotToFrontLeftCameraTrans)); 
         cams.add(new PhotonCamWrapper("FRONT_RIGHT_CAM", Constants.robotToFrontRightCameraTrans)); 
-        cams.add(new PhotonCamWrapper("REAR_CAM", Constants.robotToRearCameraTrans)); 
+        //cams.add(new PhotonCamWrapper("REAR_CAM", Constants.robotToRearCameraTrans)); 
 
         gyro = new WrapperedGyro(GyroType.ADXRS453);
 
