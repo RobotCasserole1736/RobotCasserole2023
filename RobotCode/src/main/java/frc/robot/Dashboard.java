@@ -83,13 +83,13 @@ public class Dashboard {
         d.addAutoChooser(Autonomous.getInstance().delayModeList, CENTER_COL, ROW2, 1.0);
         d.addAutoChooser(Autonomous.getInstance().mainModeList, CENTER_COL, ROW3, 1.0);
 
-        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_armSoftLimit"),"Arm Soft Limit", "#FFFF00", "icons/alert.svg", CENTER_COL-18, ROW4, 1.0);
+        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_armSoftLimit"),"Arm Soft Limit", "#FFFF00", "icons/softLimit.svg", CENTER_COL-18, ROW4, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_dtSpeedLimited"),"DT Speed Limit", "#FFFF00", "icons/speed.svg", CENTER_COL-12, ROW4, 1.0);
         d.addIcon(FaultWrangler.getInstance().getFaultActiveTopic(), "Faults", "#FF0000", "icons/alert.svg", CENTER_COL-6, ROW4, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_visionTargetVisible"),"Vision Target Visible", "#00FF00", "icons/vision.svg", CENTER_COL, ROW4, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_armPathActive"),"Arm Path", "#00FFBB", "icons/autoAlign.svg", CENTER_COL+6, ROW4, 1.0);
-        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_isRedAlliance"),"Red Alliance", "#FF3333", "icons/upperLimit.svg", CENTER_COL+12, ROW4, 1.0);
-        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_isBlueAlliance"),"Blue Alliance", "#3333FF", "icons/lowerLimit.svg", CENTER_COL+18, ROW4, 1.0);
+        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_isRedAlliance"),"Red Alliance", "#FF3333", "icons/allianceRed.svg", CENTER_COL+12, ROW4, 1.0);
+        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_isBlueAlliance"),"Blue Alliance", "#3333FF", "icons/allianceBlue.svg", CENTER_COL+18, ROW4, 1.0);
         
         
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_cubeShape"),"Cube", "#b515ef", "icons/cube.svg", LEFT_COL+5, ROW1, 2.0);
