@@ -174,7 +174,7 @@ public class DriverInput {
             braceCmd = false;
         }
 
-        disconFault.set(isConnected);
+        disconFault.set(!isConnected);
 
         
         //Slew rate limiters don't have the ability to change the slew rate on the fly,

@@ -110,7 +110,7 @@ public class OperatorInput {
             releaseCmd = false;
         }
 
-        disconFault.set(isConnected);
+        disconFault.set(!isConnected);
 
     }
 
