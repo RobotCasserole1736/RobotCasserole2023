@@ -53,10 +53,10 @@ public class Constants {
     // 3 - Using a square, twist the modules by hand until they are aligned with the robot's chassis
     // 4 - Read out the encoder readings for each module, put them here
     // 5 - Redeploy code, verify that the  encoder readings are correct as each module is manually rotated
-    static public final double FL_ENCODER_MOUNT_OFFSET_RAD = -2.157;
-    static public final double FR_ENCODER_MOUNT_OFFSET_RAD = -1.575;
-    static public final double BL_ENCODER_MOUNT_OFFSET_RAD = -2.180;
-    static public final double BR_ENCODER_MOUNT_OFFSET_RAD = -0.803;
+    static public final double FL_ENCODER_MOUNT_OFFSET_RAD = 0.0;
+    static public final double FR_ENCODER_MOUNT_OFFSET_RAD = 0.0;
+    static public final double BL_ENCODER_MOUNT_OFFSET_RAD = 0.0;
+    static public final double BR_ENCODER_MOUNT_OFFSET_RAD = 0.0;
 
     //////////////////////////////////////////////////////////////////
     // Vision Processing
@@ -75,13 +75,16 @@ public class Constants {
     //////////////////////////////////////////////////////////////////
     // Arm Physical
     //////////////////////////////////////////////////////////////////
-    static public final double ARM_BOOM_GEAR_RATIO = 300;
-    static public final double ARM_STICK_GEAR_RATIO = 300;
+    static public final double ARM_BOOM_GEAR_RATIO = 300; //gear ratio from motor shaft to boom shaft. Numbers greater than zero indicate a reduction in speed.
+    static public final double ARM_STICK_GEAR_RATIO = 300; //gear ratio from motor shaft to stick shaft Numbers greater than zero indicate a reduction in speed.
     static public final double ARM_BOOM_MOUNT_HIEGHT = Units.inchesToMeters(40);
     static public final double ARM_BOOM_LENGTH = Units.inchesToMeters(30.25);
     static public final double ARM_STICK_LENGTH = Units.inchesToMeters(32.5);
     static public final double ARM_END_EFF_MAX_VEL_MPS = Units.inchesToMeters(24.0);
     static public final double ARM_END_EFF_MAX_ACCEL_MPS2 = ARM_END_EFF_MAX_VEL_MPS * 2.0;
+    static public final double ARM_BOOM_ENCODER_MOUNT_OFFSET_RAD = 0.0;
+    static public final double ARM_STICK_ENCODER_MOUNT_OFFSET_RAD = 0.0;
+
     
 
     //////////////////////////////////////////////////////////////////

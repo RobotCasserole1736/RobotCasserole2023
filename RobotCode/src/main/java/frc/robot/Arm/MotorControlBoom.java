@@ -67,8 +67,8 @@ public class MotorControlBoom {
         var motorCmdV = 0.0;
         var angleErr = Math.abs(desAngleDeg - actAngleDeg);
         var armStationary = desAngVelDegPerSec == 0.0;
-        var engageBrake = brakeErrDbnc.calculate((angleErr < brakeErrThresh.get()) && armStationary);
-        //engageBrake=false; //tuning temp
+        //var engageBrake = brakeErrDbnc.calculate((angleErr < brakeErrThresh.get()) && armStationary);
+        var engageBrake=false; //For now - Brake is not mounted and not needed. Never engage it, always run closed loop control.
 
         if(engageBrake){
             //Brake engaged. 
