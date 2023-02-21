@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.lib.Faults.Fault;
 import frc.lib.Signal.Annotations.Signal;
-import frc.Constants;
 
 public class BatteryMonitor {
 	private PowerDistribution pd;
@@ -81,7 +80,7 @@ public class BatteryMonitor {
 	}
 
 	private BatteryMonitor() {
-		pd = new PowerDistribution(0,ModuleType.kCTRE);
+		pd = new PowerDistribution(1,ModuleType.kRev);
 		
 		// Kick off monitor in brand new thread.
 	    // Thanks to Team 254 for an example of how to do this!

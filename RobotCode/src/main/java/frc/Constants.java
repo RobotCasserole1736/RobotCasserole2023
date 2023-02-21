@@ -108,7 +108,7 @@ public class Constants {
     static public final int ARM_BOOM_ENC_IDX = 4;
     static public final int ARM_STICK_ENC_IDX = 5;
     static public final int FAULT_LED_OUT_IDX = 6;
-    //static public final int UNUSED = 7;
+    static public final int WHITE_LED_OUT_IDX = 7;
     //static public final int UNUSED = 8;
     //static public final int UNUSED = 9;
 
