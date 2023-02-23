@@ -76,11 +76,49 @@ Same as boom, but adjust the variable ARM_STICK_ENCODER_MOUNT_OFFSET_RAD, and en
 
 Verify in Glass that the visualization of the arm moves in sync with how the arm is manually positioned.
 
+Manually move the arm into each position for picking up or placing each cube. Record the x and y positions, and update the values in ArmNamedPosition.java to match.
+
 # Swerve Drive Tuning - Manual
 
 ## Azimuth
 
+The motors and gear ratios are unchanged since last year. Leave them as-is.
+
 ## Wheel
+
+Prepare for tuning by looking through the wpilib flywheel tuning simulation:
+
+https://docs.wpilib.org/en/stable/docs/software/advanced-controls/introduction/tuning-flywheel.html
+
+Set all wheel gains to zero:
+
+Drivetrain Module Wheel kP
+Drivetrain Module Wheel kI
+Drivetrain Module Wheel kD
+Drivetrain Module Wheel kV
+Drivetrain Module Wheel kS
+
+Enable in test mode. All four modules should turn their azimuth to align to be straight forward.
+
+Manually push the robot forward and backward. Ensure, in Glass, that the measured position of the robot changes correctly. Measure the actual distance moved with a tape measure matches the change in actual position of the odometry. Adjust drivetrain gear ratios or wheel radiuses in Constants.java if not.
+
+Plot desired adn actual motor speed for each wheel.
+
+Enable the fg_dt_wheel function generator to generate a square wave, with 0.5 m/sec amplititude.
+
+Increase kS to be as large as possible, but without any actual motion occuring.
+
+Increase kV to try to get the actual and desired speeds to match in steady state.
+
+Increase kP to make the velocity converge faster, just about up until oscillation starts to occur.
+
+Increase kD to help reduce oscillation. Back kP off a bit more if needed.
+
+kI should not generally be used or needed in this case, because we have kV. If we have steady state error, adjust kV to get rid of it.
+
+Try with faster speeds (increase amplititude of the function generator).
+
+Switch the function generator to a sine wave and make sure the drivetrain can track the sine wave relatively well.
 
 # Arm Position Control Tuning
 
