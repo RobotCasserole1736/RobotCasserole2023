@@ -13,7 +13,7 @@ public enum ArmNamedPosition {
     SHELF(Constants.WHEEL_BASE_HALF_LENGTH_M + Constants.BUMPER_THICKNESS_M + 0.15,1.05,true, 0.05),
     FLOOR(Constants.WHEEL_BASE_HALF_LENGTH_M + Constants.BUMPER_THICKNESS_M + 0.3 ,0.1,false),
     FLOOR_TIPPED_CONE(Constants.WHEEL_BASE_HALF_LENGTH_M + 0.2,0.10,true, 0.1),
-    STOW(Constants.WHEEL_BASE_HALF_LENGTH_M - Constants.BUMPER_THICKNESS_M - 0.1, 1.0 ,false),
+    STOW(0.208, 0.668 ,false),
     ;
 
     public final double safeY;
