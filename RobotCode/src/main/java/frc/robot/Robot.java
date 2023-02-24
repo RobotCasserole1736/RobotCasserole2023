@@ -26,6 +26,7 @@ import frc.robot.Arm.ArmNamedPosition;
 import frc.robot.AutoDrive.AutoDrive;
 import frc.robot.AutoDrive.AutoDrive.AutoDriveCmdState;
 import frc.robot.Autonomous.Autonomous;
+import frc.robot.Claw.ClawController;
 import frc.robot.Drivetrain.DrivetrainControl;
 import frc.robot.GamepieceModeManager.GamepieceMode;
 import frc.sim.RobotModel;
