@@ -39,14 +39,29 @@ public class MotorControlStick {
     @Signal(units="degpersec")
     double actAngVelDegPerSec;
 
+    @Signal
+    boolean isAngleLimited;
+
     public MotorControlStick(){
         motorCtrl.setBrakeMode(true);
     }
 
     public void setCmd(ArmAngularState in){
-        //todo - save off the right angles and velocities for this motor
         desAngleDeg = in.stickAngleDeg;
         desAngVelDegPerSec = in.stickAngularVel;
+
+        //Apply command limits
+        if(desAngleDeg > Constants.ARM_STICK_MAX_ANGLE_DEG){
+            desAngleDeg = Constants.ARM_STICK_MAX_ANGLE_DEG;
+            desAngVelDegPerSec = 0.0;
+            isAngleLimited = true;
+        } else if (desAngleDeg < Constants.ARM_STICK_MIN_ANGLE_DEG){
+            desAngleDeg = Constants.ARM_STICK_MIN_ANGLE_DEG;
+            desAngVelDegPerSec = 0.0;
+            isAngleLimited = true;
+        } else {
+            isAngleLimited = false;
+        }
     }
 
     public void update(ArmAngularState act_in, boolean enabled){

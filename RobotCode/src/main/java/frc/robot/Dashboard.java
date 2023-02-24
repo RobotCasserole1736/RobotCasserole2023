@@ -111,8 +111,7 @@ public class Dashboard {
         pnuemPressure = PneumaticsSupplyControl.getInstance().getStoragePressure();
         isRedAlliance = DriverStation.getAlliance() == Alliance.Red;
         isBlueAlliance = DriverStation.getAlliance() == Alliance.Blue;
-        armSoftLimit = ArmControl.getInstance().asl.isLimited();
-        
+        armSoftLimit = ArmControl.getInstance().isSoftLimited();
       }
     
 

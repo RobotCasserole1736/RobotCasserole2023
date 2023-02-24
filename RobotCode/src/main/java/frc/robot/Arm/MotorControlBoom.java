@@ -49,14 +49,30 @@ public class MotorControlBoom {
     @Signal(units="degpersec")
     double actAngVelDegPerSec;
 
+    @Signal
+    boolean isAngleLimited;
+
     public MotorControlBoom(){
         motorCtrl.setBrakeMode(true);
     }
 
     public void setCmd(ArmAngularState testDesState){
-        //todo - save off the right angles and velocities for this motor
         desAngleDeg = testDesState.boomAngleDeg;
         desAngVelDegPerSec = testDesState.boomAnglularVel;
+
+        //Apply command limits
+        if(desAngleDeg > Constants.ARM_BOOM_MAX_ANGLE_DEG){
+            desAngleDeg = Constants.ARM_BOOM_MAX_ANGLE_DEG;
+            desAngVelDegPerSec = 0.0;
+            isAngleLimited = true;
+        } else if (desAngleDeg < Constants.ARM_BOOM_MIN_ANGLE_DEG){
+            desAngleDeg = Constants.ARM_BOOM_MIN_ANGLE_DEG;
+            desAngVelDegPerSec = 0.0;
+            isAngleLimited = true;
+        } else {
+            isAngleLimited = false;
+        }
+
     }    
 
     public void update(ArmAngularState act_in, boolean enabled){
@@ -65,8 +81,8 @@ public class MotorControlBoom {
         actAngVelDegPerSec = act_in.boomAnglularVel;
 
         var motorCmdV = 0.0;
-        var angleErr = Math.abs(desAngleDeg - actAngleDeg);
-        var armStationary = desAngVelDegPerSec == 0.0;
+        //var angleErr = Math.abs(desAngleDeg - actAngleDeg);
+        //var armStationary = desAngVelDegPerSec == 0.0;
         //var engageBrake = brakeErrDbnc.calculate((angleErr < brakeErrThresh.get()) && armStationary);
         var engageBrake=false; //For now - Brake is not mounted and not needed. Never engage it, always run closed loop control.
 

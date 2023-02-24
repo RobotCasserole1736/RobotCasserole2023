@@ -84,7 +84,10 @@ public class Constants {
     static public final double ARM_END_EFF_MAX_ACCEL_MPS2 = ARM_END_EFF_MAX_VEL_MPS * 2.0;
     static public final double ARM_BOOM_ENCODER_MOUNT_OFFSET_RAD = 0.0;
     static public final double ARM_STICK_ENCODER_MOUNT_OFFSET_RAD = 0.0;
-
+    static public final double ARM_STICK_MAX_ANGLE_DEG = (165);
+    static public final double ARM_STICK_MIN_ANGLE_DEG = (-165);
+    static public final double ARM_BOOM_MAX_ANGLE_DEG = (70);
+    static public final double ARM_BOOM_MIN_ANGLE_DEG = (-110);
     
 
     //////////////////////////////////////////////////////////////////

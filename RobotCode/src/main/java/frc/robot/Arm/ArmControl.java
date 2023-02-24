@@ -28,7 +28,7 @@ public class ArmControl {
     ArmManPosition mp;
     ArmConePlaceOffset cpo;
 
-    public ArmSoftLimits asl;
+    ArmSoftLimits asl;
 
     WrapperedAbsoluteEncoder boomEncoder = new WrapperedAbsoluteEncoder(AbsoluteEncType.RevThroughBore, "Boom", Constants.ARM_BOOM_ENC_IDX, Constants.ARM_BOOM_ENCODER_MOUNT_OFFSET_RAD);
     WrapperedAbsoluteEncoder stickEncoder = new WrapperedAbsoluteEncoder(AbsoluteEncType.RevThroughBore, "Stick", Constants.ARM_STICK_ENC_IDX, Constants.ARM_STICK_ENCODER_MOUNT_OFFSET_RAD);
@@ -171,6 +171,10 @@ public class ArmControl {
 
     public boolean isExtended(){
         return curDesState.x > Constants.WHEEL_BASE_HALF_LENGTH_M;
+    }
+
+    public boolean isSoftLimited(){
+        return asl.isLimited() || mb.isAngleLimited || ms.isAngleLimited;
     }
     
 }
