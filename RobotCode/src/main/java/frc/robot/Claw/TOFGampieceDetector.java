@@ -1,6 +1,15 @@
-package frc.robot;
+package frc.robot.Claw;
 
-public class TOFGamepieceDetector {
+import com.playingwithfusion.TimeOfFlight;
+
+import edu.wpi.first.math.util.Units;
+import frc.Constants;
+import frc.lib.Calibration.Calibration;
+import frc.lib.Faults.Fault;
+import frc.lib.Signal.Annotations.Signal;
+import frc.robot.GamepieceModeManager;
+
+public class TOFGampieceDetector {
 
     TimeOfFlight gamepieceDistSensor;
 
@@ -8,7 +17,7 @@ public class TOFGamepieceDetector {
     @Signal(units="in")
     double gamepieceDistSensorMeas = 0.0;
 
-    boolean hasGamepeice = false;
+    boolean hasGamepiece = false;
 
     Calibration cubePresentThresh;
     Calibration conePresentThresh;
@@ -16,7 +25,7 @@ public class TOFGamepieceDetector {
     Fault disconFault = new Fault("Claw TOF Sensor", "Disconnected");
 
 
-    public TOFGamepieceDetector(){
+    public TOFGampieceDetector(){
         gamepieceDistSensor = new TimeOfFlight(Constants.GAMEPIECE_DIST_SENSOR_CANID);
         gamepieceDistSensor.setRangingMode(TimeOfFlight.RangingMode.Short, 24);
         gamepieceDistSensor.setRangeOfInterest(6, 6, 10, 10);
@@ -28,21 +37,21 @@ public class TOFGamepieceDetector {
 
     public void update(){
 
-        gamepieceDistSensorMeas = Units.millimetersToInches(gamepieceDistSensor.getRange()); 
+        gamepieceDistSensorMeas = Units.metersToInches(gamepieceDistSensor.getRange()/1000.0); 
 
-        disconFault.set(gamepieceDistSensor.isConnected());
+        disconFault.set(gamepieceDistSensor.getFirmwareVersion() == 0);
 
 
         if(GamepieceModeManager.getInstance().isConeMode()){
-            hasGamepeice = gamepieceDistSensorMeas < conePresentThresh.get();
+            hasGamepiece = gamepieceDistSensorMeas < conePresentThresh.get();
         } else {
             hasGamepiece = gamepieceDistSensorMeas < cubePresentThresh.get();
         }
 
     }
 
-    public boolean hasGamepeice() {
-        return hasGamepeice;
+    public boolean hasGamepiece() {
+        return hasGamepiece;
     }
 
 

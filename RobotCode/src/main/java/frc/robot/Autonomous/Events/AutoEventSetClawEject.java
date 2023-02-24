@@ -2,7 +2,7 @@ package frc.robot.Autonomous.Events;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.lib.AutoSequencer.AutoEvent;
-import frc.robot.ClawController;
+import frc.robot.Claw.ClawController;
 import frc.robot.Arm.ArmNamedPosition;
 
 /**
@@ -50,7 +50,7 @@ public class AutoEventSetClawEject extends AutoEvent {
 		boolean minTimeElapsed = curTime > MIN_DURATION_SEC;
 		boolean maxTimeElapsed = curTime > MAX_DURATION_SEC;
 		return maxTimeElapsed ||
-		      (minTimeElapsed && !ClawController.getInstance().hasGamepeice());
+		      (minTimeElapsed && !ClawController.getInstance().hasGamepiece());
 	}
 
 	public class setReleaseCmd {

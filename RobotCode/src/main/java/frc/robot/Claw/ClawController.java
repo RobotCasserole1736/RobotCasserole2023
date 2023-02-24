@@ -1,16 +1,11 @@
-package frc.robot;
+package frc.robot.Claw;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.Constants;
-import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
-import com.playingwithfusion.TimeOfFlight;
-import com.revrobotics.ColorSensorV3;
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.util.Color;
-
+import frc.robot.GamepieceModeManager;
 
 public class ClawController {
     Spark intakeWheelMotor;
@@ -27,7 +22,7 @@ public class ClawController {
     @Signal
     boolean gamepiecePresent = false;
 
-    TOFGamepieceDetector gpd;
+    TOFGampieceDetector gpd;
 
     private static ClawController inst = null;
 
@@ -40,7 +35,7 @@ public class ClawController {
     private ClawController() {
         intakeWheelMotor = new Spark(Constants.CLAW_INTAKE);
         clawSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.CLAW_SOLENOID);
-        gpd = new TOFGamepieceDetector();
+        gpd = new TOFGampieceDetector();
 
     }
 
@@ -66,7 +61,7 @@ public class ClawController {
             if (curGrabCmd) {
                 // close the claw and rotate wheels to suck in, until we have a gamepiece.
                 clawCloseCmd = true;
-                if(!gpd.hasGamepeice()){
+                if(!gpd.hasGamepiece()){
                     wheelMotorSpdCmd = 1.0;
                 } else {
                     wheelMotorSpdCmd = 0.0;
@@ -82,7 +77,7 @@ public class ClawController {
 
             if (curGrabCmd) {
                 // Run the wheels to suck in until we have a gamepiece
-                if(!gpd.hasGamepeice()){
+                if(!gpd.hasGamepiece()){
                     wheelMotorSpdCmd = 1.0;
                 } else {
                     wheelMotorSpdCmd = 0.0;
@@ -98,8 +93,8 @@ public class ClawController {
         clawSolenoid.set(clawCloseCmd);
     }
 
-    public boolean hasGamepeice() {
-        return gpd.hasGamepeice();
+    public boolean hasGamepiece() {
+        return gpd.hasGamepiece();
     }
 
 }

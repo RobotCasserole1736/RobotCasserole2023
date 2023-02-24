@@ -1,6 +1,12 @@
-package frc.robot;
+package frc.robot.Claw;
 
-public class ColorSensorGamepieceDetector {
+import com.revrobotics.ColorSensorV3;
+
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.util.Color;
+import frc.lib.Faults.Fault;
+
+public class ColorSensorGampieceDetector {
 
     public boolean clawHasCube;
     public boolean clawHasCone;
@@ -12,7 +18,7 @@ public class ColorSensorGamepieceDetector {
     Fault disconFault = new Fault("Claw Color Sensor", "Disconnected");
 
 
-    public ColorSensorGamepieceDetector(){
+    public ColorSensorGampieceDetector(){
 
     }
 
@@ -20,17 +26,17 @@ public class ColorSensorGamepieceDetector {
 
         Color detectedColor = m_colorSensor.getColor();
 
-        disconFault.set(m_colorSensor.isConnected());
+        disconFault.set(!m_colorSensor.isConnected());
 
         int proximityForGamePiece = m_colorSensor.getProximity();
 
-        boolean doWeHaveGamePeice = false;
+        boolean doWeHaveGamepiece = false;
         String coneOrCubeOrNothing = "Nothing";
         boolean hasCube = false;
         boolean hasCone = false;
 
         if (proximityForGamePiece >= 135) {
-            doWeHaveGamePeice = true;
+            doWeHaveGamepiece = true;
             if (Math.abs(detectedColor.red - detectedColor.blue) > Math.abs(detectedColor.green - detectedColor.blue)  ) {
                 coneOrCubeOrNothing = "Cube";
                 hasCube = true;
@@ -43,14 +49,15 @@ public class ColorSensorGamepieceDetector {
             }
 
         } else {
-            doWeHaveGamePeice = false;
+            doWeHaveGamepiece = false;
         }
         
         clawHasCone = hasCone;
         clawHasCube = hasCube;
     }
 
-    public boolean hasGamepeice() {
+    public boolean hasGamepiece() {
+        boolean gamepiecePresent;
         if (clawHasCone == true || clawHasCube == true) {
             gamepiecePresent = true;
         } else {
