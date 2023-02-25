@@ -22,7 +22,7 @@ public class ClawController {
     @Signal
     boolean gamepiecePresent = false;
 
-    TOFGampieceDetector gpd;
+    GampieceDetector gpd;
 
     private static ClawController inst = null;
 
@@ -35,7 +35,7 @@ public class ClawController {
     private ClawController() {
         intakeWheelMotor = new Spark(Constants.CLAW_INTAKE);
         clawSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.CLAW_SOLENOID);
-        gpd = new TOFGampieceDetector();
+        gpd = new GampieceDetector();
 
     }
 
