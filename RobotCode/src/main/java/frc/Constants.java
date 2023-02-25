@@ -62,10 +62,15 @@ public class Constants {
     // Vision Processing
     //////////////////////////////////////////////////////////////////
 
-    // Location of vision cameras relative to robot center - currently two in front at 45 degrees, one in back center
-    static public final Transform3d robotToFrontRightCameraTrans = new Transform3d(new Translation3d(WHEEL_BASE_HALF_LENGTH_M, -1.0*WHEEL_BASE_HALF_WIDTH_M, 0.25), new Rotation3d(0.0,0.0,-1.0*Math.PI/4.0));
-    static public final Transform3d robotToFrontLeftCameraTrans = new Transform3d(new Translation3d(WHEEL_BASE_HALF_LENGTH_M, WHEEL_BASE_HALF_WIDTH_M, 0.25), new Rotation3d(0.0,0.0,Math.PI/4.0));
-    static public final Transform3d robotToRearCameraTrans  = new Transform3d(new Translation3d(-1.0*WHEEL_BASE_HALF_LENGTH_M, 0, 0.25), new Rotation3d(0.0,0.0,Math.PI));
+    // Location of vision cameras relative to robot center - currently two in front at 45 degrees
+    static private final double camMountHeightM = Units.inchesToMeters(27.0);
+    static private final double camMountFwdRevOffsetM = Units.inchesToMeters(1.0);
+    static private final double camMountSideSideOffsetM = Units.inchesToMeters(7.0);
+    static private final double camPitchUpRad = Units.degreesToRadians(3.0);
+    static private final double camYawRad = Units.degreesToRadians(45.0);
+    static public final Transform3d robotToFrontRightCameraTrans = new Transform3d(new Translation3d(camMountFwdRevOffsetM, -1.0*camMountSideSideOffsetM, camMountHeightM), new Rotation3d(0.0,-1.0*camPitchUpRad,-1.0*camYawRad));
+    static public final Transform3d robotToFrontLeftCameraTrans = new Transform3d(new Translation3d(camMountFwdRevOffsetM, camMountSideSideOffsetM, camMountHeightM), new Rotation3d(0.0,-1.0*camPitchUpRad,camYawRad));
+    //static public final Transform3d robotToRearCameraTrans  = new Transform3d(new Translation3d(-1.0*WHEEL_BASE_HALF_LENGTH_M, 0, 0.25), new Rotation3d(0.0,0.0,Math.PI));
 
     // Vision camera static IP addresses
     static public final String cameraFrontRightIP = "10.17.36.10";
