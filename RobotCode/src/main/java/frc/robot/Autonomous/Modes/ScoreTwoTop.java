@@ -27,10 +27,11 @@ public class ScoreTwoTop extends AutoMode {
         seq.addEvent(new AutoEventSelectConeMode());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
         seq.addEvent(new AutoEventSetClawEject());
-        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
+        
 
         //Drive to center
         initDrive = new AutoEventJSONTrajectory("Score two top pt 1", 1.0);
+        initDrive.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         seq.addEvent(initDrive);
 
         //Intake cone
@@ -42,6 +43,7 @@ public class ScoreTwoTop extends AutoMode {
 
         //Drive to grid
         initDrive = new AutoEventJSONTrajectory("Score two top pt 2", 1.0);
+        initDrive.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         seq.addEvent(initDrive);
 
         //Place cone upper
