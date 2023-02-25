@@ -1,7 +1,10 @@
 package frc.robot.Arm;
 
+import java.sql.Driver;
+
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import frc.Constants;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder.AbsoluteEncType;
@@ -16,6 +19,8 @@ public class ArmControl {
 			inst = new ArmControl();
 		return inst;
 	}
+
+    boolean releaseBrakeCmd;
 
     MotorControlBoom mb;
     MotorControlStick ms;
@@ -97,6 +102,15 @@ public class ArmControl {
             curDesState.reflexFrac = prevDesState.reflexFrac;
         }
 
+        // Allow the brakes to be released in disabled for easy manipulation in the pit
+        if(DriverStation.isDisabled() && RobotController.getUserButton()){
+            mb.setBrakeMode(false);
+            ms.setBrakeMode(false);
+        } else {
+            mb.setBrakeMode(true);
+            ms.setBrakeMode(true);
+        }
+
         // Allow the path planner top (optinoally) modify the desired state
         curDesState = pp.update(curDesState);
 
@@ -127,6 +141,8 @@ public class ArmControl {
         } else {
             ms.update(curMeasAngularStates, true);
         }
+
+
         // Update telemetry
         ArmTelemetry.getInstance().setDesired(curDesStateWithOffset, curDesAngularStates);
         ArmTelemetry.getInstance().setMeasured(curMeasState, curMeasAngularStates);

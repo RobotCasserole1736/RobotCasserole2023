@@ -56,6 +56,10 @@ public class MotorControlBoom {
         motorCtrl.setBrakeMode(true);
     }
 
+    public void setBrakeMode(boolean isBrakeMode){
+        motorCtrl.setBrakeMode(isBrakeMode);
+    }
+
     public void setCmd(ArmAngularState testDesState){
         desAngleDeg = testDesState.boomAngleDeg;
         desAngVelDegPerSec = testDesState.boomAnglularVel;
