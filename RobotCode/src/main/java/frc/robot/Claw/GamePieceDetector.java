@@ -1,15 +1,12 @@
 package frc.robot.Claw;
 
-import com.revrobotics.ColorSensorV3;
 import com.playingwithfusion.TimeOfFlight;
 import edu.wpi.first.math.util.Units;
 import frc.Constants;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Faults.Fault;
 import frc.lib.Signal.Annotations.Signal;
-// import frc.robot.GamepieceModeManager;
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.GamepieceModeManager;
 
 public class GamePieceDetector {
     // Time of Flight sensor and double to track distance
@@ -18,19 +15,13 @@ public class GamePieceDetector {
     @Signal(units="in") // Not sure if this is necessary
     double gamepieceDistSensorMeas;
 
-    // Color sensor and color variable
-    private final I2C.Port i2cPort = I2C.Port.kMXP;
-    private final ColorSensorV3 m_colorSensor;
-    Fault disconColorFault;
-    Color detectedColor;
-
+    GamepieceModeManager gpmm;
     // Thresholds for Cubes and Cones
     Calibration cubePresentThresh;
     Calibration conePresentThresh;
     
-    // Booleans that determine object type
-    boolean clawHasCube;
-    boolean clawHasCone;
+    // Boolean to track game piece presence
+    boolean clawHasGamePiece;
 
     public GamePieceDetector(){
         // Instantiating the Time of Flight Sensor  
@@ -39,22 +30,20 @@ public class GamePieceDetector {
         gamepieceDistSensor.setRangeOfInterest(6, 6, 10, 10);
         disconTOFFault = new Fault("Claw TOF Sensor", "Disconnected");
 
-        // Instantiating the Color Sensor
-        m_colorSensor = new ColorSensorV3(i2cPort);
-        disconColorFault = new Fault("Claw Color Sensor", "Disconnected");
-
+        // Get instance of Game Piece Mode Manager to know which piece is being picked up
+        gpmm = GamepieceModeManager.getInstance();
+        
         // Thresholds for Cubes and Cones
         cubePresentThresh = new Calibration("Claw Cube Present Threshold", "in", 2);
         conePresentThresh = new Calibration("Claw Cone Present Threshold", "in", 3);
         
         // Initialize with no game piece
-        clawHasCube = false;
-        clawHasCone = false;
+        clawHasGamePiece = false;
     }
 
     // Return true if either game piece is detected
     public boolean hasGamepiece() {
-        return clawHasCone || clawHasCube;
+        return clawHasGamePiece;
     }
     
     public void update(){
@@ -62,22 +51,18 @@ public class GamePieceDetector {
         gamepieceDistSensorMeas = Units.metersToInches(gamepieceDistSensor.getRange()/1000.0);
         disconTOFFault.set(gamepieceDistSensor.getFirmwareVersion() == 0);    
 
-        // Update Color sensor reading
-        Color detectedColor = m_colorSensor.getColor();
-        disconColorFault.set(!m_colorSensor.isConnected());
-
-        // Determine if and what game piece is in claw
-        if (gamepieceDistSensorMeas < conePresentThresh.get()) {
-            if (Math.abs(detectedColor.red - detectedColor.blue) > Math.abs(detectedColor.green - detectedColor.blue)) {
-                clawHasCube = true;
-                clawHasCone = false;
-            } else {
-                clawHasCube = false;
-                clawHasCone = true;
+        // Determine if game piece is in claw
+        if (gpmm.isConeMode()) {
+            if (gamepieceDistSensorMeas < conePresentThresh.get()) {
+                clawHasGamePiece = true;
             }
-        } else {
-            clawHasCone = false;
-            clawHasCube = false;
+        } else if (gpmm.isCubeMode()) {
+            if (gamepieceDistSensorMeas < cubePresentThresh.get()) {
+                clawHasGamePiece = true;
+            }
+        }
+        else {
+            clawHasGamePiece = false;
         }
     }
 }

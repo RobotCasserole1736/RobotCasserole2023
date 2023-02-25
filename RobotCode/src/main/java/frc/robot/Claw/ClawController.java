@@ -64,7 +64,8 @@ public class ClawController {
                 if(!gpd.hasGamepiece()){
                     wheelMotorSpdCmd = 1.0;
                 } else {
-                    wheelMotorSpdCmd = 0.0;
+                    // Need a little speed to hold the piece in place. Subject to tuning.
+                    wheelMotorSpdCmd = 0.05;
                 }
             } else if (curReleaseCmd) {
                 // Open the claw
