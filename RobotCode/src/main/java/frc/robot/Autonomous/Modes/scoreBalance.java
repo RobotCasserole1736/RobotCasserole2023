@@ -11,43 +11,35 @@ import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
 import frc.robot.Autonomous.Events.AutoEventSetClawEject;
 import frc.robot.Autonomous.Events.AutoEventSetClawIntake;
 
-public class scoreLeavePickBottom extends AutoMode {
-    
+public class scoreBalance extends AutoMode {
+
+    //This needs to be saved off separately because it's used to supply the default initial pose.
     AutoEventJSONTrajectory initDrive;
 
-    public scoreLeavePickBottom(){
+    public scoreBalance(){
         super();
     }
 
     @Override
     public void addStepsToSequencer(AutoSequencer seq) {
-        //Place cone on high
+        
+        //Place cone
         seq.addEvent(new AutoEventSelectConeMode());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
         seq.addEvent(new AutoEventSetClawEject());
-        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         
-        //Drive out
-        initDrive = new AutoEventJSONTrajectory("S, L Bot", 1.0);
+        //Drive to charge station
+        initDrive = new AutoEventJSONTrajectory("Score, balance", 0.5);
+        initDrive.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         seq.addEvent(initDrive);
-
-        //pick up
-        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_LOW));
-        var drivePickup = new AutoEventDriveTime(2.0, 0.25);
-        drivePickup.addChildEvent(new AutoEventSetClawIntake());
-        seq.addEvent(drivePickup);
-
-        //stow
-        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
-
-        //TODO - call auto balancing code here
-
-        
+       
     }
 
     @Override
     public Pose2d getInitialPose(){
         return initDrive.getInitialPose();
     }
-
+    
+    
 }
+
