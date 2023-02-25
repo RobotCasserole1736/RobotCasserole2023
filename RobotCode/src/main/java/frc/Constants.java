@@ -75,7 +75,7 @@ public class Constants {
     // Vision camera static IP addresses
     static public final String cameraFrontRightIP = "10.17.36.10";
     static public final String cameraFrontLeftIP  = "10.17.36.11";
-    static public final String cameraRearIP = "10.17.36.12";
+    static public final String cameraRearIP = "10.17.36.12"; //Reserved - unused
 
     //////////////////////////////////////////////////////////////////
     // Arm Physical

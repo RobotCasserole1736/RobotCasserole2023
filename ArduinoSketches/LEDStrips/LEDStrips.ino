@@ -2,11 +2,11 @@
 
 //Constants related to hardware setup
 #define NUM_LEDS 30
-#define LED_PIN 5
-#define ROBORIO_DATA_PIN 7
+#define LED_PIN          5
+#define CMD_INPUT_PIN    7
 
 // Overall brigness control
-#define BRIGHTNESS 70
+#define BRIGHTNESS 100
 // Desired FPS for the strip
 #define FRAMES_PER_SECOND 120
 
@@ -23,10 +23,10 @@ void setup()
   FastLED.addLeds<NEOPIXEL, LED_PIN>(led, NUM_LEDS);
 
   //Set up a debug serial port
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   //Configure the roboRIO communication pin to recieve data
-  pinMode(ROBORIO_DATA_PIN, INPUT);
+  pinMode(CMD_INPUT_PIN, INPUT);
 
   FastLED.show(); //Ensure we get one LED update in prior to periodic - should blank out all LED's
 
@@ -41,7 +41,7 @@ void loop()
   // do some periodic updates
   EVERY_N_MILLISECONDS(200)
   {
-    pulseLen_us = pulseIn(ROBORIO_DATA_PIN, HIGH, 50000);
+    pulseLen_us = pulseIn(CMD_INPUT_PIN, HIGH, 50000);
   }
   
   if (pulseLen_us == 0)
@@ -52,28 +52,15 @@ void loop()
   else if ((pulseLen_us > 800) && (pulseLen_us <= 1200))
   {
     // Case - pulse length nominal 1.0 ms
-    ColorSparkle_update(255, 0, 0); 
-    //red color sparkle
+    ColorSparkle_update(255, 0, 200); 
+    //Purple color sparkle
   }
   else if ((pulseLen_us > 1200) && (pulseLen_us <= 1400))
   {
     // Case - pulse length nominal 1.3 ms
     ColorSparkle_update(255, 255, 0);
     //yellow color sparkle
-  }
-  else if ((pulseLen_us > 1400) && (pulseLen_us <= 1600))
-  {
-    // Case - pulse length nominal 1.5 ms
-    Green_Alert();
-  }
-  else if ((pulseLen_us > 1600) && (pulseLen_us <= 1800))
-  {
-    // Case - pulse length nominal 1.7 ms
-    Red_Fade();
-  }
-  else if ((pulseLen_us > 1800) && (pulseLen_us <= 2200))
-  {
-    // Case - pulse length nominal 2.0 ms
+  } else {
     CasseroleColorStripeChase_update();
   }
 
@@ -127,7 +114,7 @@ void ColorSparkle_update(int red, int grn, int blu)
 
     //Set all LED's to the input color, but
     //Randomly set an LED to white.
-    if (random(0, NUM_LEDS) <= 1)
+    if (random(0, NUM_LEDS) <= 0.15)
     {
       //shiny!
       setPixel(i, 255,    //Red
@@ -381,8 +368,8 @@ void setPixel(int Pixel, byte red, byte green, byte blue)
 {
   // FastLED
   led[Pixel].r = red;
-  led[Pixel].g = green;
-  led[Pixel].b = blue;
+  led[Pixel].b = green;
+  led[Pixel].g = blue; //our strips are rbg thbbbttt
 }
 void fadeall(){
   for (int i = 0; i < NUM_LEDS; i++){
