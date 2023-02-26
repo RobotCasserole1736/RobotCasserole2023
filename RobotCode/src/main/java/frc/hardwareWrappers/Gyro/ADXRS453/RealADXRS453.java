@@ -14,7 +14,7 @@ public class RealADXRS453 extends AbstractGyro {
 
     public RealADXRS453(){
         realGyro = new ADXRS450_Gyro(Port.kOnboardCS0);
-        disconFault.set(isConnected());
+        disconFault.set(!isConnected());
         realGyro.calibrate();
     }
 
