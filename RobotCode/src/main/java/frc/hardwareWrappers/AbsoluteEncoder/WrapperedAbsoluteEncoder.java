@@ -26,9 +26,10 @@ public class WrapperedAbsoluteEncoder  {
     double curAngleRad;
 
     Calibration mountingOffsetCal;
+    boolean isInverted;
 
 
-    public WrapperedAbsoluteEncoder(AbsoluteEncType type, String prefix, int id, double dfltMountingOffset_rad){
+    public WrapperedAbsoluteEncoder(AbsoluteEncType type, String prefix, int id, double dfltMountingOffset_rad, boolean isInverted){
         if(Robot.isReal()){
             switch(type){
                 case SRXEncoder:
@@ -52,10 +53,11 @@ public class WrapperedAbsoluteEncoder  {
             enc = new SimAbsoluteEncoder(id);
         }
         mountingOffsetCal = new Calibration(prefix + "MountingOffset", "rad", dfltMountingOffset_rad);
+        this.isInverted =isInverted;
     }
 
     public void update(){
-        curAngleRad = UnitUtils.wrapAngleRad( enc.getRawAngle_rad() - mountingOffsetCal.get());
+        curAngleRad = UnitUtils.wrapAngleRad( (enc.getRawAngle_rad()*(isInverted?-1.0:1.0)) - mountingOffsetCal.get());
     }
 
     public double getAngle_rad(){

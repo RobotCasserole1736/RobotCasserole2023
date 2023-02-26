@@ -63,9 +63,9 @@ public class Constants {
     //////////////////////////////////////////////////////////////////
 
     // Location of vision cameras relative to robot center - currently two in front at 45 degrees
-    static private final double camMountHeightM = Units.inchesToMeters(27.0);
+    static private final double camMountHeightM = Units.inchesToMeters(30.75);
     static private final double camMountFwdRevOffsetM = Units.inchesToMeters(1.0);
-    static private final double camMountSideSideOffsetM = Units.inchesToMeters(7.0);
+    static private final double camMountSideSideOffsetM = Units.inchesToMeters(5.0);
     static private final double camPitchUpRad = Units.degreesToRadians(3.0);
     static private final double camYawRad = Units.degreesToRadians(45.0);
     static public final Transform3d robotToFrontRightCameraTrans = new Transform3d(new Translation3d(camMountFwdRevOffsetM, -1.0*camMountSideSideOffsetM, camMountHeightM), new Rotation3d(0.0,-1.0*camPitchUpRad,-1.0*camYawRad));
