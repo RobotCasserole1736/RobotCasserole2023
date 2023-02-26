@@ -43,6 +43,8 @@ public class FaultWrangler {
         ledOut.setPWMRate(500.0);
         ledOut.enablePWM(0.0);
 
+        hb = new Heartbeat();
+
         Thread bgThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -52,6 +54,7 @@ public class FaultWrangler {
                         for (int i = 0; i < 30; i++) {
                             ledUpdate();
                             Thread.sleep(50);
+                            hb.ledUpdate();
                         }
                     }
                 } catch (Exception e) {
@@ -65,7 +68,6 @@ public class FaultWrangler {
         bgThread.setPriority(Thread.MIN_PRIORITY);
         bgThread.start();
 
-        hb = new Heartbeat();
 
     }
 
