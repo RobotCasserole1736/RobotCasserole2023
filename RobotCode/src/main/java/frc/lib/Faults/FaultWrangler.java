@@ -28,6 +28,8 @@ public class FaultWrangler {
     int curDisplayedFaultIdx;
     int numActiveFaults;
 
+    Heartbeat hb;
+
     final String faultActiveTopicName = "faultActive";
     final String faultDescriptionTopicName = "faultDescription";
 
@@ -62,6 +64,8 @@ public class FaultWrangler {
         bgThread.setName("FaultWrangler");
         bgThread.setPriority(Thread.MIN_PRIORITY);
         bgThread.start();
+
+        hb = new Heartbeat();
 
     }
 
