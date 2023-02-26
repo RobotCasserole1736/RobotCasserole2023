@@ -46,6 +46,10 @@ public class MotorControlStick {
         motorCtrl.setBrakeMode(true);
     }
 
+    public void setBrakeMode(boolean isBrakeMode){
+        motorCtrl.setBrakeMode(isBrakeMode);
+    }
+
     public void setCmd(ArmAngularState in){
         desAngleDeg = in.stickAngleDeg;
         desAngVelDegPerSec = in.stickAngularVel;

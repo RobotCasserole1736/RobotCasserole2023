@@ -62,24 +62,29 @@ public class Constants {
     // Vision Processing
     //////////////////////////////////////////////////////////////////
 
-    // Location of vision cameras relative to robot center - currently two in front at 45 degrees, one in back center
-    static public final Transform3d robotToFrontRightCameraTrans = new Transform3d(new Translation3d(WHEEL_BASE_HALF_LENGTH_M, -1.0*WHEEL_BASE_HALF_WIDTH_M, 0.25), new Rotation3d(0.0,0.0,-1.0*Math.PI/4.0));
-    static public final Transform3d robotToFrontLeftCameraTrans = new Transform3d(new Translation3d(WHEEL_BASE_HALF_LENGTH_M, WHEEL_BASE_HALF_WIDTH_M, 0.25), new Rotation3d(0.0,0.0,Math.PI/4.0));
-    static public final Transform3d robotToRearCameraTrans  = new Transform3d(new Translation3d(-1.0*WHEEL_BASE_HALF_LENGTH_M, 0, 0.25), new Rotation3d(0.0,0.0,Math.PI));
+    // Location of vision cameras relative to robot center - currently two in front at 45 degrees
+    static private final double camMountHeightM = Units.inchesToMeters(27.0);
+    static private final double camMountFwdRevOffsetM = Units.inchesToMeters(1.0);
+    static private final double camMountSideSideOffsetM = Units.inchesToMeters(7.0);
+    static private final double camPitchUpRad = Units.degreesToRadians(3.0);
+    static private final double camYawRad = Units.degreesToRadians(45.0);
+    static public final Transform3d robotToFrontRightCameraTrans = new Transform3d(new Translation3d(camMountFwdRevOffsetM, -1.0*camMountSideSideOffsetM, camMountHeightM), new Rotation3d(0.0,-1.0*camPitchUpRad,-1.0*camYawRad));
+    static public final Transform3d robotToFrontLeftCameraTrans = new Transform3d(new Translation3d(camMountFwdRevOffsetM, camMountSideSideOffsetM, camMountHeightM), new Rotation3d(0.0,-1.0*camPitchUpRad,camYawRad));
+    //static public final Transform3d robotToRearCameraTrans  = new Transform3d(new Translation3d(-1.0*WHEEL_BASE_HALF_LENGTH_M, 0, 0.25), new Rotation3d(0.0,0.0,Math.PI));
 
     // Vision camera static IP addresses
     static public final String cameraFrontRightIP = "10.17.36.10";
     static public final String cameraFrontLeftIP  = "10.17.36.11";
-    static public final String cameraRearIP = "10.17.36.12";
+    static public final String cameraRearIP = "10.17.36.12"; //Reserved - unused
 
     //////////////////////////////////////////////////////////////////
     // Arm Physical
     //////////////////////////////////////////////////////////////////
     static public final double ARM_BOOM_GEAR_RATIO = 333.33; //gear ratio from motor shaft to boom shaft. Numbers greater than zero indicate a reduction in speed.
     static public final double ARM_STICK_GEAR_RATIO = 274.28; //gear ratio from motor shaft to stick shaft Numbers greater than zero indicate a reduction in speed.
-    static public final double ARM_BOOM_MOUNT_HIEGHT = Units.inchesToMeters(40);
-    static public final double ARM_BOOM_LENGTH = Units.inchesToMeters(30.25);
-    static public final double ARM_STICK_LENGTH = Units.inchesToMeters(18);
+    static public final double ARM_BOOM_MOUNT_HIEGHT = Units.inchesToMeters(40); // Ground to center of boom pivot shaft
+    static public final double ARM_BOOM_LENGTH = Units.inchesToMeters(30.25); //Center of boom pivot to center of stick pivot
+    static public final double ARM_STICK_LENGTH = Units.inchesToMeters(18.25 + 15.0); //center of stick pivot to far edge of end effector
     static public final double ARM_END_EFF_MAX_VEL_MPS = Units.inchesToMeters(36.0);
     static public final double ARM_END_EFF_MAX_ACCEL_MPS2 = ARM_END_EFF_MAX_VEL_MPS * 2.0;
     static public final double ARM_BOOM_ENCODER_MOUNT_OFFSET_RAD = 0.0;
@@ -87,7 +92,7 @@ public class Constants {
     static public final double ARM_STICK_MAX_ANGLE_DEG = (165);
     static public final double ARM_STICK_MIN_ANGLE_DEG = (-165);
     static public final double ARM_BOOM_MAX_ANGLE_DEG = (70);
-    static public final double ARM_BOOM_MIN_ANGLE_DEG = (-110);
+    static public final double ARM_BOOM_MIN_ANGLE_DEG = (-140);
     
 
     //////////////////////////////////////////////////////////////////
