@@ -123,8 +123,8 @@ public class ArmSim {
 
 
         // Finally, we set our simulated encoder's readings and simulated battery voltage
-        boomAbsEnc.setRawAngle(curBoomAngle_rad);
-        stickAbsEnc.setRawAngle(curStickAngle_rad);
+        boomAbsEnc.setRawAngle(Constants.ARM_BOOM_ENCODER_MOUNT_OFFSET_RAD + curBoomAngle_rad);
+        stickAbsEnc.setRawAngle(Constants.ARM_STICK_ENCODER_MOUNT_OFFSET_RAD + curStickAngle_rad);
 
         // Update the telemetry for the actual arm position
         var boomAngleDeg = Units.radiansToDegrees(curBoomAngle_rad);
