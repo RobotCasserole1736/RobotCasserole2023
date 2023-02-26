@@ -4,16 +4,16 @@ import frc.Constants;
 
 public enum ArmNamedPosition {
     //TODO - add actual numbers for the positions
-    CUBE_LOW(Constants.WHEEL_BASE_HALF_LENGTH_M + Constants.BUMPER_THICKNESS_M + 0.3 ,0.1,false),
-    CUBE_MID(Constants.WHEEL_BASE_HALF_LENGTH_M + Constants.BUMPER_THICKNESS_M + 0.58 ,0.6,false, 0.1),
-    CUBE_HIGH(Constants.WHEEL_BASE_HALF_LENGTH_M + Constants.BUMPER_THICKNESS_M + 1.1 ,1.0,false, 0.1),
-    CONE_LOW(Constants.WHEEL_BASE_HALF_LENGTH_M + Constants.BUMPER_THICKNESS_M + 0.3,0.1,false),
-    CONE_MID(Constants.WHEEL_BASE_HALF_LENGTH_M + Constants.BUMPER_THICKNESS_M + 0.58 ,0.91,false),
-    CONE_HIGH(Constants.WHEEL_BASE_HALF_LENGTH_M + Constants.BUMPER_THICKNESS_M + 1.01 ,1.22,false ),
+    CUBE_LOW(1.13 ,0.11,false),
+    CUBE_MID(0.9317 ,0.8366,false, 0.1),
+    CUBE_HIGH(1.377 ,1.123,false, 0.1),
+    CONE_LOW(1.13 ,0.11,false),
+    CONE_MID(1.069 ,1.076,false),
+    CONE_HIGH(1.547 ,1.414,false ),
     SHELF(Constants.WHEEL_BASE_HALF_LENGTH_M + Constants.BUMPER_THICKNESS_M + 0.15,1.05,false, 0.05),
-    FLOOR(Constants.WHEEL_BASE_HALF_LENGTH_M + Constants.BUMPER_THICKNESS_M + 0.3 ,0.1,false),
-    FLOOR_TIPPED_CONE(Constants.WHEEL_BASE_HALF_LENGTH_M + 0.2,0.10,true, 0.1),
-    STOW(0.208, 1.068 ,false),
+    FLOOR(1.13 ,0.11,false),
+    FLOOR_TIPPED_CONE(1.13 ,0.11,true, 0.1),
+    STOW(0.35, 1.02 ,false),
     ;
 
     public final double safeY;
