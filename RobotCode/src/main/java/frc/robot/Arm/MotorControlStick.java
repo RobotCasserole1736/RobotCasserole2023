@@ -13,13 +13,13 @@ public class MotorControlStick {
     WrapperedCANMotorCtrl motorCtrl = new WrapperedCANMotorCtrl("Stick", Constants.ARM_STICK_MOTOR_CANID, CANMotorCtrlType.SPARK_MAX);
 
     //Feed Forward
-    Calibration kV = new Calibration("Arm Stick kF", "V/degpersec", 0.13);
-    Calibration kG = new Calibration("Arm Stick kG", "V/cos(deg)", 0.7);
+    Calibration kV = new Calibration("Arm Stick kF", "V/degpersec", 0.0);
+    Calibration kG = new Calibration("Arm Stick kG", "V/cos(deg)", 0.0);
     Calibration kS = new Calibration("Arm Stick kS", "V", 0.0);
 
     //Feedback
-    Calibration kP = new Calibration("Arm Stick kP", "V/deg", 2.0);
-    Calibration kI = new Calibration("Arm Stick kI", "V*sec/deg", 0.1);
+    Calibration kP = new Calibration("Arm Stick kP", "V/deg", 0.0);
+    Calibration kI = new Calibration("Arm Stick kI", "V*sec/deg", 0.0);
     Calibration kD = new Calibration("Arm Stick kD", "V/degpersec", 0.0);
 
     PIDController m_pid = new PIDController(0, 0, 0);
