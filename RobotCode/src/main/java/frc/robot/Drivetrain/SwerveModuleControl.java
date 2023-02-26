@@ -65,7 +65,7 @@ class SwerveModuleControl {
 
         wheelMotorCtrl = new WrapperedCANMotorCtrl("wheel"+modName, wheelMotorIdx, WrapperedCANMotorCtrl.CANMotorCtrlType.SPARK_MAX);
         azmthMotorCtrl = new WrapperedCANMotorCtrl("azmth"+modName, azmthMotorIdx, WrapperedCANMotorCtrl.CANMotorCtrlType.SPARK_MAX);
-        azmth_enc = new WrapperedAbsoluteEncoder(AbsoluteEncType.SRXEncoder, "encoder"+modName, azmthEncoderIdx, azmthOffset);
+        azmth_enc = new WrapperedAbsoluteEncoder(AbsoluteEncType.SRXEncoder, "encoder"+modName, azmthEncoderIdx, azmthOffset, false); //TODO - are any of these actually inverted?
       
         wheelMotorCtrl.setInverted(invertWheel);
         azmthMotorCtrl.setInverted(true);
