@@ -10,6 +10,7 @@ import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
 import frc.robot.Autonomous.Events.AutoEventSetClawEject;
 import frc.robot.Autonomous.Events.AutoEventSetClawIntake;
+import frc.robot.Autonomous.Events.AutoEventWait;
 
 public class scoreTopPickup extends AutoMode {
 
@@ -22,13 +23,33 @@ public class scoreTopPickup extends AutoMode {
 
     @Override
     public void addStepsToSequencer(AutoSequencer seq) {
+
+        //Place cone 
         seq.addEvent(new AutoEventSelectConeMode());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
         seq.addEvent(new AutoEventSetClawEject());
-        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
-        initDrive = new AutoEventJSONTrajectory("Score, pickup", 1.0);
+
+        //Drive to center
+        initDrive = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 1.0);
+        initDrive.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         seq.addEvent(initDrive);
-  
+ 
+        //Intake cone
+        var drivePickup = new AutoEventDriveTime(2.0, 0.25);
+        drivePickup.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_LOW));
+        drivePickup.addChildEvent(new AutoEventSetClawIntake());
+        seq.addEvent(drivePickup);
+
+        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
+
+
+
+        
+   
+
+
+
+      
     }
 
     @Override

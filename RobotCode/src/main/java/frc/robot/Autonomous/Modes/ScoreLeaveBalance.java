@@ -9,26 +9,26 @@ import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
 import frc.robot.Autonomous.Events.AutoEventSetClawEject;
 
-public class ScoreLeaveBalBottom extends AutoMode {
+public class ScoreLeaveBalance extends AutoMode {
     
     AutoEventJSONTrajectory initDrive;
 
 
-    public ScoreLeaveBalBottom(){
+    public ScoreLeaveBalance(){
         super();
     }
 
     @Override
     public void addStepsToSequencer(AutoSequencer seq) {
         
-        //Place cone on high
+        //Place cone
         seq.addEvent(new AutoEventSelectConeMode());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
         seq.addEvent(new AutoEventSetClawEject());
-        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         
         //Drive to charging station
-        initDrive = new AutoEventJSONTrajectory("S, L, B Bot", 1.0);
+        initDrive = new AutoEventJSONTrajectory("Score, Leave community, balance", 0.5);
+        initDrive.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         seq.addEvent(initDrive);
 
         //TODO - call auto balancing code here
