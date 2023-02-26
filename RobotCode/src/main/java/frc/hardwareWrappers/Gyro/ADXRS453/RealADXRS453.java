@@ -34,13 +34,13 @@ public class RealADXRS453 extends AbstractGyro {
 
     @Override
     public double getRate() {
-        disconFault.set(isConnected());
+        disconFault.set(!isConnected());
         return Units.degreesToRadians(realGyro.getRate());
     }
 
     @Override
     public double getRawAngle() {
-        disconFault.set(isConnected());
+        disconFault.set(!isConnected());
         return Units.degreesToRadians(realGyro.getAngle());
     }
 
