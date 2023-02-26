@@ -54,8 +54,8 @@ public class ArmSim {
         var stickVoltage = 0.0;
 
         if(!isDisabled){
-            boomVoltage  = boomMotorCtrl.getAppliedVoltage_V();
-            stickVoltage = stickMotorCtrl.getAppliedVoltage_V();
+            boomVoltage  = boomMotorCtrl.getAppliedVoltage_V() * -1.0; //it's mechanically inverted
+            stickVoltage = stickMotorCtrl.getAppliedVoltage_V() * -1.0; //it's mechanically inverted
         } 
 
         //Using the last speed, get our motor currents

@@ -18,12 +18,12 @@ public class MotorControlBoom {
     WrapperedCANMotorCtrl motorCtrl = new WrapperedCANMotorCtrl("Boom", Constants.ARM_BOOM_MOTOR_CANID, CANMotorCtrlType.SPARK_MAX);
 
     //Feed Forward
-    Calibration kV = new Calibration("Arm Boom kF", "V/degpersec", 0.0);
+    Calibration kF = new Calibration("Arm Boom kF", "V/degpersec", 0.12);
     Calibration kG = new Calibration("Arm Boom kG", "V/cos(deg)", 0.0);
-    Calibration kS = new Calibration("Arm Boom kS", "V", 0.0);
+    Calibration kS = new Calibration("Arm Boom kS", "V", 0.01);
 
     //Feedback
-    Calibration kP = new Calibration("Arm Boom kP", "V/deg", 0.0);
+    Calibration kP = new Calibration("Arm Boom kP", "V/deg", 0.6);
     Calibration kI = new Calibration("Arm Boom kI", "V*sec/deg", 0.0);
     Calibration kD = new Calibration("Arm Boom kD", "V/degpersec", 0.0);
 
@@ -105,7 +105,7 @@ public class MotorControlBoom {
             // Calculate Feed-Forward
             cmdFeedForward = Math.signum(desAngVelDegPerSec) * kS.get() + 
                             Math.cos(Units.degreesToRadians(actAngleDeg)) * kG.get() + 
-                            desAngVelDegPerSec * kV.get();
+                            desAngVelDegPerSec * kF.get();
 
             // Update feedback command
             cmdFeedBack = m_pid.calculate(actAngleDeg, desAngleDeg);
@@ -120,7 +120,7 @@ public class MotorControlBoom {
         motorCtrl.setVoltageCmd(motorCmdV); 
 
         if(enabled){
-            motorCtrl.setVoltageCmd(cmdFeedForward + cmdFeedBack); 
+            motorCtrl.setVoltageCmd(-1.0 * (cmdFeedForward + cmdFeedBack)); 
         } else {
             motorCtrl.setVoltageCmd(0.0);
         }
