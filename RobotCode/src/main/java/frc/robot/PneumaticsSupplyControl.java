@@ -73,11 +73,9 @@ public class PneumaticsSupplyControl {
         if (voltage >= 0.001) {
             storagePressure = (250 * (voltage / 4.62) - 25);
             badSensor.clearFault();
-            lowPressure.set((storagePressure < 70));
         } else {
             storagePressure = 0;// meh, should never happen physically
             badSensor.reportFault();
-            lowPressure.clearFault();
         }
 
         compressorCurrent = phCompressor.getCurrent();

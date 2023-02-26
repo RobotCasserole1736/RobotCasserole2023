@@ -88,7 +88,7 @@ public class Constants {
     static public final double ARM_END_EFF_MAX_VEL_MPS = Units.inchesToMeters(36.0);
     static public final double ARM_END_EFF_MAX_ACCEL_MPS2 = ARM_END_EFF_MAX_VEL_MPS * 2.0;
     static public final double ARM_BOOM_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(101.8);
-    static public final double ARM_STICK_ENCODER_MOUNT_OFFSET_RAD = 0.0;
+    static public final double ARM_STICK_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(126.3);
     static public final double ARM_STICK_MAX_ANGLE_DEG = (165);
     static public final double ARM_STICK_MIN_ANGLE_DEG = (-165);
     static public final double ARM_BOOM_MAX_ANGLE_DEG = (70);
