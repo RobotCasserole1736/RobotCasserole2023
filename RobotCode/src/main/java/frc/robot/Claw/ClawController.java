@@ -22,7 +22,7 @@ public class ClawController {
     @Signal
     boolean gamepiecePresent = false;
 
-    TOFGampieceDetector gpd;
+    GamePieceDetector gpd;
 
     private static ClawController inst = null;
 
@@ -35,7 +35,7 @@ public class ClawController {
     private ClawController() {
         intakeWheelMotor = new Spark(Constants.CLAW_INTAKE);
         clawSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.CLAW_SOLENOID);
-        gpd = new TOFGampieceDetector();
+        gpd = new GamePieceDetector();
 
     }
 
@@ -64,7 +64,8 @@ public class ClawController {
                 if(!gpd.hasGamepiece()){
                     wheelMotorSpdCmd = 1.0;
                 } else {
-                    wheelMotorSpdCmd = 0.0;
+                    // Need a little speed to hold the piece in place. Subject to tuning.
+                    wheelMotorSpdCmd = 0.05;
                 }
             } else if (curReleaseCmd) {
                 // Open the claw
