@@ -111,7 +111,7 @@ public class ArmControl {
             ms.setBrakeMode(true);
         }
 
-        // Allow the path planner top (optinoally) modify the desired state
+        // Allow the path planner top (optionally) modify the desired state
         curDesState = pp.update(curDesState);
 
         // Allow the manual motion module to (optionally) modify the desired state
@@ -143,11 +143,13 @@ public class ArmControl {
 
 
         // Update telemetry
-        ArmTelemetry.getInstance().setDesired(curDesStateWithOffset, curDesAngularStates);
+        ArmTelemetry.getInstance().setDesired(curDesStateLimited, curDesAngularStates);
         ArmTelemetry.getInstance().setMeasured(curMeasState, curMeasAngularStates);
 
         // Save previous
-        prevDesState = curDesStateLimited;
+        // A little wonky, because this needs to be prior to the 
+        // offset, but including the soft limits.
+        prevDesState = asl.applyLimit(curDesState);
     }
 
     private boolean isFaulted() {
