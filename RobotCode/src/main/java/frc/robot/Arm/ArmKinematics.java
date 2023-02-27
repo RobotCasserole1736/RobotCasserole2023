@@ -72,9 +72,13 @@ public class ArmKinematics {
         //Calcualte angles and angular velocities
         var boomAngleDeg = Units.radiansToDegrees(cur.getFirst());
         var stickAngleDeg = Units.radiansToDegrees(cur.getSecond());
-        var boomAnglularVel = Units.radiansToDegrees(next.getFirst() - prev.getFirst())/0.04;
-        var stickAngularVel = Units.radiansToDegrees(next.getSecond() - prev.getSecond())/0.04;
-
+        var boomAnglularVel = 0.0;
+        var stickAngularVel = 0.0;
+        if(next != null && prev != null){
+            boomAnglularVel = Units.radiansToDegrees(next.getFirst() - prev.getFirst())/0.04;
+            stickAngularVel = Units.radiansToDegrees(next.getSecond() - prev.getSecond())/0.04;
+        }
+        
         return new ArmAngularState(boomAngleDeg, boomAnglularVel, stickAngleDeg, stickAngularVel);   
     }
 
@@ -105,10 +109,11 @@ public class ArmKinematics {
         double boomAngleRad = boomTerm1 + boomTerm2;
 
         if(!Double.isFinite(boomAngleRad) || !Double.isFinite(stickAngleRad)){
-            DriverStation.reportWarning("Cannot calculate inverse kinematics", false);
+            return null; //Unreachable position
+        } else {
+            return Pair.of((Double) boomAngleRad, (Double) stickAngleRad);
         }
 
-        return Pair.of((Double) boomAngleRad, (Double) stickAngleRad);
     }
 
 }

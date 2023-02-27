@@ -13,7 +13,7 @@ public class ArmSoftLimits {
 
 
     Double XPosLimits[] = {0.700, 0.308, 0.308, 1.612, 1.612};
-    Double YPosLimits[] = {0.113, 0.900, 1.847, 1.847, 0.113};
+    Double YPosLimits[] = {0.10, 0.900, 1.847, 1.847, 0.10};
 
     boolean isLimited;
 
@@ -200,8 +200,8 @@ public class ArmSoftLimits {
         var y = clipPos.y - Constants.ARM_BOOM_MOUNT_HIEGHT;
         // Ensure the input point is "reachable" by scaling it back
         // inside the unit circle of the max extension of the arm.
-        double maxRadius = Constants.ARM_BOOM_LENGTH + Constants.ARM_STICK_LENGTH * 0.99;
-        double minRadius = Math.abs(Constants.ARM_BOOM_LENGTH - Constants.ARM_STICK_LENGTH) * 1.01;
+        double maxRadius = Constants.ARM_BOOM_LENGTH + Constants.ARM_STICK_LENGTH * 0.99999;
+        double minRadius = Math.abs(Constants.ARM_BOOM_LENGTH - Constants.ARM_STICK_LENGTH) * 1.00001;
         double reqRadius = Math.sqrt(x * x + y * y);
 
         if (reqRadius == 0.0) {

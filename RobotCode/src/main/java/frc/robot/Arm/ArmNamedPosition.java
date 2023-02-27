@@ -1,7 +1,5 @@
 package frc.robot.Arm;
 
-import frc.Constants;
-
 public enum ArmNamedPosition {
     //TODO - add actual numbers for the positions
     CUBE_LOW(1.13 ,0.11,false),
@@ -10,7 +8,7 @@ public enum ArmNamedPosition {
     CONE_LOW(1.13 ,0.11,false),
     CONE_MID(1.069 ,1.076,false),
     CONE_HIGH(1.547 ,1.414,false ),
-    SHELF(Constants.WHEEL_BASE_HALF_LENGTH_M + Constants.BUMPER_THICKNESS_M + 0.15,1.05,false, 0.05),
+    SHELF(1.069 ,1.076,true),
     FLOOR(1.13 ,0.11,false),
     FLOOR_TIPPED_CONE(1.13 ,0.11,true, 0.1),
     STOW(0.35, 1.02 ,false),
