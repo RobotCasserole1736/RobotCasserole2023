@@ -187,7 +187,7 @@ public class ArmControl {
     }
 
     public boolean isExtended(){
-        return curDesState.x > Constants.WHEEL_BASE_HALF_LENGTH_M;
+        return curDesState.x > (Constants.WHEEL_BASE_HALF_LENGTH_M + 0.35);
     }
 
     public boolean isSoftLimited(){
