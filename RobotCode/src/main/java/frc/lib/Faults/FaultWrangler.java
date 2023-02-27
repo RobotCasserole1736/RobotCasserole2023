@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.Constants;
+import frc.lib.Signal.Annotations.Signal;
 
 public class FaultWrangler {
 
@@ -35,6 +36,7 @@ public class FaultWrangler {
 
     DigitalOutput ledOut;
     private final double BLINK_FREQ_HZ = 2.0;
+    @Signal
     double ledBrightness = 0;
 
     private FaultWrangler() {
