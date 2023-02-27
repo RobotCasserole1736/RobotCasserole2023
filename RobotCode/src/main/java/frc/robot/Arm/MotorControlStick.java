@@ -7,6 +7,7 @@ import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl;
 import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl.CANMotorCtrlType;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
+import frc.lib.Util.MapLookup2D;
 
 public class MotorControlStick {
 
@@ -24,7 +25,10 @@ public class MotorControlStick {
 
     PIDController m_pid = new PIDController(0, 0, 0);
 
-    //Neesd a deadzone of 7.67 deg
+    // Gain schedule P 
+    final double pDeazoneErrDeg =  7.67/2.0; //Due to mechanical bounce, Needs a deadzone of  7.67 deg or more
+    final double pDeadzonTransitionWidth = pDeazoneErrDeg/4.0;
+    MapLookup2D pGainSchedule;
 
     @Signal(units="V")
     double cmdFeedForward;
@@ -46,6 +50,16 @@ public class MotorControlStick {
 
     public MotorControlStick(){
         motorCtrl.setBrakeMode(true);
+
+        //Gain schedule P to have zero value in the deadzone
+        // but get more powerful as error gets larger
+        pGainSchedule = new MapLookup2D();
+        pGainSchedule.insertNewPoint(-180, 1.0);
+        pGainSchedule.insertNewPoint(-pDeazoneErrDeg - pDeadzonTransitionWidth, 1.0);
+        pGainSchedule.insertNewPoint(-pDeazoneErrDeg, 0.0);
+        pGainSchedule.insertNewPoint(pDeazoneErrDeg, 0.0);
+        pGainSchedule.insertNewPoint(pDeazoneErrDeg + pDeadzonTransitionWidth, 1.0);
+        pGainSchedule.insertNewPoint(180, 1.0);
     }
 
     public void setBrakeMode(boolean isBrakeMode){
@@ -76,8 +90,9 @@ public class MotorControlStick {
         actAngVelDegPerSec = act_in.stickAngularVel;
         var actBoomAngleDeg = act_in.boomAngleDeg;
 
-        //Update PID constants
-        m_pid.setPID(kP.get(), kI.get(), kD.get());
+        // update PID Controller Constants
+        var absErr = Math.abs(actAngleDeg - desAngleDeg);
+        m_pid.setPID(kP.get() * pGainSchedule.lookupVal(absErr), kI.get(), kD.get());
 
         //Calculate Feed-Forward
         cmdFeedForward = Math.signum(desAngVelDegPerSec) * kS.get() + 

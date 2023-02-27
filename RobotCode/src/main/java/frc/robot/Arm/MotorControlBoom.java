@@ -1,16 +1,13 @@
 package frc.robot.Arm;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import frc.Constants;
 import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl;
 import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl.CANMotorCtrlType;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
+import frc.lib.Util.MapLookup2D;
 
 public class MotorControlBoom {
 
@@ -28,6 +25,9 @@ public class MotorControlBoom {
     Calibration kD = new Calibration("Arm Boom kD", "V/degpersec", 0.0);
 
     // Gain schedule P 
+    final double pDeazoneErrDeg = 1.375/2.0; //Due to mechanical bounce, Needs a deadzone of 1.375 deg or more
+    final double pDeadzonTransitionWidth = pDeazoneErrDeg/4.0;
+    MapLookup2D pGainSchedule;
 
     PIDController m_pid = new PIDController(0, 0, 0);
 
@@ -49,11 +49,20 @@ public class MotorControlBoom {
     @Signal
     boolean isAngleLimited;
 
-    //Needs a deadzone of 1.375 deg or more
 
 
     public MotorControlBoom(){
         motorCtrl.setBrakeMode(true);
+
+        //Gain schedule P to have zero value in the deadzone
+        // but get more powerful as error gets larger
+        pGainSchedule = new MapLookup2D();
+        pGainSchedule.insertNewPoint(-180, 1.0);
+        pGainSchedule.insertNewPoint(-pDeazoneErrDeg - pDeadzonTransitionWidth, 1.0);
+        pGainSchedule.insertNewPoint(-pDeazoneErrDeg, 0.0);
+        pGainSchedule.insertNewPoint(pDeazoneErrDeg, 0.0);
+        pGainSchedule.insertNewPoint(pDeazoneErrDeg + pDeadzonTransitionWidth, 1.0);
+        pGainSchedule.insertNewPoint(180, 1.0);
     }
 
     public void setBrakeMode(boolean isBrakeMode){
@@ -87,11 +96,12 @@ public class MotorControlBoom {
         var motorCmdV = 0.0;
 
         // update PID Controller Constants
-        m_pid.setPID(kP.get(), kI.get(), kD.get());
+        var absErr = Math.abs(actAngleDeg - desAngleDeg);
+        m_pid.setPID(kP.get() * pGainSchedule.lookupVal(absErr), kI.get(), kD.get());
 
         // Calculate Feed-Forward
         cmdFeedForward = Math.signum(desAngVelDegPerSec) * kS.get() + 
-                        Math.cos(Units.degreesToRadians(actAngleDeg)) * kG.get() + 
+                        Math.cos(Units.degreesToRadians(desAngleDeg)) * kG.get() + 
                         desAngVelDegPerSec * kF.get();
 
         // Update feedback command
