@@ -3,6 +3,7 @@ package frc.robot.Arm;
 import java.util.ArrayList;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.Constants;
 import frc.robot.ArmTelemetry;
 
 public class ArmSoftLimits {
@@ -36,6 +37,9 @@ public class ArmSoftLimits {
         // If the input point is inside, then just return the input, else return the
         // closest point
         // on the fence to the input point as clipped position.
+
+        //Additionally, after that process is complete, clip the position to the maximum and minimum radii 
+        // of the arm.
 
 
 
@@ -191,7 +195,41 @@ public class ArmSoftLimits {
             
             }
 
-        // if we've clipped the position, 
+
+        var x = clipPos.x;
+        var y = clipPos.y - Constants.ARM_BOOM_MOUNT_HIEGHT;
+        // Ensure the input point is "reachable" by scaling it back
+        // inside the unit circle of the max extension of the arm.
+        double maxRadius = Constants.ARM_BOOM_LENGTH + Constants.ARM_STICK_LENGTH * 0.99;
+        double minRadius = Math.abs(Constants.ARM_BOOM_LENGTH - Constants.ARM_STICK_LENGTH) * 1.01;
+        double reqRadius = Math.sqrt(x * x + y * y);
+
+        if (reqRadius == 0.0) {
+            // user was silly, give up
+            clipPos.x = minRadius;
+            clipPos.y = 0.0 + Constants.ARM_BOOM_MOUNT_HIEGHT;
+            clipPos.xvel = 0;
+            clipPos.yvel = 0;
+        } else if (reqRadius >= maxRadius) {
+            //Requested point beyond the reach of the arm
+            // Project the point back into the reachable area
+            var angle = Math.atan2(y, x);
+            clipPos.x = maxRadius * Math.cos(angle);
+            clipPos.y = maxRadius * Math.sin(angle) + Constants.ARM_BOOM_MOUNT_HIEGHT;
+            clipPos.xvel = 0;
+            clipPos.yvel = 0;
+        } else if (reqRadius <= minRadius) {
+            //Requested point inside the "unreachable" circle near
+            // the pivot point. 
+            // Project the point back out into the reachable area
+            var angle = Math.atan2(y, x);
+            clipPos.x = minRadius * Math.cos(angle); 
+            clipPos.y = minRadius * Math.sin(angle) + Constants.ARM_BOOM_MOUNT_HIEGHT;
+            clipPos.xvel = 0;
+            clipPos.yvel = 0;
+        }
+
+        // if we've clipped the position in any way, we're limited
         isLimited = !in.equals(clipPos);
   
         return clipPos;
