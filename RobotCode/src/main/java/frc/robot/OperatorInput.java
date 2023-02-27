@@ -40,6 +40,10 @@ public class OperatorInput {
     boolean armHighPosCmd = false;
     @Signal
     boolean armStowPosCmd = false;
+    @Signal
+    boolean armFloorTippedConePosCmd = false;
+    @Signal
+    boolean armShelfPosCmd = false;
 
     // Manipulator grab/release
     @Signal
@@ -78,7 +82,7 @@ public class OperatorInput {
         isConnected = ctrl.isConnected();
 
         if (isConnected) {
-            curVerticalCmd =  -1 * ctrl.getLeftY();
+            curVerticalCmd =  -1.0 * ctrl.getLeftY();
             curHorizontalCmd = -1.0 * ctrl.getRightY();
 
             curVerticalCmd = MathUtil.applyDeadband( curVerticalCmd,stickDb.get()) * Units.inchesToMeters(manMaxVel.get()); 
@@ -88,6 +92,8 @@ public class OperatorInput {
             armMidPosCmd = ctrl.getBButton();
             armHighPosCmd = ctrl.getYButton();
             armStowPosCmd = ctrl.getXButton();
+            armFloorTippedConePosCmd = povDown();
+            armShelfPosCmd = povUP();
 
             armVertOffsetCmd = (ctrl.getLeftTriggerAxis() - ctrl.getRightTriggerAxis());
 
@@ -105,6 +111,8 @@ public class OperatorInput {
             armMidPosCmd = false;
             armHighPosCmd = false;
             armStowPosCmd = false;
+            armShelfPosCmd = false;
+            armFloorTippedConePosCmd = false;
             armVertOffsetCmd = 0.0;
             grabCmd = false;
             releaseCmd = false;
@@ -115,10 +123,18 @@ public class OperatorInput {
     }
 
     public boolean posCmdActive(){ 
-        return armLowPosCmd || armMidPosCmd || armHighPosCmd || armStowPosCmd;
+        return armLowPosCmd || armMidPosCmd || armHighPosCmd || armStowPosCmd || armFloorTippedConePosCmd || armShelfPosCmd;
     }
 
     public boolean manCmdActive(){
         return curVerticalCmd != 0.0 || curHorizontalCmd != 0.0;
+    }
+
+    private boolean povDown(){
+        return (ctrl.getPOV() != -1 && ctrl.getPOV() <= 225 && ctrl.getPOV() >= 135);
+    }
+
+    private boolean povUP(){
+        return (ctrl.getPOV() != -1 && (ctrl.getPOV() >= 315 || ctrl.getPOV() <= 45));
     }
 }

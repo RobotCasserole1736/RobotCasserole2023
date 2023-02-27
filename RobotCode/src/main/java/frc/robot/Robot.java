@@ -252,7 +252,11 @@ public class Robot extends TimedRobot {
       curOpPos = mm.isConeMode() ? ArmNamedPosition.CONE_LOW : ArmNamedPosition.CUBE_LOW;
     } else if(oi.armStowPosCmd){
       curOpPos = ArmNamedPosition.STOW;
-    } //TODO - shelf location? or is Mid good enough?
+    } else if (oi.armFloorTippedConePosCmd){
+      curOpPos = ArmNamedPosition.FLOOR_TIPPED_CONE;
+    } else if(oi.armShelfPosCmd){
+      curOpPos = ArmNamedPosition.SHELF;
+    }
 
     ac.setOpCmds(oi.curHorizontalCmd, oi.curVerticalCmd, curOpPos, oi.posCmdActive(), oi.armVertOffsetCmd);
     stt.mark("Arm Control");
