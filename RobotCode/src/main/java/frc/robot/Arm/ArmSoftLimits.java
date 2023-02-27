@@ -10,10 +10,6 @@ public class ArmSoftLimits {
     private final double SMALL_DIFF = 0.01;
     private final double LARGE_DIFF = Double.MAX_VALUE;
 
-    double minX = 0.308;
-    double maxX = 1.612;
-    double minY = 0.113;
-    double maxY = 1.847;
 
     Double XPosLimits[] = {0.700, 0.308, 0.308, 1.612, 1.612};
     Double YPosLimits[] = {0.113, 0.900, 1.847, 1.847, 0.113};

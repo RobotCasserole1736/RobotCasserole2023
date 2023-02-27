@@ -122,7 +122,6 @@ public class ArmControl {
 
         //Apply soft limits
         var curDesStateLimited = asl.applyLimit(curDesStateWithOffset);
-        //var curDesStateLimited = curDesStateWithOffset;
 
         // Apply kinematics to get linkge positions
         var curDesAngularStates = ArmKinematics.inverse(curDesStateLimited);
@@ -148,7 +147,7 @@ public class ArmControl {
         ArmTelemetry.getInstance().setMeasured(curMeasState, curMeasAngularStates);
 
         // Save previous
-        prevDesState = curDesState;
+        prevDesState = curDesStateLimited;
     }
 
     private boolean isFaulted() {
