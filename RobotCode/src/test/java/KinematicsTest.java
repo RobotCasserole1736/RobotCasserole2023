@@ -71,7 +71,7 @@ class KinematicsTest {
 
     assertEquals(result.x, Constants.ARM_STICK_LENGTH, DELTA);
     assertEquals(result.y, (Constants.ARM_BOOM_MOUNT_HIEGHT + Constants.ARM_BOOM_LENGTH), DELTA);
-    assertEquals(result.reflexFrac, 1.0);
+    assertEquals(result.isReflex, true);
   }
 
   @Test 
@@ -87,7 +87,7 @@ class KinematicsTest {
 
     assertEquals(result.x, Constants.ARM_BOOM_LENGTH, DELTA);
     assertEquals(result.y, (Constants.ARM_BOOM_MOUNT_HIEGHT + Constants.ARM_STICK_LENGTH), DELTA);
-    assertEquals(result.reflexFrac, 0.0);
+    assertEquals(result.isReflex, false);
   }
 
   @Test 
@@ -122,7 +122,7 @@ class KinematicsTest {
           var actual = ArmKinematics.forward(intRes);
           assertEquals(expected.x, actual.x, DELTA);
           assertEquals(expected.y, actual.y, DELTA);
-          assertEquals(expected.reflexFrac, actual.reflexFrac, DELTA);
+          assertEquals(expected.isReflex, actual.isReflex);
         }
       }
     }

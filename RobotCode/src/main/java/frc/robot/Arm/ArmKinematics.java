@@ -27,12 +27,8 @@ public class ArmKinematics {
         var xVel = (next.getFirst() - prev.getFirst()) / 0.04;
         var yVel = (next.getSecond() - prev.getSecond()) / 0.04;
 
-        // Calcualte reflex fraction from knowing whether the stick is angled up or
-        // down.
-        double reflexFrac = isReflex(stickAngleCur) ? 1.0 : 0.0;
-
         // Return a complete end effector state object.
-        return new ArmEndEffectorState(cur.getFirst(), cur.getSecond(), xVel, yVel, reflexFrac);
+        return new ArmEndEffectorState(cur.getFirst(), cur.getSecond(), xVel, yVel, isReflex(stickAngleCur));
 
     }
 
@@ -60,20 +56,18 @@ public class ArmKinematics {
         //Calculate current, previous, and next x/y positions
         var curX = in.x;
         var curY = in.y;
-        var curReflex = in.reflexFrac;
+        var curReflex = in.isReflex;
 
         var nextX = in.x + in.xvel * 0.02;
         var nextY = in.y + in.yvel * 0.02;
-        var nextReflex = in.reflexFrac; //todo need reflex rate of change
 
         var prevX = in.x - in.xvel * 0.02;
         var prevY = in.y - in.yvel * 0.02;
-        var prevReflex = in.reflexFrac; //todo need reflex rate of change
 
         //Run all three through kinematics
-        var cur = inverse_reflex_interpolated(curX, curY, curReflex);
-        var next = inverse_reflex_interpolated(nextX, nextY, nextReflex);
-        var prev = inverse_reflex_interpolated(prevX, prevY, prevReflex);
+        var cur = inverse_internal(curX, curY, curReflex);
+        var next = inverse_internal(nextX, nextY, curReflex);
+        var prev = inverse_internal(prevX, prevY, curReflex);
 
         //Calcualte angles and angular velocities
         var boomAngleDeg = Units.radiansToDegrees(cur.getFirst());
@@ -82,18 +76,6 @@ public class ArmKinematics {
         var stickAngularVel = Units.radiansToDegrees(next.getSecond() - prev.getSecond())/0.04;
 
         return new ArmAngularState(boomAngleDeg, boomAnglularVel, stickAngleDeg, stickAngularVel);   
-    }
-
-    private static Pair<Double, Double> inverse_reflex_interpolated(double x, double y, double reflexFrac){
-        // Calculate the fully reflex and fully non-reflex solutions
-        var retReflex = inverse_internal(x, y, true);
-        var retNonReflex = inverse_internal(x, y, false);
-
-        // Interpolate between reflex and non-reflex positions by reflex frac
-        double boomAngleRad = retReflex.getFirst() * reflexFrac + retNonReflex.getFirst() * (1.0 - reflexFrac);
-        double stickAngleRad = retReflex.getSecond() * reflexFrac + retNonReflex.getSecond() * (1.0 - reflexFrac);
-
-        return Pair.of(boomAngleRad, stickAngleRad);
     }
 
     private static Pair<Double, Double> inverse_internal(double x, double y, boolean isReflex) {

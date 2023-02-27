@@ -154,7 +154,7 @@ public class ArmTelemetry {
     @Signal
     double measPosY;
     @Signal
-    double desReflexFrac;
+    boolean desReflex;
 
     private ArmTelemetry() {
         // Put Mechanism 2d to SmartDashboard
@@ -235,7 +235,7 @@ public class ArmTelemetry {
 
         desPosX = desPos.x;
         desPosY = desPos.y;
-        desReflexFrac = desPos.reflexFrac;
+        desReflex = desPos.isReflex;
     }
 
     // Update the control logic's measured angular and end effector position

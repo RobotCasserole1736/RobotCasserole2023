@@ -146,11 +146,11 @@ public class ReflexInvertingArmPath implements ArmPath {
 
         if(time_sec < duration1){
             //Within the first path, all done with the starting reflex
-            return ArmEndEffectorState.fromTrajState(traj1, time_sec, start.reflexFrac);
+            return ArmEndEffectorState.fromTrajState(traj1, time_sec, start.isReflex);
         } else if(time_sec < totalDuration){
             //Within the second path, all done with the ending reflex
             var curTime = time_sec - duration1;
-            return ArmEndEffectorState.fromTrajState(traj2, curTime, end.get().reflexFrac); 
+            return ArmEndEffectorState.fromTrajState(traj2, curTime, end.get().isReflex); 
         } else {
             //Past the end of the path
             return end.get();

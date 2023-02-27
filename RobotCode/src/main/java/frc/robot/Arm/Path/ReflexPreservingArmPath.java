@@ -106,7 +106,7 @@ public class ReflexPreservingArmPath implements ArmPath {
      */
     public ArmEndEffectorState sample(double time_sec){
         if(time_sec < totalDuration){
-            double curReflex = end.get().reflexFrac;
+            boolean curReflex = end.get().isReflex;
             return ArmEndEffectorState.fromTrajState(traj, time_sec, curReflex);
         } else {
             return end.get();

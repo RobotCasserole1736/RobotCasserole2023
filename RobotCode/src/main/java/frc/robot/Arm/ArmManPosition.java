@@ -57,7 +57,7 @@ public class ArmManPosition {
             newDesPos.yvel = desYVelLimited;
             newDesPos.x = curPosCmd.x + desXVelLimited * Constants.Ts;
             newDesPos.y = curPosCmd.y + desYVelLimited * Constants.Ts;
-            newDesPos.reflexFrac = curPosCmd.reflexFrac;
+            newDesPos.isReflex = curPosCmd.isReflex;
             return newDesPos;
         } else {
             return curPosCmd;

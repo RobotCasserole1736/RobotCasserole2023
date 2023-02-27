@@ -10,7 +10,7 @@ public class ArmEndEffectorState {
     public double y;
     public double xvel;
     public double yvel;
-    public double reflexFrac; //1.0 is fully reflex, 0.0 is fully non-reflex
+    public boolean isReflex;
 
     //TODO - add something here to fiture out if we should attempt to achieve the solution through a "concave" or "convex" joint solution
 
@@ -19,23 +19,15 @@ public class ArmEndEffectorState {
         this.y = y;
         this.xvel = 0;
         this.yvel = 0;
-        this.reflexFrac = isReflex ? 1.0 : 0.0;
+        this.isReflex = isReflex;
     }
 
-    public ArmEndEffectorState(double x, double y, double reflexFrac){
-        this.x = x;
-        this.y = y;
-        this.xvel = 0;
-        this.yvel = 0;
-        this.reflexFrac = reflexFrac;
-    }
-
-    public ArmEndEffectorState(double x, double y, double xvel, double yvel, double reflexFrac){
+    public ArmEndEffectorState(double x, double y, double xvel, double yvel, boolean isReflex){
         this.x = x;
         this.y = y;
         this.xvel = xvel;
         this.yvel = yvel;
-        this.reflexFrac = reflexFrac;
+        this.isReflex = isReflex;
     }
 
     public ArmEndEffectorState(double x, double y){
@@ -43,13 +35,13 @@ public class ArmEndEffectorState {
         this.y = y;
         this.xvel = 0;
         this.yvel = 0;
-        this.reflexFrac = 0.0;
+        this.isReflex = false;
     }
 
     ArmEndEffectorState(){
         this.x = 0;
         this.y = 0;
-        this.reflexFrac = 0;
+        this.isReflex = false;
     }
 
     ArmEndEffectorState(ArmEndEffectorState other){
@@ -57,7 +49,7 @@ public class ArmEndEffectorState {
         this.xvel = other.xvel;
         this.y = other.y;
         this.yvel = other.yvel;
-        this.reflexFrac = other.reflexFrac;
+        this.isReflex = other.isReflex;
     }
 
     public double distTo(ArmEndEffectorState other){
@@ -66,23 +58,14 @@ public class ArmEndEffectorState {
         return Math.sqrt(x2 + y2);
     }
 
-    public ArmEndEffectorState interpolateTo(ArmEndEffectorState other, double frac){
-        double fracInv = (1.0 - frac);
-        double x = other.x * frac + this.x * fracInv;
-        double y = other.y * frac + this.y * fracInv;
-        double reflexFrac = other.reflexFrac * frac + this.reflexFrac * fracInv;
-        return new ArmEndEffectorState(x, y, reflexFrac);
-    }
-
     public ArmEndEffectorState interpolateTo(ArmEndEffectorState other, double frac, double linearVel){
         double fracInv = (1.0 - frac);
         double x = other.x * frac + this.x * fracInv;
         double y = other.y * frac + this.y * fracInv;
-        double reflexFrac = other.reflexFrac * frac + this.reflexFrac * fracInv;
         var velDir = new Rotation2d(other.x - this.x, other.y - this.y);
         double xVel = linearVel * velDir.getCos();
         double yVel = linearVel * velDir.getSin();
-        return new ArmEndEffectorState(x, y, xVel, yVel, reflexFrac);
+        return new ArmEndEffectorState(x, y, xVel, yVel, other.isReflex);
     }
 
     //TODO - refine these 
@@ -119,13 +102,13 @@ public class ArmEndEffectorState {
         return new Pose2d(this.x, this.y, rot);
     }
 
-    public static ArmEndEffectorState fromTrajState(Trajectory traj, double time, double reflexFrac){
+    public static ArmEndEffectorState fromTrajState(Trajectory traj, double time, boolean isReflex){
         var pos = traj.sample(time).poseMeters;
         var pos_prev = traj.sample(time - 0.02).poseMeters;
         var pos_next = traj.sample(time + 0.02).poseMeters;
         double velx = (pos_next.getX() - pos_prev.getX()) / 0.04;
         double vely = (pos_next.getY() - pos_prev.getY()) / 0.04;
-        return new ArmEndEffectorState(pos.getX(), pos.getY(), velx, vely, reflexFrac);
+        return new ArmEndEffectorState(pos.getX(), pos.getY(), velx, vely, isReflex);
     }
 
 
@@ -134,6 +117,6 @@ public class ArmEndEffectorState {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ArmEndEffectorState other = (ArmEndEffectorState)o;
-        return this.x == other.x && this.y == other.y && this.reflexFrac == other.reflexFrac;
+        return this.x == other.x && this.y == other.y && this.isReflex == other.isReflex;
     }
 }

@@ -12,7 +12,7 @@ public class ArmPathFactory {
 
     public static ArmPath build(ArmEndEffectorState start, ArmNamedPosition end){
         ArmPath newPath = null;
-        if(start.reflexFrac == end.get().reflexFrac){
+        if(start.isReflex == end.get().isReflex){
             newPath = new ReflexPreservingArmPath();
         } else {
             newPath = new ReflexInvertingArmPath();

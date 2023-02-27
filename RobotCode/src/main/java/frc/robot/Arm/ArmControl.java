@@ -93,13 +93,13 @@ public class ArmControl {
             // While disabled, by default, we just maintain measured state
             curDesState.x = curMeasState.x;
             curDesState.y = curMeasState.y;
-            curDesState.reflexFrac = curMeasState.reflexFrac;
+            curDesState.isReflex = curMeasState.isReflex;
         } else {
             // While endabled, by default, the next desired state
             // is just the position of the desired state position, with zero velocity
             curDesState.x = prevDesState.x;
             curDesState.y = prevDesState.y;
-            curDesState.reflexFrac = prevDesState.reflexFrac;
+            curDesState.isReflex = prevDesState.isReflex;
         }
 
         // Allow the brakes to be released in disabled for easy manipulation in the pit
