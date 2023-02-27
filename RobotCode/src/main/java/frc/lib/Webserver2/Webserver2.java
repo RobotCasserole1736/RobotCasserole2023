@@ -111,8 +111,11 @@ public class Webserver2 {
                 try {
                     server.start();
                     server.join();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    e.printStackTrace();                
+                } catch (Exception e){
+                    e.printStackTrace(); // not sure, but the server might throw this anyway
                 }
 
             }

@@ -24,6 +24,8 @@ public class MotorControlStick {
 
     PIDController m_pid = new PIDController(0, 0, 0);
 
+    //Neesd a deadzone of 7.67 deg
+
     @Signal(units="V")
     double cmdFeedForward;
     @Signal(units="V")

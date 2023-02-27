@@ -52,6 +52,9 @@ public class MotorControlBoom {
     @Signal
     boolean isAngleLimited;
 
+    //Needs a deadzone of 1.375 deg or more
+
+
     public MotorControlBoom(){
         motorCtrl.setBrakeMode(true);
     }

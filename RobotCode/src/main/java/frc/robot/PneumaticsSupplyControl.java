@@ -50,8 +50,9 @@ public class PneumaticsSupplyControl {
                         update();
                         Thread.sleep(250);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    e.printStackTrace();                
                 }
 
             }

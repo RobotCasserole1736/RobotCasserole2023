@@ -113,10 +113,10 @@ public class RIOLoadMonitor {
 	            		periodicUpdate();
 	            		Thread.sleep(UPDATE_RATE_MS);
 	            	}
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    e.printStackTrace();                
+                }
 	        }
 		});
 		

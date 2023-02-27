@@ -69,7 +69,7 @@ public class DynamicSwerveTrajectoryGenerator {
 
         backgroundGenRunner = new Thread(backgroundGen);
         backgroundGenRunner.setDaemon(true);
-        backgroundGenRunner.start();
+        backgroundGenRunner.start(); // This thread is not long-running, therefor no handling done to work with Interrupted exceptions
     }
 
     public boolean isReady(){
