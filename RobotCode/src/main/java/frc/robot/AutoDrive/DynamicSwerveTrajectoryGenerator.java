@@ -68,6 +68,7 @@ public class DynamicSwerveTrajectoryGenerator {
         this.waypoints = waypoints;
 
         backgroundGenRunner = new Thread(backgroundGen);
+        backgroundGenRunner.setDaemon(true);
         backgroundGenRunner.start();
     }
 

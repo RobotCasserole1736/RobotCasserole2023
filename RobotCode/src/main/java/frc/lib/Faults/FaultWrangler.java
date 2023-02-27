@@ -66,6 +66,7 @@ public class FaultWrangler {
         // Set up thread properties and start it off
         bgThread.setName("FaultWrangler");
         bgThread.setPriority(Thread.MIN_PRIORITY);
+        bgThread.setDaemon(true);
         bgThread.start();
 
 

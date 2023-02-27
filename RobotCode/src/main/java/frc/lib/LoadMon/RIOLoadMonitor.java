@@ -127,6 +127,7 @@ public class RIOLoadMonitor {
 	    //Set up thread properties and start it off
 	    monitorThread.setName("CasseroleRIOLoadMonitor");
 	    monitorThread.setPriority(Thread.MIN_PRIORITY);
+		monitorThread.setDaemon(true);
 	    monitorThread.start();
 	}
 	

@@ -60,6 +60,7 @@ public class PneumaticsSupplyControl {
         // Set up thread properties and start it off
         monitorThread.setName("PneumaticsSupplyControl");
         monitorThread.setPriority(Thread.MIN_PRIORITY);
+        monitorThread.setDaemon(true);
         monitorThread.start();
     }
 

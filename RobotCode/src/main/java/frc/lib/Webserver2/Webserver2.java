@@ -119,6 +119,7 @@ public class Webserver2 {
         });
         serverThread.setName("WebServer2");
         serverThread.setPriority(2);
+        serverThread.setDaemon(true);
         serverThread.start();
 
     }
