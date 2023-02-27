@@ -3,7 +3,6 @@ package frc.robot.Arm;
 import java.util.ArrayList;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import frc.robot.ArmTelemetry;
 
 public class ArmSoftLimits {
@@ -16,8 +15,8 @@ public class ArmSoftLimits {
     double minY = 0.113;
     double maxY = 1.847;
 
-    Double XPosLimits[] = {minX, minY, maxX, maxX};
-    Double YPosLimits[] = {minY, maxY, maxY, minY};
+    Double XPosLimits[] = {0.700, 0.308, 0.308, 1.612, 1.612};
+    Double YPosLimits[] = {0.113, 0.900, 1.847, 1.847, 0.113};
 
     boolean isLimited;
 
