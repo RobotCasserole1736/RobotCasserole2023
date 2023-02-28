@@ -38,7 +38,7 @@ public class RealRevThroughBoreEncoder extends AbstractAbsoluteEncoder {
             return 0.0;
         } else {        
             pulsetime = m_dutyCycle.getOutput() * (1.0 / freq);
-            double anglerad = ((pulsetime - 1E-6) / (1.024E-3 - 1E-6)) * 2 * Math.PI;
+            double anglerad = ((pulsetime - 0.000001975) / (0.001004 - 0.000001975)) * 2 * Math.PI;
             return anglerad;
         }
 

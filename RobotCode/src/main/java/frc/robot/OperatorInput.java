@@ -28,6 +28,8 @@ public class OperatorInput {
 
     // Manual "offset up/down" position command
     @Signal(units="frac")
+    boolean armVertOffsetTrig;
+
     double armVertOffsetCmd;
 
 
@@ -95,7 +97,15 @@ public class OperatorInput {
             armFloorTippedConePosCmd = povDown();
             armShelfPosCmd = povUP();
 
-            armVertOffsetCmd = (ctrl.getLeftTriggerAxis() - ctrl.getRightTriggerAxis());
+            armVertOffsetTrig = ctrl.getRightTriggerAxis() > 0.5;
+
+            if(armVertOffsetTrig == true) {
+                armVertOffsetCmd = -1 * ctrl.getRightY();
+                curHorizontalCmd = 0.0;
+            } else {
+                curHorizontalCmd = ctrl.getRightY();
+                armVertOffsetCmd = 0.0;
+            }
 
             grabCmd = ctrl.getLeftBumper();
             releaseCmd = ctrl.getRightBumper();
@@ -113,7 +123,7 @@ public class OperatorInput {
             armStowPosCmd = false;
             armShelfPosCmd = false;
             armFloorTippedConePosCmd = false;
-            armVertOffsetCmd = 0.0;
+            armVertOffsetTrig = false;
             grabCmd = false;
             releaseCmd = false;
         }

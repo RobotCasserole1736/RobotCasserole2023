@@ -11,7 +11,7 @@ public enum ArmNamedPosition {
     SHELF(1.069 ,1.076,true),
     FLOOR(1.13 ,0.11,false),
     FLOOR_TIPPED_CONE(1.13 ,0.11,true, 0.1),
-    STOW(0.35, 1.02 ,false),
+    STOW(0.3934, 1.116 ,false),
     ;
 
     public final double safeY;
