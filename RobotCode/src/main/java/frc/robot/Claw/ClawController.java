@@ -90,7 +90,7 @@ public class ClawController {
 
         }
 
-        intakeWheelMotor.set(wheelMotorSpdCmd);
+        intakeWheelMotor.set(-1 * wheelMotorSpdCmd);
         clawSolenoid.set(clawCloseCmd);
     }
 

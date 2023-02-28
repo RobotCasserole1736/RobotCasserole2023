@@ -74,7 +74,7 @@ public class OperatorInput {
 
     public OperatorInput(int controllerIdx) {
         ctrl = new XboxController(controllerIdx);
-        stickDb = new Calibration(getName(controllerIdx) + "Stick Deadband", "", 0.1);
+        stickDb = new Calibration(getName(controllerIdx) + "Stick Deadband", "", 0.15);
         manMaxVel = new Calibration(getName(controllerIdx) + "Arm manual command max speed", "inches per second",
                 12.0);
     }
