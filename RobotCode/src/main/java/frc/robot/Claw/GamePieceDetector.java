@@ -19,7 +19,9 @@ public class GamePieceDetector {
     // Thresholds for Cubes and Cones
     Calibration cubePresentThresh;
     Calibration conePresentThresh;
-    
+    Calibration cubeAbsentThresh;
+    Calibration coneAbsentThresh;
+
     // Boolean to track game piece presence
     boolean clawHasGamePiece;
 
@@ -36,7 +38,9 @@ public class GamePieceDetector {
         // Thresholds for Cubes and Cones
         cubePresentThresh = new Calibration("Claw Cube Present Threshold", "in", 4);
         conePresentThresh = new Calibration("Claw Cone Present Threshold", "in", 4);
-        
+        cubeAbsentThresh = new Calibration("Claw Cube Absent Threshold", "in", 8);
+        coneAbsentThresh = new Calibration("Claw Cone Absent Threshold", "in", 8);
+
         // Initialize with no game piece
         clawHasGamePiece = false;
     }
@@ -52,10 +56,23 @@ public class GamePieceDetector {
         disconTOFFault.set(gamepieceDistSensor.getFirmwareVersion() == 0);    
 
         // Determine if game piece is in claw
-        if (gpmm.isConeMode() && (gamepieceDistSensorMeas < conePresentThresh.get())) {
-            clawHasGamePiece = true;
-        } else if (gpmm.isCubeMode() && (gamepieceDistSensorMeas < cubePresentThresh.get())) {
-            clawHasGamePiece = true;
+        // Use two threshold to achieve some hysterisis
+        if (gpmm.isConeMode()) {
+            if(gamepieceDistSensorMeas < conePresentThresh.get()){
+                clawHasGamePiece = true;
+            } else if (gamepieceDistSensorMeas > coneAbsentThresh.get()){
+                clawHasGamePiece = false;
+            } else {
+                // maintain gamepiece state
+            }
+        } else if (gpmm.isCubeMode()) {
+            if(gamepieceDistSensorMeas < cubePresentThresh.get()){
+                clawHasGamePiece = true;
+            } else if (gamepieceDistSensorMeas > cubeAbsentThresh.get()){
+                clawHasGamePiece = false;
+            } else {
+                // maintain gamepiece state
+            }
         }
         else {
             clawHasGamePiece = false;
