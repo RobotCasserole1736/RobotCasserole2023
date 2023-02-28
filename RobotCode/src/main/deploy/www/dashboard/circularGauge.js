@@ -51,7 +51,7 @@ export class CircularGauge {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Draw Title Text
-        this.ctx.font = (this.titleTextSize) + "px localMichroma";
+        this.ctx.font = (this.titleTextSize) + "px localNovaMono";
         this.ctx.textBaseline = 'middle';
         this.ctx.textAlign = 'center';
         this.ctx.fillStyle = "#FFFFFF";
@@ -62,7 +62,7 @@ export class CircularGauge {
         this.drawGauge(this.ARC_END_ANGLE, false);
 
         // Draw Value Text
-        this.ctx.font = (this.valueTextSize) + "px localMichroma";
+        this.ctx.font = (this.valueTextSize) + "px localNovaMono";
         this.ctx.fillStyle = "#FFFFFF";
         var displayValueStr = "****";
         if(this.hasData){

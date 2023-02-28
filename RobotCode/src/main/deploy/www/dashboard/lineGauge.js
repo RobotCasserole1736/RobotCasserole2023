@@ -50,7 +50,7 @@ export class LineGauge {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Draw main text
-        this.ctx.font = (this.titleTextSize) + "px localMichroma";
+        this.ctx.font = (this.titleTextSize) + "px localNovaMono";
         this.ctx.textBaseline = 'middle';
         this.ctx.fillStyle = "#FFFFFF";
         var displayValueStr = "****"
