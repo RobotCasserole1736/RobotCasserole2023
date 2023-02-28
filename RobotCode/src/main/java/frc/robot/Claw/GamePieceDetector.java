@@ -52,14 +52,10 @@ public class GamePieceDetector {
         disconTOFFault.set(gamepieceDistSensor.getFirmwareVersion() == 0);    
 
         // Determine if game piece is in claw
-        if (gpmm.isConeMode()) {
-            if (gamepieceDistSensorMeas < conePresentThresh.get()) {
-                clawHasGamePiece = true;
-            }
-        } else if (gpmm.isCubeMode()) {
-            if (gamepieceDistSensorMeas < cubePresentThresh.get()) {
-                clawHasGamePiece = true;
-            }
+        if (gpmm.isConeMode() && (gamepieceDistSensorMeas < conePresentThresh.get())) {
+            clawHasGamePiece = true;
+        } else if (gpmm.isCubeMode() && (gamepieceDistSensorMeas < cubePresentThresh.get())) {
+            clawHasGamePiece = true;
         }
         else {
             clawHasGamePiece = false;
