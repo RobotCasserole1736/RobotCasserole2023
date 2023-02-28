@@ -13,6 +13,14 @@ public class ClawController {
     boolean curReleaseCmd;
     Solenoid clawSolenoid;
 
+    private final double CUBE_INTAKE_SPD = 0.25;
+    private final double CUBE_HOLD_SPD = 0.1;
+    private final double CUBE_EJECT_SPD = -0.25;
+
+    private final double CONE_INTAKE_SPD = 0.75;
+    private final double CONE_HOLD_SPD = 0.1;
+    private final double CONE_EJECT_SPD = -0.1;
+
     @Signal
     boolean clawCloseCmd = true;
 
@@ -55,21 +63,23 @@ public class ClawController {
 
         // Main claw control logic. Drives the wheel motors and solenoid
         // to achieve the correct states per different gamepieces
-        wheelMotorSpdCmd = 0.0;
+        wheelMotorSpdCmd = 0.0; //default to zero speed
         if (gpmm.isConeMode()) {
 
             if (curGrabCmd) {
                 // close the claw and rotate wheels to suck in, until we have a gamepiece.
                 clawCloseCmd = true;
                 if(!gpd.hasGamepiece()){
-                    wheelMotorSpdCmd = 1.0;
+                    wheelMotorSpdCmd = CONE_INTAKE_SPD;
                 } else {
-                    // Need a little speed to hold the piece in place. Subject to tuning.
-                    wheelMotorSpdCmd = 0.05;
+                    // Need a little speed to hold the piece in place.
+                    wheelMotorSpdCmd = CONE_HOLD_SPD;
                 }
             } else if (curReleaseCmd) {
                 // Open the claw
                 clawCloseCmd = false;
+                wheelMotorSpdCmd = CONE_EJECT_SPD;
+
             }
 
 
@@ -79,19 +89,27 @@ public class ClawController {
             if (curGrabCmd) {
                 // Run the wheels to suck in until we have a gamepiece
                 if(!gpd.hasGamepiece()){
-                    wheelMotorSpdCmd = 1.0;
+                    wheelMotorSpdCmd = CUBE_INTAKE_SPD;
                 } else {
-                    wheelMotorSpdCmd = 0.0;
+                    wheelMotorSpdCmd = CUBE_HOLD_SPD;
                 }
             } else if (curReleaseCmd) {
                 // Run the wheels to eject
-                wheelMotorSpdCmd = -1.0;
+                wheelMotorSpdCmd = CUBE_EJECT_SPD;
             }
 
         }
 
-        intakeWheelMotor.set(-1 * wheelMotorSpdCmd);
-        clawSolenoid.set(clawCloseCmd);
+        //Electrically, positive command causes outward motion
+        // while negative command causes inward motion
+        intakeWheelMotor.set(-1 * wheelMotorSpdCmd); 
+
+        // Claw pneumatic must be:
+        //   off = closed
+        //   on = opened
+        // This is to ensure it can grip gamepieces
+        // while disabled, before the match starts.
+        clawSolenoid.set(!clawCloseCmd);
     }
 
     public boolean hasGamepiece() {
