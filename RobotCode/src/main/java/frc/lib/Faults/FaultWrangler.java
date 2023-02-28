@@ -121,4 +121,8 @@ public class FaultWrangler {
     public void register(Fault in) {
         faultList.add(in);
     }
+
+    public void setHeartbeatActive(boolean isActive){
+        hb.isActive = isActive;
+    }
 }

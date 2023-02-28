@@ -15,6 +15,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.lib.Calibration.CalWrangler;
+import frc.lib.Faults.FaultWrangler;
 import frc.lib.LoadMon.RIOLoadMonitor;
 import frc.lib.LoadMon.SegmentTimeTracker;
 import frc.lib.Logging.LogFileWrangler;
@@ -97,6 +98,9 @@ public class Robot extends TimedRobot {
 
     stt.start();
 
+    //Ensure we start with no heartbeat light
+    FaultWrangler.getInstance().setHeartbeatActive(false);
+
     // Disable default behavior of the live-window output manipulation logic
     // We've got our own and never use this anyway.
     LiveWindow.setEnabled(false);
@@ -170,6 +174,10 @@ public class Robot extends TimedRobot {
 
     System.out.println("Init Stats:");
     stt.end();
+
+    //ITS ALIVE
+    FaultWrangler.getInstance().setHeartbeatActive(true);
+
 
   }
 
