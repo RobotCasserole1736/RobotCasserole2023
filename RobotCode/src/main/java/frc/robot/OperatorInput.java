@@ -62,8 +62,8 @@ public class OperatorInput {
     @Signal
     boolean switchToCubeModeCmd = false;
 
-    SlewRateLimiter horizCmdSlewRate = new SlewRateLimiter(MAX_MAN_VEL_MPS/2);
-    SlewRateLimiter vertCmdSlewRate = new SlewRateLimiter(MAX_MAN_VEL_MPS/2);
+    SlewRateLimiter horizCmdSlewRate = new SlewRateLimiter(MAX_MAN_VEL_MPS * 3);
+    SlewRateLimiter vertCmdSlewRate = new SlewRateLimiter(MAX_MAN_VEL_MPS * 2);
     SlewRateLimiter horizOffsetSlewRate = new SlewRateLimiter(1.0);
 
     // Deadband for controller sticks
@@ -90,8 +90,8 @@ public class OperatorInput {
 
         if (isConnected) {
             //Vertical command is always just vertical command
-            curVerticalCmd =  -1.0 * ctrl.getLeftY();
-            curVerticalCmd = vertCmdSlewRate.calculate( MathUtil.applyDeadband( curVerticalCmd,stickDb.get()) * MAX_MAN_VEL_MPS); 
+            curVerticalCmd =  MathUtil.applyDeadband( -1.0 * ctrl.getLeftY(),stickDb.get());
+            curVerticalCmd = vertCmdSlewRate.calculate( curVerticalCmd * MAX_MAN_VEL_MPS); 
 
             armLowPosCmd = ctrl.getAButton();
             armMidPosCmd = ctrl.getBButton();
