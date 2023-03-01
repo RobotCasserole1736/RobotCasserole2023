@@ -14,7 +14,7 @@ public class ClawController {
     Solenoid clawSolenoid;
 
     private final double CUBE_INTAKE_SPD = 0.40;
-    private final double CUBE_HOLD_SPD = 0.15;
+    private final double CUBE_HOLD_SPD = 0.1;
     private final double CUBE_EJECT_SPD = -0.35;
 
     private final double CONE_INTAKE_SPD = 0.75;
@@ -66,35 +66,43 @@ public class ClawController {
         wheelMotorSpdCmd = 0.0; //default to zero speed
         if (gpmm.isConeMode()) {
 
-            if (curGrabCmd) {
-                // close the claw and rotate wheels to suck in, until we have a gamepiece.
+            // Cone mode - claw closed unless releasing
+            if(!gpd.hasGamepiece() && curGrabCmd){
+                // No gamepiece, but actively intaking
                 clawCloseCmd = true;
-                if(!gpd.hasGamepiece()){
-                    wheelMotorSpdCmd = CONE_INTAKE_SPD;
-                } else {
-                    // Need a little speed to hold the piece in place.
-                    wheelMotorSpdCmd = CONE_HOLD_SPD;
-                }
+                wheelMotorSpdCmd = CONE_INTAKE_SPD;
             } else if (curReleaseCmd) {
-                // Open the claw
+                // releasing (with or without gamepiece)
                 clawCloseCmd = false;
                 wheelMotorSpdCmd = CONE_EJECT_SPD;
+            } else if(gpd.hasGamepiece()){
+                //Idle but with gamepiece
+                clawCloseCmd = true;
+                wheelMotorSpdCmd = CONE_HOLD_SPD;
+            } else {
+                //Idle but with no gamepiece
+                clawCloseCmd = true;
+                wheelMotorSpdCmd = 0.0;
             }
 
-
         } else if (gpmm.isCubeMode()) {
+
+            //Cube mode - claw always open.
             clawCloseCmd = false;
 
-            if (curGrabCmd) {
-                // Run the wheels to suck in until we have a gamepiece
-                if(!gpd.hasGamepiece()){
-                    wheelMotorSpdCmd = CUBE_INTAKE_SPD;
-                } else {
-                    wheelMotorSpdCmd = CUBE_HOLD_SPD;
-                }
+            // Cone mode - claw closed unless releasing
+            if(!gpd.hasGamepiece() && curGrabCmd){
+                // No gamepiece, but actively intaking
+                wheelMotorSpdCmd = CUBE_INTAKE_SPD;
             } else if (curReleaseCmd) {
-                // Run the wheels to eject
+                // releasing (with or without gamepiece)
                 wheelMotorSpdCmd = CUBE_EJECT_SPD;
+            } else if(gpd.hasGamepiece()){
+                //Idle but with gamepiece
+                wheelMotorSpdCmd = CUBE_HOLD_SPD;
+            } else {
+                //Idle but with no gamepiece
+                wheelMotorSpdCmd = 0.0;
             }
 
         }
