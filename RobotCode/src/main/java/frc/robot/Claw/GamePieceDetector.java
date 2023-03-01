@@ -36,9 +36,9 @@ public class GamePieceDetector {
         gpmm = GamepieceModeManager.getInstance();
         
         // Thresholds for Cubes and Cones
-        cubePresentThresh = new Calibration("Claw Cube Present Threshold", "in", 4);
+        cubePresentThresh = new Calibration("Claw Cube Present Threshold", "in", 5);
+        cubeAbsentThresh = new Calibration("Claw Cube Absent Threshold", "in", 9);
         conePresentThresh = new Calibration("Claw Cone Present Threshold", "in", 4);
-        cubeAbsentThresh = new Calibration("Claw Cube Absent Threshold", "in", 8);
         coneAbsentThresh = new Calibration("Claw Cone Absent Threshold", "in", 8);
 
         // Initialize with no game piece
