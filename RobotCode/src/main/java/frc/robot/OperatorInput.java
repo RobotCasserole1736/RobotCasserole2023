@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.lib.Calibration.Calibration;
@@ -14,6 +15,8 @@ import frc.lib.Signal.Annotations.Signal;
 public class OperatorInput {
 
     XboxController ctrl;
+
+    final double MAX_MAN_VEL_MPS = Units.inchesToMeters(12.0);
 
     @Signal
     boolean isConnected;
@@ -59,6 +62,10 @@ public class OperatorInput {
     @Signal
     boolean switchToCubeModeCmd = false;
 
+    SlewRateLimiter horizCmdSlewRate = new SlewRateLimiter(MAX_MAN_VEL_MPS/2);
+    SlewRateLimiter vertCmdSlewRate = new SlewRateLimiter(MAX_MAN_VEL_MPS/2);
+    SlewRateLimiter horizOffsetSlewRate = new SlewRateLimiter(1.0);
+
     // Deadband for controller sticks
     Calibration stickDb;
 
@@ -75,8 +82,6 @@ public class OperatorInput {
     public OperatorInput(int controllerIdx) {
         ctrl = new XboxController(controllerIdx);
         stickDb = new Calibration(getName(controllerIdx) + "Stick Deadband", "", 0.15);
-        manMaxVel = new Calibration(getName(controllerIdx) + "Arm manual command max speed", "inches per second",
-                12.0);
     }
 
     public void update() {
@@ -84,11 +89,9 @@ public class OperatorInput {
         isConnected = ctrl.isConnected();
 
         if (isConnected) {
+            //Vertical command is always just vertical command
             curVerticalCmd =  -1.0 * ctrl.getLeftY();
-            curHorizontalCmd = -1.0 * ctrl.getRightY();
-
-            curVerticalCmd = MathUtil.applyDeadband( curVerticalCmd,stickDb.get()) * Units.inchesToMeters(manMaxVel.get()); 
-            curHorizontalCmd = MathUtil.applyDeadband( curHorizontalCmd,stickDb.get())  * Units.inchesToMeters(manMaxVel.get()); 
+            curVerticalCmd = vertCmdSlewRate.calculate( MathUtil.applyDeadband( curVerticalCmd,stickDb.get()) * MAX_MAN_VEL_MPS); 
 
             armLowPosCmd = ctrl.getAButton();
             armMidPosCmd = ctrl.getBButton();
@@ -99,12 +102,15 @@ public class OperatorInput {
 
             armVertOffsetTrig = ctrl.getRightTriggerAxis() > 0.5;
 
+            var horizCmdRaw = MathUtil.applyDeadband( ctrl.getRightY(),stickDb.get());
             if(armVertOffsetTrig == true) {
-                armVertOffsetCmd = -1 * ctrl.getRightY();
-                curHorizontalCmd = 0.0;
+                // Use horizontal command as an offset, zero velocity
+                armVertOffsetCmd = horizOffsetSlewRate.calculate(-1 * horizCmdRaw * MAX_MAN_VEL_MPS);
+                curHorizontalCmd = horizCmdSlewRate.calculate(0.0);
             } else {
-                curHorizontalCmd = ctrl.getRightY();
-                armVertOffsetCmd = 0.0;
+                // Use horizontal command as a velocity command, zero offset
+                armVertOffsetCmd = horizOffsetSlewRate.calculate(0.0);
+                curHorizontalCmd = horizCmdSlewRate.calculate(horizCmdRaw);
             }
 
             grabCmd = ctrl.getLeftBumper();
