@@ -6,6 +6,7 @@ import frc.Constants;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder;
 import frc.hardwareWrappers.AbsoluteEncoder.WrapperedAbsoluteEncoder.AbsoluteEncType;
 import frc.lib.Util.FunctionGenerator;
+import frc.lib.Util.MapLookup2D;
 import frc.robot.ArmTelemetry;
 
 public class ArmControl {
@@ -40,6 +41,8 @@ public class ArmControl {
     FunctionGenerator boomFG;
     FunctionGenerator stickFG;
 
+    MapLookup2D speedLimitMap;
+
     private ArmControl(){
         mb = new MotorControlBoom();
         ms = new MotorControlStick();
@@ -54,6 +57,11 @@ public class ArmControl {
         boomFG = new FunctionGenerator("arm_boom", "deg");
         stickFG = new FunctionGenerator("arm_stick", "deg");
 
+        speedLimitMap = new MapLookup2D();
+        speedLimitMap.insertNewPoint(Constants.WHEEL_BASE_HALF_LENGTH_M + 0.4, 0.25);
+        speedLimitMap.insertNewPoint(Constants.WHEEL_BASE_HALF_LENGTH_M + 0.3, 0.5);
+        speedLimitMap.insertNewPoint(Constants.WHEEL_BASE_HALF_LENGTH_M + 0.2, 0.75);
+        speedLimitMap.insertNewPoint(Constants.WHEEL_BASE_HALF_LENGTH_M + 0.1, 1.0);
     }
 
     public void setInactive(){
@@ -183,16 +191,12 @@ public class ArmControl {
         return pp.motionActive;
     }
 
+    public double speedLimitFactorCalc(){
+        return speedLimitMap.lookupVal(Constants.WHEEL_BASE_HALF_LENGTH_M + curDesState.x);
+    }
+
     public boolean isExtended(){
         return curDesState.x > (Constants.WHEEL_BASE_HALF_LENGTH_M + 0.35);
-    }
-
-    public boolean isExtendedFar(){
-        return curDesState.x > (Constants.WHEEL_BASE_HALF_LENGTH_M + 0.5);
-    }
-
-    public boolean isExtendedReallyFar(){
-        return curDesState.x > (Constants.WHEEL_BASE_HALF_LENGTH_M + 0.75);
     }
 
     public boolean isSoftLimited(){
