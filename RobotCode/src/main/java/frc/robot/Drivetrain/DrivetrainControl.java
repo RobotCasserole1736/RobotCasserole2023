@@ -108,7 +108,7 @@ public class DrivetrainControl {
 
     private DrivetrainControl(){
 
-        moduleWheel_kP = new Calibration("Drivetrain Module Wheel kP", "", 0.035); 
+        moduleWheel_kP = new Calibration("Drivetrain Module Wheel kP", "", 0.00); //0.035 previously 
         moduleWheel_kI = new Calibration("Drivetrain Module Wheel kI", "", 0.0);
         moduleWheel_kD = new Calibration("Drivetrain Module Wheel kD", "", 0.0);
         moduleWheel_kV = new Calibration("Drivetrain Module Wheel kV", "volts/radPerSec", 0.02);
@@ -135,10 +135,10 @@ public class DrivetrainControl {
         hdc.setEnabled(true);
 
         // Init all swerve drive modules
-        moduleFL = new SwerveModuleControl("FL", Constants.FL_WHEEL_MOTOR_CANID,Constants.FL_AZMTH_MOTOR_CANID,Constants.FL_AZMTH_ENC_IDX, Constants.FL_ENCODER_MOUNT_OFFSET_RAD, true);
-        moduleFR = new SwerveModuleControl("FR", Constants.FR_WHEEL_MOTOR_CANID,Constants.FR_AZMTH_MOTOR_CANID,Constants.FR_AZMTH_ENC_IDX, Constants.FR_ENCODER_MOUNT_OFFSET_RAD, false);
-        moduleBL = new SwerveModuleControl("BL", Constants.BL_WHEEL_MOTOR_CANID,Constants.BL_AZMTH_MOTOR_CANID,Constants.BL_AZMTH_ENC_IDX, Constants.BL_ENCODER_MOUNT_OFFSET_RAD, true);
-        moduleBR = new SwerveModuleControl("BR", Constants.BR_WHEEL_MOTOR_CANID,Constants.BR_AZMTH_MOTOR_CANID,Constants.BR_AZMTH_ENC_IDX, Constants.BR_ENCODER_MOUNT_OFFSET_RAD, false);          
+        moduleFL = new SwerveModuleControl("FL", Constants.FL_WHEEL_MOTOR_CANID,Constants.FL_AZMTH_MOTOR_CANID,Constants.FL_AZMTH_ENC_IDX, Constants.FL_ENCODER_MOUNT_OFFSET_RAD, false);
+        moduleFR = new SwerveModuleControl("FR", Constants.FR_WHEEL_MOTOR_CANID,Constants.FR_AZMTH_MOTOR_CANID,Constants.FR_AZMTH_ENC_IDX, Constants.FR_ENCODER_MOUNT_OFFSET_RAD, true);
+        moduleBL = new SwerveModuleControl("BL", Constants.BL_WHEEL_MOTOR_CANID,Constants.BL_AZMTH_MOTOR_CANID,Constants.BL_AZMTH_ENC_IDX, Constants.BL_ENCODER_MOUNT_OFFSET_RAD, false);
+        moduleBR = new SwerveModuleControl("BR", Constants.BR_WHEEL_MOTOR_CANID,Constants.BR_AZMTH_MOTOR_CANID,Constants.BR_AZMTH_ENC_IDX, Constants.BR_ENCODER_MOUNT_OFFSET_RAD, true);          
 
         // Make sure the pose estimator has been init'ed, and save a reference to it.
         pe = DrivetrainPoseEstimator.getInstance();

@@ -93,7 +93,7 @@ public class DriverInput {
         stickDeadband = new Calibration(getName(controllerIdx) + "StickDeadBand", "", 0.1);
 
         fwdRevSlewRate = new Calibration(getName(controllerIdx) + "fwdRevSlewRate_", "", Constants.MAX_TRANSLATE_ACCEL_MPS2*0.75);
-        rotSlewRate = new Calibration(getName(controllerIdx) + "rotSlewRate", "", Constants.MAX_ROTATE_ACCEL_RAD_PER_SEC_2*0.75);
+        rotSlewRate = new Calibration(getName(controllerIdx) + "rotSlewRate", "", Constants.MAX_ROTATE_ACCEL_RAD_PER_SEC_2*0.5);
         sideToSideSlewRate = new Calibration(getName(controllerIdx) + "sideToSideSlewRate", "", Constants.MAX_TRANSLATE_ACCEL_MPS2*0.75);
 
         translateCmdScalar = new Calibration(getName(controllerIdx) + "translateCmdScalar", "", 1.0);

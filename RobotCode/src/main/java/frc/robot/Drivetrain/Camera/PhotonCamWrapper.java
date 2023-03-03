@@ -42,7 +42,7 @@ public class PhotonCamWrapper {
         disconnectedFault.set(!cam.isConnected());
 
         var res = cam.getLatestResult();
-        double observationTime = Timer.getFPGATimestamp() - res.getLatencyMillis();
+        double observationTime = res.getTimestampSeconds();
 
         PoseTelemetry.getInstance().setCamPose(this.cam.getName(), new Pose3d(lastEstimate).transformBy(robotToCam));
 
