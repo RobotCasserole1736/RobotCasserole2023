@@ -192,7 +192,7 @@ public class ArmControl {
     }
 
     public double speedLimitFactorCalc(){
-        return speedLimitMap.lookupVal(Constants.WHEEL_BASE_HALF_LENGTH_M + curDesState.x);
+        return speedLimitMap.lookupVal(curDesState.x);
     }
 
     public boolean isExtended(){
