@@ -12,6 +12,8 @@ import frc.lib.Webserver2.DashboardConfig.DashboardConfig;
 import frc.lib.Webserver2.DashboardConfig.SwerveStateTopicSet;
 import frc.robot.Arm.ArmControl;
 import frc.robot.Autonomous.Autonomous;
+import frc.robot.Claw.ClawController;
+import frc.robot.Claw.GamePieceDetector;
 import frc.robot.Drivetrain.DrivetrainPoseEstimator;
 
 
@@ -36,10 +38,10 @@ public class Dashboard {
     boolean armPathActive;
 
     @Signal(name="db_cubeShape")
-    boolean cubeShape;
+    int cubeShape;
 
     @Signal(name="db_triangleShape")
-    boolean triangleShape;
+    int triangleShape;
 
     @Signal(name="db_isRedAlliance")
     boolean isRedAlliance;
@@ -49,6 +51,7 @@ public class Dashboard {
 
     @Signal(name="db_armSoftLimit")
     boolean armSoftLimit;
+
 
     DashboardConfig d;
 
@@ -84,6 +87,7 @@ public class Dashboard {
         d.addAutoChooser(Autonomous.getInstance().mainModeList, CENTER_COL, ROW3, 1.0);
 
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_armSoftLimit"),"Arm Soft Limit", "#FFFF00", "icons/softLimit.svg", CENTER_COL-18, ROW4, 1.0);
+        d.addIcon(SignalUtils.nameToNT4ValueTopic("db_armSoftLimit"),"Arm Soft Limit", "#FFFF00", "icons/softLimit.svg", CENTER_COL-18, ROW4, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_dtSpeedLimited"),"DT Speed Limit", "#FFFF00", "icons/speed.svg", CENTER_COL-12, ROW4, 1.0);
         d.addIcon(FaultWrangler.getInstance().getFaultActiveTopic(), "Faults", "#FF0000", "icons/alert.svg", CENTER_COL-6, ROW4, 1.0);
         d.addIcon(SignalUtils.nameToNT4ValueTopic("db_visionTargetVisible"),"Vision Target Visible", "#00FF00", "icons/vision.svg", CENTER_COL, ROW4, 1.0);
@@ -104,14 +108,20 @@ public class Dashboard {
         visionTargetVisible = DrivetrainPoseEstimator.getInstance().getVisionTargetsVisible();
         armXPos = Units.metersToInches(ArmTelemetry.getInstance().measPosX - Constants.WHEEL_BASE_HALF_LENGTH_M);
         armYPos = Units.metersToInches(ArmTelemetry.getInstance().measPosY);
-        cubeShape = GamepieceModeManager.getInstance().isCubeMode();
-        triangleShape = GamepieceModeManager.getInstance().isConeMode();
+        if(GamepieceModeManager.getInstance().isCubeMode()){
+          cubeShape = ClawController.getInstance().hasGamepiece() ? 2 : 1;
+          triangleShape = 0;
+        } else {
+          cubeShape = 0;
+          triangleShape = ClawController.getInstance().hasGamepiece() ? 2 : 1;
+        }
         armPathActive = ArmControl.getInstance().isPathPlanning();
         dtSpeedLimited = DriverStation.isTeleop() && ArmControl.getInstance().isExtended();
         pnuemPressure = PneumaticsSupplyControl.getInstance().getStoragePressure();
         isRedAlliance = DriverStation.getAlliance() == Alliance.Red;
         isBlueAlliance = DriverStation.getAlliance() == Alliance.Blue;
         armSoftLimit = ArmControl.getInstance().isSoftLimited();
+
       }
     
 
