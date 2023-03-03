@@ -13,7 +13,6 @@ import frc.lib.Webserver2.DashboardConfig.SwerveStateTopicSet;
 import frc.robot.Arm.ArmControl;
 import frc.robot.Autonomous.Autonomous;
 import frc.robot.Claw.ClawController;
-import frc.robot.Claw.GamePieceDetector;
 import frc.robot.Drivetrain.DrivetrainPoseEstimator;
 
 
