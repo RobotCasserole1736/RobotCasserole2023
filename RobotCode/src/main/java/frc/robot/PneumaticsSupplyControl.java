@@ -73,7 +73,7 @@ public class PneumaticsSupplyControl {
 
         double voltage = pressureSensor.getVoltage();
         if (voltage >= 0.001) {
-            storagePressure = (250 * (voltage / 4.62) - 25);
+            storagePressure = (120/151 * (250 * (voltage / 4.62) - 25));
             badSensor.clearFault();
         } else {
             storagePressure = 0;// meh, should never happen physically
