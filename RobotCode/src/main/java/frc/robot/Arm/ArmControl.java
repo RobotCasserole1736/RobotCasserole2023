@@ -187,6 +187,14 @@ public class ArmControl {
         return curDesState.x > (Constants.WHEEL_BASE_HALF_LENGTH_M + 0.35);
     }
 
+    public boolean isExtendedFar(){
+        return curDesState.x > (Constants.WHEEL_BASE_HALF_LENGTH_M + 0.5);
+    }
+
+    public boolean isExtendedReallyFar(){
+        return curDesState.x > (Constants.WHEEL_BASE_HALF_LENGTH_M + 0.75);
+    }
+
     public boolean isSoftLimited(){
         return asl.isLimited() || mb.isAngleLimited || ms.isAngleLimited;
     }

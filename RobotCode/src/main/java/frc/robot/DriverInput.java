@@ -34,6 +34,8 @@ public class DriverInput {
     Calibration translateCmdScalar;
     Calibration rotateCmdScalar;
     Calibration armExtenedLimitFactor;
+    Calibration armExtenedFarLimitFactor;
+    Calibration armExtenedReallyFarLimitFactor;
     
     // Drivetrain movement commands (from joysticks)
     @Signal(units="cmd")
@@ -99,7 +101,9 @@ public class DriverInput {
         translateCmdScalar = new Calibration(getName(controllerIdx) + "translateCmdScalar", "", 1.0);
         rotateCmdScalar = new Calibration(getName(controllerIdx) + "rotateCmdScalar", "", 1.0);
 
-        armExtenedLimitFactor = new Calibration(getName(controllerIdx) + "armExtendedSpdLimitFactor", "frac", 0.25);
+        armExtenedLimitFactor = new Calibration(getName(controllerIdx) + "armExtendedSpdLimitFactor", "frac", 0.75);
+        armExtenedFarLimitFactor = new Calibration(getName(controllerIdx) + "armExtendedSpdLimitFactor", "frac", 0.5);
+        armExtenedReallyFarLimitFactor = new Calibration(getName(controllerIdx) + "armExtendedSpdLimitFactor", "frac", 0.25);
 
         fwdRevSlewLimiter = new SlewRateLimiter(fwdRevSlewRate.get());
         rotSlewLimiter = new SlewRateLimiter(rotSlewRate.get());
@@ -130,6 +134,18 @@ public class DriverInput {
             //Scale back the speed command if the arm is extended too far.
             if(ArmControl.getInstance().isExtended()){
                 var factor = armExtenedLimitFactor.get();
+                curFwdRevSpdRaw *= factor;
+                curRotSpdRaw *= factor;
+                curSideToSideSpdRaw *= factor;
+            }
+            else if(ArmControl.getInstance().isExtendedFar()){
+                var factor = armExtenedFarLimitFactor.get();
+                curFwdRevSpdRaw *= factor;
+                curRotSpdRaw *= factor;
+                curSideToSideSpdRaw *= factor;
+            }
+            else if(ArmControl.getInstance().isExtendedReallyFar()){
+                var factor = armExtenedReallyFarLimitFactor.get();
                 curFwdRevSpdRaw *= factor;
                 curRotSpdRaw *= factor;
                 curSideToSideSpdRaw *= factor;
