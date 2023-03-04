@@ -3,7 +3,7 @@ package frc.robot.Arm;
 public enum ArmNamedPosition {
     //TODO - add actual numbers for the positions
     CUBE_LOW(1.10 ,0.15,false),
-    CUBE_MID(0.9317 ,0.8366,false, 0.1),
+    CUBE_MID(0.9117 ,0.8366,false, 0.1),
     CUBE_HIGH(1.377 ,1.123,false, 0.1),
     CONE_LOW(1.10 ,0.15,false),
     CONE_MID(1.069 ,1.076,false),
