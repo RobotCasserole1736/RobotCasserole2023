@@ -2,13 +2,16 @@ package frc.robot.AutoDrive;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
 import frc.robot.Drivetrain.DrivetrainControl;
+import frc.robot.Drivetrain.DrivetrainPoseEstimator;
 
 public class AutoDrive {
 
@@ -22,7 +25,8 @@ public class AutoDrive {
 	public enum AutoDriveCmdState{
 		MANUAL(0), // operator has full control over drivetrain
 		DRIVE_TO_CENTER(1), // Driver wants robot to drive to the center of the field
-		DO_A_BARREL_ROLL(2); // Driver wants to do a defense avoidance spin-to-the-right move
+		DO_A_BARREL_ROLL(2), // Driver wants to do a defense avoidance spin-to-the-right move
+        TURN_AROUND(3); // Turning 180 degrees while traversing the field
 
 		public final int value;
 
@@ -75,6 +79,13 @@ public class AutoDrive {
     double curAutoCmdRotDeg;
     @Signal
     double curAutoCmdRotVelDegPerSec;
+
+    // PID Controller for turning around while traversing the field. kp needs tuning.
+    DrivetrainPoseEstimator dpe = DrivetrainPoseEstimator.getInstance();
+    @Signal(units="V")
+    double cmdFeedForward;
+    Calibration kP = new Calibration("Turning kP", "deg/sec", 0.1);
+    PIDController turnAround_pid = new PIDController(kP.get(), 0, 0);
 
     public AutoDrive(){
 
@@ -131,6 +142,15 @@ public class AutoDrive {
                 waypoints.endRot = Rotation2d.fromDegrees(0.0); //pointed downfield
             } else if(curCmd == AutoDriveCmdState.DO_A_BARREL_ROLL){
                 waypoints.endRot = waypoints.startRot.plus(Rotation2d.fromDegrees(180.0));
+            } else if(curCmd == AutoDriveCmdState.TURN_AROUND){
+                startHeading = dpe.getEstPose().getRotation(); // Need variable that is the actual rotation of robot
+                if(startHeading.getDegrees() >= 180){
+                    endHeading = startHeading;
+                }
+                //Calculate Feed-Forward
+                // cmdFeedForward = Math.signum(desAngVelDegPerSec) * kS.get() + 
+                // Math.cos(Units.degreesToRadians(actAngleDeg + actBoomAngleDeg)) * kG.get() + 
+                // desAngVelDegPerSec * kF.get();
             }
 
             // Start the dynamic generation

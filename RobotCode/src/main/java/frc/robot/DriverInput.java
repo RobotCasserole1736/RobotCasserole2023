@@ -73,6 +73,8 @@ public class DriverInput {
     boolean spinMoveCmd;
     @Signal(units="bool")
     boolean driveToCenterCmd;
+    @Signal(units="bool")
+    boolean turnAroundCmd;
 
     // Press-and-hold to reset odometry to be pointing downfield.
     @Signal(units="bool")
@@ -148,6 +150,7 @@ public class DriverInput {
             // Read in Auto-drive commands
             spinMoveCmd = driverController.getBButton();
             driveToCenterCmd = driverController.getXButton();
+            turnAroundCmd = driverController.getRightTriggerAxis() > 0.5;
 
             // Read in claw intake/eject commands
             clawEject = driverController.getRightTriggerAxis() > .75;
@@ -169,6 +172,7 @@ public class DriverInput {
             resetOdometry = false;
             spinMoveCmd = false;
             driveToCenterCmd = false;
+            turnAroundCmd = false;
             clawEject = false;
             clawIntake = false;
             braceCmd = false;
@@ -249,6 +253,10 @@ public class DriverInput {
 
     public boolean getDriveToCenterCmd(){
         return driveToCenterCmd;
+    }
+
+    public boolean getTurnAroundCmd(){
+        return turnAroundCmd;
     }
 
     public boolean getBracePositionCmd(){
