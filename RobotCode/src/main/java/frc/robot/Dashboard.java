@@ -115,7 +115,7 @@ public class Dashboard {
           triangleShape = ClawController.getInstance().hasGamepiece() ? 2 : 1;
         }
         armPathActive = ArmControl.getInstance().isPathPlanning();
-        dtSpeedLimited = DriverStation.isTeleop() && ArmControl.getInstance().isExtended();
+        dtSpeedLimited = DriverStation.isTeleop() && (ArmControl.getInstance().speedLimitFactorCalc() < 1.0);
         pnuemPressure = PneumaticsSupplyControl.getInstance().getStoragePressure();
         isRedAlliance = DriverStation.getAlliance() == Alliance.Red;
         isBlueAlliance = DriverStation.getAlliance() == Alliance.Blue;

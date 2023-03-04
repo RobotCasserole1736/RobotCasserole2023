@@ -135,13 +135,6 @@ public class DriverInput {
             curRotSpdRaw *= factor;
             curSideToSideSpdRaw *= factor;
 
-            // if(ArmControl.getInstance().isExtended()){
-            //     var factor = armExtenedLimitFactor.get();
-            //     curFwdRevSpdRaw *= factor;
-            //     curRotSpdRaw *= factor;
-            //     curSideToSideSpdRaw *= factor;
-            // }
-
             // Slew rate limit the command to prevent jerky movement
             fwdRevSpdCmd = fwdRevSlewLimiter.calculate(curFwdRevSpdRaw );
             rotSpdCmd = rotSlewLimiter.calculate(curRotSpdRaw);
