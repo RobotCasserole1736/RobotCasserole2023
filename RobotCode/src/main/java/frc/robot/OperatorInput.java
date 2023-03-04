@@ -97,6 +97,7 @@ public class OperatorInput {
             armMidPosCmd = ctrl.getBButton();
             armHighPosCmd = ctrl.getYButton();
             armStowPosCmd = ctrl.getXButton();
+            //pov is the DPad on the controller
             armFloorTippedConePosCmd = povDown();
             armShelfPosCmd = povUP();
 
