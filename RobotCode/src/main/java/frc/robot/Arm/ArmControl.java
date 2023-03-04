@@ -195,10 +195,6 @@ public class ArmControl {
         return speedLimitMap.lookupVal(curDesState.x);
     }
 
-    public boolean isExtended(){
-        return curDesState.x > (Constants.WHEEL_BASE_HALF_LENGTH_M + 0.35);
-    }
-
     public boolean isSoftLimited(){
         return asl.isLimited() || mb.isAngleLimited || ms.isAngleLimited;
     }
