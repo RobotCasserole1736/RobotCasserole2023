@@ -8,6 +8,7 @@ import frc.robot.Autonomous.Events.AutoEventArmMoveToPos;
 import frc.robot.Autonomous.Events.AutoEventDriveTime;
 import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
+import frc.robot.Autonomous.Events.AutoEventSelectCubeMode;
 import frc.robot.Autonomous.Events.AutoEventSetClawEject;
 import frc.robot.Autonomous.Events.AutoEventSetClawIntake;
 import frc.robot.Autonomous.Events.AutoEventWait;
@@ -27,7 +28,7 @@ public class scoreTopPickup extends AutoMode {
         //Place cone 
         seq.addEvent(new AutoEventSelectConeMode());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
-        seq.addEvent(new AutoEventSetClawEject());
+        seq.addEvent(new AutoEventSelectCubeMode());
 
         //Drive to center
         initDrive = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 1.0);
