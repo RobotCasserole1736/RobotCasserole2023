@@ -28,6 +28,8 @@ public class ArmTelemetry {
     /* Singleton infratructure */
     private static ArmTelemetry inst = null;
 
+    boolean ENABLE_TELEMETRY = false;
+
     public static synchronized ArmTelemetry getInstance() {
         if (inst == null)
             inst = new ArmTelemetry();
@@ -157,8 +159,10 @@ public class ArmTelemetry {
     boolean desReflex;
 
     private ArmTelemetry() {
-        // Put Mechanism 2d to SmartDashboard
-        SmartDashboard.putData("Arm", m_mech2d);
+        if(ENABLE_TELEMETRY){
+            // Put Mechanism 2d to SmartDashboard
+            SmartDashboard.putData("Arm", m_mech2d);
+        }
 
         // Init all waypoint markers
         for (int i = 0; i < 8; i++) {
