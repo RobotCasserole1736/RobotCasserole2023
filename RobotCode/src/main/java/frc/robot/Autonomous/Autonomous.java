@@ -92,7 +92,7 @@ public class Autonomous {
         delayModeList.add(new Wait(9.0));
 
         mainModeList.add(new ScoreTwoTop());
-        mainModeList.add(new DriveFwd(3.0));
+        mainModeList.add(new DriveFwd(4.0));
         mainModeList.add(new SteakAuto2023());
         mainModeList.add(new DoNothing());
         mainModeList.add(new leaveComTop());

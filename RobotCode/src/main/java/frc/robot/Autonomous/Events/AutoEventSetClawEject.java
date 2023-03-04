@@ -53,6 +53,4 @@ public class AutoEventSetClawEject extends AutoEvent {
 		      (minTimeElapsed && !ClawController.getInstance().hasGamepiece());
 	}
 
-	public class setReleaseCmd {
-	}
 }

@@ -16,7 +16,7 @@ public class DriveFwd extends AutoMode {
 
     @Override
     public void addStepsToSequencer(AutoSequencer seq) {
-        seq.addEvent(new AutoEventDriveTime(duration, 1.0));
+        seq.addEvent(new AutoEventDriveTime(duration, 1.35));
     }
     
 }

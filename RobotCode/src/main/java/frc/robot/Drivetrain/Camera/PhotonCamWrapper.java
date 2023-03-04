@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import frc.Constants;
 import frc.lib.Faults.Fault;
 import frc.lib.Signal.Annotations.Signal;
 import frc.robot.PoseTelemetry;
@@ -78,7 +79,12 @@ public class PhotonCamWrapper {
 
                 //TODO - calculate a trustworthiness factor based on distance, ambiguity, etc.
 
-                observations.add(new CameraPoseObservation(observationTime, bestEst, 1.0)); 
+                if(ctotgt1.getTranslation().getNorm() > .25 * Constants.FIELD_LENGTH_M || ctotgt2.getTranslation().getNorm() > .25 * Constants.FIELD_LENGTH_M){
+                    //Target is too far, do nothing
+                } else {
+                    observations.add(new CameraPoseObservation(observationTime, bestEst, 1.0)); 
+                }
+
             } else {
                 //TODO - handle case where we saw some tag other than 1 through 8
                 DriverStation.reportError("Saw unknown tag ID " + Integer.toString(id), false);

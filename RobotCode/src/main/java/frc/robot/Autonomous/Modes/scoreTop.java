@@ -8,6 +8,7 @@ import frc.robot.Autonomous.Events.AutoEventArmMoveToPos;
 import frc.robot.Autonomous.Events.AutoEventDriveTime;
 import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
+import frc.robot.Autonomous.Events.AutoEventSelectCubeMode;
 import frc.robot.Autonomous.Events.AutoEventSetClawEject;
 import frc.robot.Autonomous.Events.AutoEventSetClawIntake;
 
@@ -25,7 +26,7 @@ public class scoreTop extends AutoMode {
 
         seq.addEvent(new AutoEventSelectConeMode());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
-        seq.addEvent(new AutoEventSetClawEject());
+        seq.addEvent(new AutoEventSelectCubeMode());
 
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
     }
