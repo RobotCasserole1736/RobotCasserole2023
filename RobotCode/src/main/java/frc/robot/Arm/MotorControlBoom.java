@@ -20,7 +20,7 @@ public class MotorControlBoom {
     Calibration kS = new Calibration("Arm Boom kS", "V", 0.01);
 
     //Feedback
-    Calibration kP = new Calibration("Arm Boom kP", "V/deg", 0.3);
+    Calibration kP = new Calibration("Arm Boom kP", "V/deg", 0.1);
     Calibration kI = new Calibration("Arm Boom kI", "V*sec/deg", 0.0);
     Calibration kD = new Calibration("Arm Boom kD", "V/degpersec", 0.0);
 

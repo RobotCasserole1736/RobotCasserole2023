@@ -19,14 +19,14 @@ public class MotorControlStick {
     Calibration kS = new Calibration("Arm Stick kS", "V", 0.1); 
 
     //Feedback
-    Calibration kP = new Calibration("Arm Stick kP", "V/deg", 0.08);
+    Calibration kP = new Calibration("Arm Stick kP", "V/deg", 0.1);
     Calibration kI = new Calibration("Arm Stick kI", "V*sec/deg", 0.0);
     Calibration kD = new Calibration("Arm Stick kD", "V/degpersec", 0.0);
 
     PIDController m_pid = new PIDController(0, 0, 0);
 
     // Gain schedule P 
-    final double pDeazoneErrDeg =  7.67/2.0; //Due to mechanical bounce, Needs a deadzone of  7.67 deg or more
+    final double pDeazoneErrDeg =  2.1/2.0; //Due to mechanical bounce, Needs a deadzone of  7.67 deg or more
     final double pDeadzonTransitionWidth = pDeazoneErrDeg/4.0;
     MapLookup2D pGainSchedule;
 
