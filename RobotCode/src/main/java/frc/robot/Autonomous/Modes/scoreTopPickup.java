@@ -31,12 +31,14 @@ public class scoreTopPickup extends AutoMode {
         seq.addEvent(new AutoEventSelectCubeMode());
 
         //Drive to center
-        initDrive = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 1.0);
+        initDrive = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 0.5);
         initDrive.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         seq.addEvent(initDrive);
  
         //Intake cone
+        
         var drivePickup = new AutoEventDriveTime(2.0, 0.25);
+        seq.addEvent(new AutoEventSelectConeMode());
         drivePickup.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_LOW));
         drivePickup.addChildEvent(new AutoEventSetClawIntake());
         seq.addEvent(drivePickup);

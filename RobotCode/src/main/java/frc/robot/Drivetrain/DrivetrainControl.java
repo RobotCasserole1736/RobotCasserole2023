@@ -229,10 +229,10 @@ public class DrivetrainControl {
         } else if (homePosition) {
             //Home Position
             desModState = new SwerveModuleState[4];
-            desModState[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
-            desModState[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
-            desModState[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
-            desModState[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+            desModState[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
+            desModState[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
+            desModState[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
+            desModState[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
         } else {
             //In motion
             desModState = Constants.m_kinematics.toSwerveModuleStates(desChSpd);
