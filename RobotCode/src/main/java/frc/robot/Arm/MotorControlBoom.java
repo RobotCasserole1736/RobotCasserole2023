@@ -15,19 +15,19 @@ public class MotorControlBoom {
     WrapperedCANMotorCtrl motorCtrl = new WrapperedCANMotorCtrl("Boom", Constants.ARM_BOOM_MOTOR_CANID, CANMotorCtrlType.SPARK_MAX);
 
     //Feed Forward
-    Calibration kF = new Calibration("Arm Boom kF", "V/degpersec", 0.12);
-    Calibration kG = new Calibration("Arm Boom kG", "V/cos(deg)", 0.5);
+    Calibration kF = new Calibration("Arm Boom kF", "V/degpersec", 0.135);
+    Calibration kG = new Calibration("Arm Boom kG", "V/cos(deg)", 0.4);
     Calibration kS = new Calibration("Arm Boom kS", "V", 0.01);
 
     //Feedback
-    Calibration kP = new Calibration("Arm Boom kP", "V/deg", 0.1);
-    Calibration kI = new Calibration("Arm Boom kI", "V*sec/deg", 0.0);
-    Calibration kD = new Calibration("Arm Boom kD", "V/degpersec", 0.0);
+    Calibration kP = new Calibration("Arm Boom kP", "V/deg", 0.25);
+    Calibration kI = new Calibration("Arm Boom kI", "V*sec/deg", 0.002);
+    Calibration kD = new Calibration("Arm Boom kD", "V/degpersec", 0.00);
 
     // Gain schedule P 
-    final double pDeazoneErrDeg = 1.375/2.0; //Due to mechanical bounce, Needs a deadzone of 1.375 deg or more
+    final double pDeazoneErrDeg = 0.01/2.0; //Due to mechanical bounce, Needs a deadzone of 1.375 deg or more
     final double pDeadzonTransitionWidth = pDeazoneErrDeg/4.0;
-    MapLookup2D pGainSchedule;
+    MapLookup2D closedLoopGainSchedule;
 
     PIDController m_pid = new PIDController(0, 0, 0);
 
@@ -56,13 +56,13 @@ public class MotorControlBoom {
 
         //Gain schedule P to have zero value in the deadzone
         // but get more powerful as error gets larger
-        pGainSchedule = new MapLookup2D();
-        pGainSchedule.insertNewPoint(-180, 1.0);
-        pGainSchedule.insertNewPoint(-pDeazoneErrDeg - pDeadzonTransitionWidth, 1.0);
-        pGainSchedule.insertNewPoint(-pDeazoneErrDeg, 0.0);
-        pGainSchedule.insertNewPoint(pDeazoneErrDeg, 0.0);
-        pGainSchedule.insertNewPoint(pDeazoneErrDeg + pDeadzonTransitionWidth, 1.0);
-        pGainSchedule.insertNewPoint(180, 1.0);
+        closedLoopGainSchedule = new MapLookup2D();
+        closedLoopGainSchedule.insertNewPoint(-180, 1.0);
+        closedLoopGainSchedule.insertNewPoint(-pDeazoneErrDeg - pDeadzonTransitionWidth, 1.0);
+        closedLoopGainSchedule.insertNewPoint(-pDeazoneErrDeg, 0.0);
+        closedLoopGainSchedule.insertNewPoint(pDeazoneErrDeg, 0.0);
+        closedLoopGainSchedule.insertNewPoint(pDeazoneErrDeg + pDeadzonTransitionWidth, 1.0);
+        closedLoopGainSchedule.insertNewPoint(180, 1.0);
     }
 
     public void setBrakeMode(boolean isBrakeMode){
@@ -97,7 +97,7 @@ public class MotorControlBoom {
 
         // update PID Controller Constants
         var absErr = Math.abs(actAngleDeg - desAngleDeg);
-        m_pid.setPID(kP.get() * pGainSchedule.lookupVal(absErr), kI.get(), kD.get());
+        m_pid.setPID(kP.get(), kI.get(), kD.get());
 
         // Calculate Feed-Forward
         cmdFeedForward = Math.signum(desAngVelDegPerSec) * kS.get() + 
@@ -105,7 +105,7 @@ public class MotorControlBoom {
                         desAngVelDegPerSec * kF.get();
 
         // Update feedback command
-        cmdFeedBack = m_pid.calculate(actAngleDeg, desAngleDeg);
+        cmdFeedBack = m_pid.calculate(actAngleDeg, desAngleDeg) * closedLoopGainSchedule.lookupVal(absErr);
 
         motorCmdV = cmdFeedForward + cmdFeedBack;
 
