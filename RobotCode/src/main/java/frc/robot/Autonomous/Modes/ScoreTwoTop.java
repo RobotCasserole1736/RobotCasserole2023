@@ -27,7 +27,7 @@ public class ScoreTwoTop extends AutoMode {
         //Place first cone upper
         seq.addEvent(new AutoEventSelectConeMode());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
-        seq.addEvent(new AutoEventSelectCubeMode());
+        seq.addEvent(new AutoEventSetClawEject());
 
         //Drive to center
         initDrive = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 1.0);
@@ -47,7 +47,7 @@ public class ScoreTwoTop extends AutoMode {
 
         //Place cone upper
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
-        seq.addEvent(new AutoEventSelectCubeMode());
+        seq.addEvent(new AutoEventSetClawEject());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
 
 
