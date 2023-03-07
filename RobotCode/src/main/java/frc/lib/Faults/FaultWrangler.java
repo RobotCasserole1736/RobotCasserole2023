@@ -39,6 +39,8 @@ public class FaultWrangler {
     @Signal
     double ledBrightness = 0;
 
+    boolean isInit = false;
+
     private FaultWrangler() {
         faultList = Collections.synchronizedList(new ArrayList<Fault>());
         ledOut = new DigitalOutput(Constants.FAULT_LED_OUT_IDX);
@@ -100,11 +102,12 @@ public class FaultWrangler {
     private void ledUpdate() {
 
         boolean ledActive = (numActiveFaults > 0);
-        if (ledActive) {
+        if(isInit){
+            ledBrightness = 1.0;
+        }else if (ledActive) {
             ledBrightness = Math.abs(Math.sin(2 * Math.PI * Timer.getFPGATimestamp() * BLINK_FREQ_HZ / 2.0));
-            ledOut.updateDutyCycle(ledBrightness);
         } else {
-            ledBrightness = 0;
+            ledBrightness = 0.0;
         }
         ledOut.updateDutyCycle(ledBrightness);
 
@@ -124,5 +127,11 @@ public class FaultWrangler {
 
     public void setHeartbeatActive(boolean isActive){
         hb.isActive = isActive;
+        setInit(false);
+    }
+
+    public void setInit(boolean isInit){
+        this.isInit = isInit;
+        this.hb.isInit = isInit;
     }
 }
