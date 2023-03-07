@@ -14,6 +14,7 @@ public class Heartbeat {
     double ledBrightness = 0;
 
     public boolean isActive = false;
+    public boolean isInit = false;
 
     public Heartbeat(){
         ledOut = new DigitalOutput(Constants.HEARTBEAT_LED_OUT_IDX);
@@ -22,7 +23,9 @@ public class Heartbeat {
     }
 
     public void ledUpdate() {
-        if(isActive){
+        if(isInit){
+            ledBrightness = 1.0;
+        } else if(isActive) {
             ledBrightness = Math.sin(2 * Math.PI * Timer.getFPGATimestamp() * BLINK_FREQ_HZ );
             ledBrightness = Math.max(0, ledBrightness);
             ledBrightness *= Math.pow(Math.sin(2 * Math.PI * Timer.getFPGATimestamp() * 2* BLINK_FREQ_HZ), 2);
