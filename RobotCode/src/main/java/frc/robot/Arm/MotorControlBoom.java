@@ -15,17 +15,17 @@ public class MotorControlBoom {
     WrapperedCANMotorCtrl motorCtrl = new WrapperedCANMotorCtrl("Boom", Constants.ARM_BOOM_MOTOR_CANID, CANMotorCtrlType.SPARK_MAX);
 
     //Feed Forward
-    Calibration kF = new Calibration("Arm Boom kF", "V/degpersec", 0.135);
-    Calibration kG = new Calibration("Arm Boom kG", "V/cos(deg)", 0.4);
+    Calibration kF = new Calibration("Arm Boom kF", "V/degpersec", 0.12);
+    Calibration kG = new Calibration("Arm Boom kG", "V/cos(deg)", 0.5);
     Calibration kS = new Calibration("Arm Boom kS", "V", 0.01);
 
     //Feedback
-    Calibration kP = new Calibration("Arm Boom kP", "V/deg", 0.25);
-    Calibration kI = new Calibration("Arm Boom kI", "V*sec/deg", 0.002);
+    Calibration kP = new Calibration("Arm Boom kP", "V/deg", 0.1);
+    Calibration kI = new Calibration("Arm Boom kI", "V*sec/deg", 0.0);
     Calibration kD = new Calibration("Arm Boom kD", "V/degpersec", 0.00);
 
     // Gain schedule P 
-    final double pDeazoneErrDeg = 0.01/2.0; //keep a very very tiny deadzone
+    final double pDeazoneErrDeg = 1.375/2.0; //keep a very very tiny deadzone
     final double pDeadzonTransitionWidth = pDeazoneErrDeg/4.0;
     MapLookup2D closedLoopGainSchedule;
 
