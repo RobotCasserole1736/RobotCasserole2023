@@ -47,12 +47,12 @@ public class ClawController {
 
     }
 
-    public void setReleaseCmd(boolean release) {
-        curGrabCmd = release;
+    public void setGrabCmd(boolean grab) {
+        curGrabCmd = grab;
     }
 
-    public void setGrabCmd(boolean grab) {
-        curReleaseCmd = grab;
+    public void setReleaseCmd(boolean release) {
+        curReleaseCmd = release;
     }
 
     public void update() {
