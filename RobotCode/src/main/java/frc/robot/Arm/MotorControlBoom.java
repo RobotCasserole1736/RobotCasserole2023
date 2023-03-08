@@ -25,7 +25,7 @@ public class MotorControlBoom {
     Calibration kD = new Calibration("Arm Boom kD", "V/degpersec", 0.00);
 
     // Gain schedule P 
-    final double pDeazoneErrDeg = 0.01/2.0; //Due to mechanical bounce, Needs a deadzone of 1.375 deg or more
+    final double pDeazoneErrDeg = 0.01/2.0; //keep a very very tiny deadzone
     final double pDeadzonTransitionWidth = pDeazoneErrDeg/4.0;
     MapLookup2D closedLoopGainSchedule;
 

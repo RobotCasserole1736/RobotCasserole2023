@@ -50,15 +50,24 @@ public class ReflexPreservingArmPath implements ArmPath {
         this.max_accel = max_accel_mps2; 
 
         TrajectoryConfig cfg = new TrajectoryConfig(max_vel_mps, max_accel_mps2);
-        cfg.addConstraint(new CentripetalAccelerationConstraint(max_accel_mps2/2));
+        cfg.addConstraint(new CentripetalAccelerationConstraint(max_accel_mps2/1.5));
 
         interiorWaypoints = new ArrayList<Translation2d>();//none by default
 
+        double dispX = end.get().x - start.x;
+        double oneQuarterX = start.x + dispX * 0.25;
+        double threeQuarterX = start.x + dispX * 0.75;
+
         Pose2d pathStartPos;
         final double directXLimit = Constants.WHEEL_BASE_HALF_LENGTH_M + Constants.BUMPER_THICKNESS_M*2;
-        if(start.x > directXLimit && Math.abs(start.x - end.get().x) > 0.01){
+        boolean startingOutsideAndTranslating = start.x > directXLimit && Math.abs(start.x - end.get().x) > 0.01;
+        boolean belowSafeY = end.safeY > start.y;
+        if(startingOutsideAndTranslating || belowSafeY){
             // If we're outside frame perimiter and about to move horizontally, 
             // ensure we start with upward motion to clear obstacles
+            if(belowSafeY){
+                interiorWaypoints.add(new Translation2d(oneQuarterX, end.safeY));
+            }
             pathStartPos = start.toPoseToTop();
         } else {
             pathStartPos = start.toPoseToOther(end);
@@ -69,6 +78,7 @@ public class ReflexPreservingArmPath implements ArmPath {
         if(end.safeY > 0){
             //If the end has a configured safe height, add in an additional waypoint to account for it
             // TODO - handle safe Y better
+            interiorWaypoints.add(new Translation2d(threeQuarterX, end.safeY));
             pathEndPos = end.get().toPoseFromTop();
         } else {
             // If we end outside the frame perimiter, approach from top.

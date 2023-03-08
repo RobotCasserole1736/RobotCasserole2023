@@ -168,6 +168,24 @@ public class DrivetrainControl {
         hdc_rotate.reset(pe.getGyroHeading().getRadians());
     }
 
+    // Commands the robot to travel at a certain speed relative to the field.
+    // The pose estsimator is used to "rotate" the commands into the robot's reference frame.
+    // FwdRev commands along the fields's X axis (toward-opposite-alliance positive), in meters per second
+    // strafeCmd commands along the field's Y axis (toward-your-alliance-driver-station-1 positive), in meters per second
+    // rotateCmd commands rotation about the field's Z axis (when viewed top-down, counterclockwise positive), in radians per second.
+    public void setCmdFieldRelativeWithTgtRotation(double fwdRevCmd, double strafeCmd, Rotation2d targetRotation, boolean braceCmd){
+        fwdRevCmd *= (DriverStation.getAlliance() == Alliance.Red)? -1.0 : 1.0;
+        strafeCmd *= (DriverStation.getAlliance() == Alliance.Red)? -1.0 : 1.0;
+
+        double rotateCmd = pe.getGyroHeading().minus(targetRotation).getRadians() * 10.0;
+
+        desChSpd = ChassisSpeeds.fromFieldRelativeSpeeds(fwdRevCmd, strafeCmd, rotateCmd, pe.getGyroHeading());
+        curDesPose = pe.getEstPose();
+        initAngleOnly = false;
+        bracePosition = braceCmd;
+        hdc_rotate.reset(pe.getGyroHeading().getRadians());
+    }
+
     // Commands the robot to travel at a certain speed relative to itself.
     // FwdRev commands along the robot's X axis (forward positive), in meters per second
     // strafeCmd commands along the robot's Y axis (left positive), in meters per second
