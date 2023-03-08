@@ -38,6 +38,7 @@ public class scoreTopPickup extends AutoMode {
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_LOW));
         seq.addEvent(new AutoEventDriveAndIntake(2.0, 0.25));
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
+        
       
     }
 
