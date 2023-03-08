@@ -55,7 +55,7 @@ public class ReflexPreservingArmPath implements ArmPath {
         interiorWaypoints = new ArrayList<Translation2d>();//none by default
 
         Pose2d pathStartPos;
-        final double directXLimit = Constants.WHEEL_BASE_HALF_LENGTH_M + Constants.BUMPER_THICKNESS_M*2;
+        final double directXLimit = Constants.WHEEL_BASE_HALF_LENGTH_M + Constants.BUMPER_THICKNESS_M*0;
         if(start.x > directXLimit && Math.abs(start.x - end.get().x) > 0.01){
             // If we're outside frame perimiter and about to move horizontally, 
             // ensure we start with upward motion to clear obstacles
