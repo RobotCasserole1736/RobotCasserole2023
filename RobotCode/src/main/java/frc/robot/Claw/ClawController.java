@@ -17,7 +17,7 @@ public class ClawController {
     private final double CUBE_HOLD_SPD = 0.2;
     private final double CUBE_EJECT_SPD = -0.35;
 
-    private final double CONE_INTAKE_SPD = 0.75;
+    private final double CONE_INTAKE_SPD = 0.65;
     private final double CONE_HOLD_SPD = 0.2;
     private final double CONE_EJECT_SPD = -0.3;
 
