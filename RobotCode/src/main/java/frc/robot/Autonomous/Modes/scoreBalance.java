@@ -5,6 +5,7 @@ import frc.lib.AutoSequencer.AutoSequencer;
 import frc.lib.Autonomous.AutoMode;
 import frc.robot.Arm.ArmNamedPosition;
 import frc.robot.Autonomous.Events.AutoEventArmMoveToPos;
+import frc.robot.Autonomous.Events.AutoEventBraceDrivetrain;
 import frc.robot.Autonomous.Events.AutoEventDriveTime;
 import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
@@ -33,6 +34,9 @@ public class scoreBalance extends AutoMode {
         //Drive to charge station
         initDrive = new AutoEventJSONTrajectory("Score, balance", 0.25);
         seq.addEvent(initDrive);
+
+        seq.addEvent(new AutoEventBraceDrivetrain(10.0));
+
        
     }
 

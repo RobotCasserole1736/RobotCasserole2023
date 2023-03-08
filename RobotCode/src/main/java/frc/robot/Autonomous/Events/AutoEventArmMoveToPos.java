@@ -1,5 +1,7 @@
 package frc.robot.Autonomous.Events;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.Timer;
 import frc.lib.AutoSequencer.AutoEvent;
 import frc.robot.Arm.ArmControl;
@@ -13,6 +15,7 @@ public class AutoEventArmMoveToPos extends AutoEvent {
 	ArmNamedPosition posDes;
 	double startTime = 0;
 	final double MIN_DURATION_SEC = 1.0;
+	Debouncer doneMovingArmDebouncer = new Debouncer(0.5, DebounceType.kRising);
 	
 	public AutoEventArmMoveToPos(ArmNamedPosition posDes) {
 		this.posDes = posDes;
@@ -45,6 +48,7 @@ public class AutoEventArmMoveToPos extends AutoEvent {
 		// Done = we've been commanding a position for a minimum number of seconds
 		//        AND we've finished path planning
 		var curTime = Timer.getFPGATimestamp() - startTime;
-		return (!ArmControl.getInstance().isPathPlanning() && curTime > MIN_DURATION_SEC);
+		boolean doneMovingDbnc = doneMovingArmDebouncer.calculate(!ArmControl.getInstance().isPathPlanning());
+		return (doneMovingDbnc && curTime > MIN_DURATION_SEC);
 	}
 }

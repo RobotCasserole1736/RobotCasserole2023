@@ -95,11 +95,12 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     stt = new SegmentTimeTracker("Robot.java", 0.25);
-
     stt.start();
 
     //Ensure we start with no heartbeat light
     FaultWrangler.getInstance().setHeartbeatActive(false);
+    FaultWrangler.getInstance().setInit(true);
+
 
     // Disable default behavior of the live-window output manipulation logic
     // We've got our own and never use this anyway.
@@ -178,6 +179,7 @@ public class Robot extends TimedRobot {
     //ITS ALIVE
     FaultWrangler.getInstance().setHeartbeatActive(true);
 
+    
 
   }
 

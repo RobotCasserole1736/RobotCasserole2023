@@ -58,8 +58,8 @@ public class ArmControl {
         stickFG = new FunctionGenerator("arm_stick", "deg");
 
         speedLimitMap = new MapLookup2D();
-        speedLimitMap.insertNewPoint(Constants.WHEEL_BASE_HALF_LENGTH_M + 0.4, 0.25);
-        speedLimitMap.insertNewPoint(Constants.WHEEL_BASE_HALF_LENGTH_M + 0.3, 0.5);
+        speedLimitMap.insertNewPoint(Constants.WHEEL_BASE_HALF_LENGTH_M + 0.4, 0.5);
+        speedLimitMap.insertNewPoint(Constants.WHEEL_BASE_HALF_LENGTH_M + 0.3, 0.75);
         speedLimitMap.insertNewPoint(Constants.WHEEL_BASE_HALF_LENGTH_M + 0.2, 0.75);
         speedLimitMap.insertNewPoint(Constants.WHEEL_BASE_HALF_LENGTH_M + 0.1, 1.0);
     }

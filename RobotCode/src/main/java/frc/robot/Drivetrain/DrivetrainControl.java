@@ -168,6 +168,24 @@ public class DrivetrainControl {
         hdc_rotate.reset(pe.getGyroHeading().getRadians());
     }
 
+    // Commands the robot to travel at a certain speed relative to the field.
+    // The pose estsimator is used to "rotate" the commands into the robot's reference frame.
+    // FwdRev commands along the fields's X axis (toward-opposite-alliance positive), in meters per second
+    // strafeCmd commands along the field's Y axis (toward-your-alliance-driver-station-1 positive), in meters per second
+    // rotateCmd commands rotation about the field's Z axis (when viewed top-down, counterclockwise positive), in radians per second.
+    public void setCmdFieldRelativeWithTgtRotation(double fwdRevCmd, double strafeCmd, Rotation2d targetRotation, boolean braceCmd){
+        fwdRevCmd *= (DriverStation.getAlliance() == Alliance.Red)? -1.0 : 1.0;
+        strafeCmd *= (DriverStation.getAlliance() == Alliance.Red)? -1.0 : 1.0;
+
+        double rotateCmd = pe.getGyroHeading().minus(targetRotation).getRadians() * 10.0;
+
+        desChSpd = ChassisSpeeds.fromFieldRelativeSpeeds(fwdRevCmd, strafeCmd, rotateCmd, pe.getGyroHeading());
+        curDesPose = pe.getEstPose();
+        initAngleOnly = false;
+        bracePosition = braceCmd;
+        hdc_rotate.reset(pe.getGyroHeading().getRadians());
+    }
+
     // Commands the robot to travel at a certain speed relative to itself.
     // FwdRev commands along the robot's X axis (forward positive), in meters per second
     // strafeCmd commands along the robot's Y axis (left positive), in meters per second
@@ -229,10 +247,10 @@ public class DrivetrainControl {
         } else if (homePosition) {
             //Home Position
             desModState = new SwerveModuleState[4];
-            desModState[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
-            desModState[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
-            desModState[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
-            desModState[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+            desModState[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
+            desModState[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
+            desModState[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
+            desModState[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
         } else {
             //In motion
             desModState = Constants.m_kinematics.toSwerveModuleStates(desChSpd);

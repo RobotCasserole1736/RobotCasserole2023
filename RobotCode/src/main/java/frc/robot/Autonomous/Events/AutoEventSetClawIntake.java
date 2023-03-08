@@ -13,7 +13,7 @@ public class AutoEventSetClawIntake extends AutoEvent {
 	ArmNamedPosition posDes;
 	double startTime = 0;
 	final double MIN_DURATION_SEC = 0.25;
-	final double MAX_DURATION_SEC = 1.0;
+	final double MAX_DURATION_SEC = 10.0;
 	
 	public AutoEventSetClawIntake() {
 

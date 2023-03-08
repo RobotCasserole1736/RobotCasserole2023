@@ -30,7 +30,7 @@ public class AllianceTransformUtils{
 
     public static Rotation2d transform(Rotation2d in){
         if(DriverStation.getAlliance() == Alliance.Red){
-            return Rotation2d.fromDegrees(180).minus(in);
+            return Rotation2d.fromDegrees(180).plus(in);
         } else {
             return in;
         }

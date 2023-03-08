@@ -5,6 +5,7 @@ import frc.lib.AutoSequencer.AutoSequencer;
 import frc.lib.Autonomous.AutoMode;
 import frc.robot.Arm.ArmNamedPosition;
 import frc.robot.Autonomous.Events.AutoEventArmMoveToPos;
+import frc.robot.Autonomous.Events.AutoEventBraceDrivetrain;
 import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
 import frc.robot.Autonomous.Events.AutoEventSetClawEject;
@@ -32,6 +33,7 @@ public class ScoreLeaveBalance extends AutoMode {
         seq.addEvent(initDrive);
 
         //TODO - call auto balancing code here
+        seq.addEvent(new AutoEventBraceDrivetrain(10.0));
 
         
     }
