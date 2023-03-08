@@ -48,7 +48,6 @@ public class Robot extends TimedRobot {
 
   // Things
   RIOLoadMonitor loadMon;
-  BatteryMonitor batMan;
 
   // Main Driver
   DriverInput di;
@@ -105,9 +104,6 @@ public class Robot extends TimedRobot {
 
     loadMon = new RIOLoadMonitor();
     stt.mark("RIO Load Monitor");
-
-    batMan = BatteryMonitor.getInstance();
-    stt.mark("Battery Monitor");
 
     //bcd = new Ballcolordetector();
     stt.mark("Ball Color Detector");
