@@ -71,17 +71,21 @@ public class PhotonCamWrapper {
                 double err2 = botPoseEst2.minus(lastEstimate).getTranslation().getNorm();
 
                 Pose2d bestEst;
-                if(err1 < err2){
+                boolean useFirst = (err1 < err2); //Select the pose closest to our last pose estimate
+                var amb = t.getPoseAmbiguity();
+                boolean targetCloseEnoughToCamera = false;
+                boolean lowEnoughAmbiguity = amb < 0.2 && amb >= 0.0; // less than 0.2, and not -1
+
+                if(useFirst){
                     bestEst = botPoseEst1;
+                    targetCloseEnoughToCamera = ctotgt1.getTranslation().getNorm() < 0.25 * Constants.FIELD_LENGTH_M ;
                 } else {
                     bestEst = botPoseEst2;
+                    targetCloseEnoughToCamera = ctotgt2.getTranslation().getNorm() < 0.25 * Constants.FIELD_LENGTH_M ;
                 }
 
-                //TODO - calculate a trustworthiness factor based on distance, ambiguity, etc.
-
-                if(ctotgt1.getTranslation().getNorm() > .25 * Constants.FIELD_LENGTH_M || ctotgt2.getTranslation().getNorm() > .25 * Constants.FIELD_LENGTH_M){
-                    //Target is too far, do nothing
-                } else {
+                if(targetCloseEnoughToCamera && lowEnoughAmbiguity){
+                    // Target meets our filter criteria, add it.
                     observations.add(new CameraPoseObservation(observationTime, bestEst, 1.0)); 
                 }
 
