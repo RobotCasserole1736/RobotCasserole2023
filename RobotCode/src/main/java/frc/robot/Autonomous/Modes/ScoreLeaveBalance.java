@@ -12,7 +12,9 @@ import frc.robot.Autonomous.Events.AutoEventSetClawEject;
 
 public class ScoreLeaveBalance extends AutoMode {
     
-    AutoEventJSONTrajectory initDrive;
+    AutoEventJSONTrajectory initDrive1;
+    AutoEventJSONTrajectory initDrive2;
+
 
 
     public ScoreLeaveBalance(){
@@ -28,9 +30,15 @@ public class ScoreLeaveBalance extends AutoMode {
         seq.addEvent(new AutoEventSetClawEject());
         
         //Drive to charging station
-        initDrive = new AutoEventJSONTrajectory("Score, Leave community, balance", 0.37);
-        initDrive.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
-        seq.addEvent(initDrive);
+        initDrive1 = new AutoEventJSONTrajectory("Score, Leave community, balance pt 1", 0.25);
+        initDrive1.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
+        seq.addEvent(initDrive1);
+
+        initDrive2 = new AutoEventJSONTrajectory("Score, Leave community, balance pt 2", 0.45);
+        seq.addEvent(initDrive2);
+
+
+
 
         //TODO - call auto balancing code here
         seq.addEvent(new AutoEventBraceDrivetrain(10.0));
@@ -40,7 +48,7 @@ public class ScoreLeaveBalance extends AutoMode {
 
     @Override
     public Pose2d getInitialPose(){
-        return initDrive.getInitialPose();
+        return initDrive1.getInitialPose();
     }
 
 }
