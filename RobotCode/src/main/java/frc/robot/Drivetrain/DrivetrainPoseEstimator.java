@@ -62,6 +62,7 @@ public class DrivetrainPoseEstimator {
     // Measured in expected standard deviation (meters of position and degrees of rotation)
     Matrix<N3, N1>  visionMeasurementStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
 
+    DrivetrainPitchEstimator pe = DrivetrainPitchEstimator.getInstance();
 
     // Mostly for debug or dashboard purposes, plot
     // the robot's current speed on the field.
@@ -116,8 +117,9 @@ public class DrivetrainPoseEstimator {
 
     public void update(){
 
-        // Handle gyro-related update tasks
+        // Handle sensor-related update tasks
         gyro.update();
+        pe.update();
 
         //Based on gyro and measured module speeds and positions, estimate where our robot should have moved to.
         SwerveModulePosition[] positions = DrivetrainControl.getInstance().getModuleActualPositions();
