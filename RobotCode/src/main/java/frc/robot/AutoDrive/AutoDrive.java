@@ -2,6 +2,8 @@ package frc.robot.AutoDrive;
 
 import java.util.ArrayList;
 
+import javax.lang.model.util.ElementScanner14;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -72,8 +74,9 @@ public class AutoDrive {
 
     //Holonomic specific - the heading (direction we point the front of the robot in)
     // is independent of the velocity direction of the trajectory
-    Rotation2d startHeading;
-    Rotation2d endHeading;
+    double startHeading;
+    double endHeading;
+    double cmdFeedBack;
 
     @Signal
     double curAutoCmdRotDeg;
@@ -143,14 +146,15 @@ public class AutoDrive {
             } else if(curCmd == AutoDriveCmdState.DO_A_BARREL_ROLL){
                 waypoints.endRot = waypoints.startRot.plus(Rotation2d.fromDegrees(180.0));
             } else if(curCmd == AutoDriveCmdState.TURN_AROUND){
-                startHeading = dpe.getEstPose().getRotation(); // Need variable that is the actual rotation of robot
-                if(startHeading.getDegrees() >= 180){
-                    endHeading = startHeading;
+                startHeading = dpe.getEstPose().getRotation().getDegrees(); // Need variable that is the actual rotation of robot
+                if(startHeading >= 180.0){
+                    endHeading = 360.0;
                 }
-                //Calculate Feed-Forward
-                // cmdFeedForward = Math.signum(desAngVelDegPerSec) * kS.get() + 
-                // Math.cos(Units.degreesToRadians(actAngleDeg + actBoomAngleDeg)) * kG.get() + 
-                // desAngVelDegPerSec * kF.get();
+                else{
+                    endHeading = 0.0;
+                }
+                cmdFeedBack = turnAround_pid.calculate(dpe.getEstPose().getRotation().getDegrees(), endHeading);
+                dt.setCmdFieldRelative(manualFwdRevCmd, manualStrafeCmd, cmdFeedBack, bracePosition);
             }
 
             // Start the dynamic generation
