@@ -1,16 +1,19 @@
 package frc.robot.Drivetrain;
 
-import java.lang.constant.Constable;
-
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer.Range;
 import frc.Constants;
 import frc.lib.Signal.Annotations.Signal;
 
 public class DrivetrainPitchEstimator {
+
+    public enum TiltState{
+        LEVEL,
+        NOSE_UP,
+        NOSE_DOWN;
+    }
 
     /* Singleton infrastructure */
     private static DrivetrainPitchEstimator instance;
@@ -21,11 +24,18 @@ public class DrivetrainPitchEstimator {
         return instance;
     }
 
+    double TILTED_THRESH_DEG = 20.0;
+    double LEVEL_THRESH_DEG = 10.0;
+
     @Signal
     double chassisPitchDeg = 0;
     @Signal
     double chassisPitchDegRaw = 0;
     BuiltInAccelerometer accel;
+
+    TiltState curTilt = TiltState.LEVEL;
+
+
 
     LinearFilter pitchFilter = LinearFilter.singlePoleIIR(1.0/180.0, Constants.Ts);
 
@@ -44,6 +54,24 @@ public class DrivetrainPitchEstimator {
 
         chassisPitchDeg = pitchFilter.calculate(chassisPitchDegRaw);
 
+        //Interpret the pitch into a three-state level, nose-up, or nose-down state with hystersis
+        if(Math.abs(chassisPitchDeg) < LEVEL_THRESH_DEG){
+            curTilt = TiltState.LEVEL;
+        } else if(chassisPitchDeg > TILTED_THRESH_DEG){
+            curTilt = TiltState.NOSE_UP;
+        } else if(chassisPitchDeg < -1.0 * TILTED_THRESH_DEG){
+            curTilt = TiltState.NOSE_DOWN;
+        } //else hold state
+
+       
+    }
+
+    public double getPitchDeg(){
+        return chassisPitchDeg;
+    }
+
+    public TiltState getCurTilt(){
+        return curTilt;
     }
     
 }
