@@ -5,6 +5,7 @@ import frc.lib.AutoSequencer.AutoSequencer;
 import frc.lib.Autonomous.AutoMode;
 import frc.robot.Arm.ArmNamedPosition;
 import frc.robot.Autonomous.Events.AutoEventArmMoveToPos;
+import frc.robot.Autonomous.Events.AutoEventDriveAndIntake;
 import frc.robot.Autonomous.Events.AutoEventDriveTime;
 import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
@@ -15,7 +16,9 @@ import frc.robot.Autonomous.Events.AutoEventSetClawIntake;
 public class SteakAuto2023 extends AutoMode {
 
     //This needs to be saved off separately because it's used to supply the default initial pose.
-    AutoEventJSONTrajectory initDrive;
+    AutoEventJSONTrajectory initDrive1;
+    AutoEventJSONTrajectory initDrive2;
+    AutoEventJSONTrajectory initDrive3;
 
     public SteakAuto2023(){
         super();
@@ -30,20 +33,18 @@ public class SteakAuto2023 extends AutoMode {
         seq.addEvent(new AutoEventSelectCubeMode());
 
         //Drive to center
-        initDrive = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 1.0);
-        initDrive.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
-        seq.addEvent(initDrive);
+        initDrive1 = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 0.7);
+        initDrive1.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
+        seq.addEvent(initDrive1);
 
         //Intake cone
-        var drivePickup = new AutoEventDriveTime(2.0, 0.25);
-        drivePickup.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_LOW));
-        drivePickup.addChildEvent(new AutoEventSetClawIntake());
-        seq.addEvent(drivePickup);
-
+        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_LOW));
+        seq.addEvent(new AutoEventDriveAndIntake(2.0, 0.4));
+        
         //Drive to grid
-        initDrive = new AutoEventJSONTrajectory("Score two top pt 2", 1.0);
-        initDrive.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
-        seq.addEvent(initDrive);
+        initDrive2 = new AutoEventJSONTrajectory("Score two top pt 2", 0.7);
+        initDrive2.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
+        seq.addEvent(initDrive2);
 
         //Place cone upper
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
@@ -51,16 +52,16 @@ public class SteakAuto2023 extends AutoMode {
         
 
         //Drive to charging station
-        initDrive = new AutoEventJSONTrajectory("Steak balance", 1.0);
-        initDrive.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
-        seq.addEvent(initDrive);
+        initDrive3 = new AutoEventJSONTrajectory("Steak balance", 0.5);
+        initDrive3.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
+        seq.addEvent(initDrive3);
 
 
     }
 
     @Override
     public Pose2d getInitialPose(){
-        return initDrive.getInitialPose();
+        return initDrive1.getInitialPose();
     }
     
     
