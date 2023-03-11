@@ -30,7 +30,7 @@ public class ClawController {
     @Signal
     boolean gamepiecePresent = false;
 
-    GamePieceDetector gpd;
+    public GamePieceDetector gpd;
 
     private static ClawController inst = null;
 

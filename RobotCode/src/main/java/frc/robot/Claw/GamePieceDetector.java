@@ -1,6 +1,9 @@
 package frc.robot.Claw;
 
 import com.playingwithfusion.TimeOfFlight;
+
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
 import frc.Constants;
 import frc.lib.Calibration.Calibration;
@@ -24,6 +27,10 @@ public class GamePieceDetector {
 
     // Boolean to track game piece presence
     boolean clawHasGamePiece;
+    boolean clawHadGamePiece;
+
+    public boolean ledShouldBlink;
+    Debouncer blinkDebouncer = new Debouncer(1.0, DebounceType.kFalling);
 
     public GamePieceDetector(){
         // Instantiating the Time of Flight Sensor  
@@ -43,6 +50,7 @@ public class GamePieceDetector {
 
         // Initialize with no game piece
         clawHasGamePiece = false;
+        clawHadGamePiece = false;
     }
 
     // Return true if either game piece is detected
@@ -54,6 +62,8 @@ public class GamePieceDetector {
         // Update TOF sensor reading
         gamepieceDistSensorMeas = Units.metersToInches(gamepieceDistSensor.getRange()/1000.0);
         disconTOFFault.set(gamepieceDistSensor.getFirmwareVersion() == 0);    
+
+        clawHadGamePiece = clawHasGamePiece;
 
         // Determine if game piece is in claw
         // Use two threshold to achieve some hysterisis
@@ -77,5 +87,21 @@ public class GamePieceDetector {
         else {
             clawHasGamePiece = false;
         }
+
+        if(clawHasGamePiece && !clawHadGamePiece) {
+            ledShouldBlink = blinkDebouncer.calculate(true);
+        } else {
+            ledShouldBlink = blinkDebouncer.calculate(false);
+        }
+
+    } 
+
+    public boolean newGamePiece(){
+        return (clawHasGamePiece && !clawHadGamePiece);
     }
+
+    public boolean ledShouldBlink() {
+        return ledShouldBlink;
+    }
+    
 }
