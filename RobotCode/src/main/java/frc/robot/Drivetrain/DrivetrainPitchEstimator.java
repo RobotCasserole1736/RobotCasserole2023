@@ -24,8 +24,8 @@ public class DrivetrainPitchEstimator {
         return instance;
     }
 
-    double TILTED_THRESH_DEG = 20.0;
-    double LEVEL_THRESH_DEG = 10.0;
+    double TILTED_THRESH_DEG = 10.0;
+    double LEVEL_THRESH_DEG = 5.0;
 
     @Signal
     double chassisPitchDeg = 0;
@@ -37,7 +37,7 @@ public class DrivetrainPitchEstimator {
 
 
 
-    LinearFilter pitchFilter = LinearFilter.singlePoleIIR(1.0/180.0, Constants.Ts);
+    LinearFilter pitchFilter = LinearFilter.singlePoleIIR(0.1, Constants.Ts);
 
 
     private DrivetrainPitchEstimator(){
@@ -50,7 +50,8 @@ public class DrivetrainPitchEstimator {
         var vertAccel = accel.getZ();
         var latAccel = accel.getX();
 
-        chassisPitchDegRaw = Units.radiansToDegrees(Math.atan2(vertAccel, latAccel));
+        chassisPitchDegRaw = Units.radiansToDegrees(Math.atan2(vertAccel, latAccel)) - 90;
+        
 
         chassisPitchDeg = pitchFilter.calculate(chassisPitchDegRaw);
 

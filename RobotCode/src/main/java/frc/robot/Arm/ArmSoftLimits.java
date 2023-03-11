@@ -12,7 +12,7 @@ public class ArmSoftLimits {
     private final double LARGE_DIFF = Double.MAX_VALUE;
 
 
-    Double XPosLimits[] = {0.700, 0.5327, 0.3934, 0.308, 1.612, 1.612};
+    Double XPosLimits[] = {0.6, 0.5327, 0.3934, 0.308, 1.612, 1.612};
     Double YPosLimits[] = {0.05, 0.8217, 1.116, 1.847, 1.847, 0.05};
 
     boolean isLimited;

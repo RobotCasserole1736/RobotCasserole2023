@@ -27,6 +27,8 @@ import frc.robot.Drivetrain.DrivetrainControl;
 import frc.robot.Drivetrain.DrivetrainPitchEstimator;
 import frc.robot.Drivetrain.DrivetrainPitchEstimator.TiltState;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 
 /**
@@ -46,6 +48,8 @@ public class AutoEventDriveFwdTillLevel extends AutoEvent {
     DrivetrainPitchEstimator pe = DrivetrainPitchEstimator.getInstance();
 
     boolean hasTiltedUp = false;
+
+    Debouncer levelDebounce = new Debouncer(0.5, DebounceType.kRising);
 
     public AutoEventDriveFwdTillLevel(double max_duration, double speed_mps) {
 
@@ -69,12 +73,17 @@ public class AutoEventDriveFwdTillLevel extends AutoEvent {
             hasTiltedUp = true;
         }
 
+        boolean debouncedLevelCondition = levelDebounce.calculate(pe.getCurTilt() == TiltState.LEVEL);
+
         if(hasTiltedUp) {
-            if(pe.getCurTilt() == TiltState.LEVEL){
+            if(debouncedLevelCondition){
+                dt_inst.setCmdRobotRelative(0.0, 0.0, 0.0, true);
 
             } if (pe.getCurTilt() == TiltState.NOSE_UP){
+                dt_inst.setCmdRobotRelative(speed_mps, 0.0, 0.0, false);
 
             } if (pe.getCurTilt() == TiltState.NOSE_DOWN){
+                dt_inst.setCmdRobotRelative(-1 * speed_mps, 0.0, 0.0, false);
 
             }
 
@@ -102,19 +111,11 @@ public class AutoEventDriveFwdTillLevel extends AutoEvent {
     }
 
     /**
-     * Returns true once we've run the whole path
+     * we never want it to end, so it will always return false
      */
     public boolean isDone() {
 
-        var curTime = Timer.getFPGATimestamp() - startTime;
-		boolean minTimeElapsed = curTime > 0.25;
-		boolean maxTimeElapsed = curTime > duration;
-		boolean isDone =  maxTimeElapsed ||
-		      (minTimeElapsed && ClawController.getInstance().hasGamepiece());
-        if(isDone){
-            dt_inst.stop();
-        }
-        return isDone;
+        return false;
     }
 
     @Override

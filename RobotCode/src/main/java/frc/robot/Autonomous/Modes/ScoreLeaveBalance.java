@@ -6,6 +6,7 @@ import frc.lib.Autonomous.AutoMode;
 import frc.robot.Arm.ArmNamedPosition;
 import frc.robot.Autonomous.Events.AutoEventArmMoveToPos;
 import frc.robot.Autonomous.Events.AutoEventBraceDrivetrain;
+import frc.robot.Autonomous.Events.AutoEventDriveFwdTillLevel;
 import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
 import frc.robot.Autonomous.Events.AutoEventSetClawEject;
@@ -34,8 +35,7 @@ public class ScoreLeaveBalance extends AutoMode {
         initDrive1.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         seq.addEvent(initDrive1);
 
-        initDrive2 = new AutoEventJSONTrajectory("Score, Leave community, balance pt 2", 0.45);
-        seq.addEvent(initDrive2);
+        seq.addEvent(new AutoEventDriveFwdTillLevel(100, 1));
 
 
 

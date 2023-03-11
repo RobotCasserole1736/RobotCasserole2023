@@ -92,7 +92,7 @@ public class Constants {
     static public final double ARM_STICK_MAX_ANGLE_DEG = (154.9);
     static public final double ARM_STICK_MIN_ANGLE_DEG = (-155);
     static public final double ARM_BOOM_MAX_ANGLE_DEG = (60.00);
-    static public final double ARM_BOOM_MIN_ANGLE_DEG = (-117.5);
+    static public final double ARM_BOOM_MIN_ANGLE_DEG = (-107.5);
     
 
     //////////////////////////////////////////////////////////////////
