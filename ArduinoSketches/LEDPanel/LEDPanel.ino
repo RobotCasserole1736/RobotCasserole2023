@@ -14,101 +14,11 @@ const uint8_t kMatrixWidth = 16;
 //const uint8_t kMatrixHeight = 16;
 uint8_t fader = BRIGHTNESS;
 const long pulseLengthYellowCone = 1000; //pulse length in microseconds to command yellow cone display
+const long pulseLengthYellowConeAttention = 750; //pulse length in microseconds to command yellow cone display
 const long pulseLengthPurpleCube = 1500; //pulse length in microseconds to command purple cube display
+const long pulseLengthPurpleCubeAttention = 1250; //pulse length in microseconds to command purple cube display
+const long pulseLengthGreenBlink = 500;  //pulse length in microseconds to command green blink
 const long pulseLengthTolerance = 100; //command pulse length tolerance
-
-//**************************************************************
-// Pattern: Array that prints '1' with printArray function
-//**************************************************************
-                              // 0123456789ABCDEF
-const uint16_t oneArray[16] = {0b0000000110000000, //0
-                               0b0000001110000000, //1
-                               0b0000011110000000, //2
-                               0b0000110110000000, //3
-                               0b0001100110000000, //4
-                               0b0011000110000000, //5
-                               0b0010000110000000, //6
-                               0b0000000110000000, //7
-                               0b0000000110000000, //8
-                               0b0000000110000000, //9
-                               0b0000000110000000, //A
-                               0b0000000110000000, //B
-                               0b0000000110000000, //C
-                               0b0000000110000000, //D
-                               0b0011111111111100, //E
-                               0b0011111111111100};//F
-
-//**************************************************************
-// Pattern: Array that prints '7' with printArray function
-//**************************************************************
-                                // 0123456789ABCDEF
-const uint16_t sevenArray[16] = {0b0011111111111100, //0
-                                 0b0011111111111100, //1
-                                 0b0000000000001100, //2
-                                 0b0000000000011000, //3
-                                 0b0000000000110000, //4
-                                 0b0000000001100000, //5
-                                 0b0000000011000000, //6
-                                 0b0000000110000000, //7
-                                 0b0000001100000000, //8
-                                 0b0000011000000000, //9
-                                 0b0000110000000000, //10
-                                 0b0001100000000000, //11
-                                 0b0011000000000000, //12
-                                 0b0110000000000000, //13
-                                 0b1100000000000000, //14
-                                 0b0000000000000000};//15
-                             
-const uint16_t threeArray[16] = {0b0011111111111000, //0
-                                 0b0011111111111100, //1
-                                 0b0000000000011100, //2
-                                 0b0000000000001100, //3
-                                 0b0000000000001100, //4
-                                 0b0000000000011100, //5
-                                 0b0011111111111100, //6
-                                 0b0011111111111100, //7
-                                 0b0000000000011100, //8
-                                 0b0000000000001100, //9
-                                 0b0000000000001100, //10
-                                 0b0000000000001100, //11
-                                 0b0000000000001100, //12
-                                 0b0000000000011100, //13
-                                 0b0011111111111100, //14
-                                 0b0011111111111000};//15        
-                                                 
-const uint16_t sixArray[16] =   {0b0001111111111000, //0
-                                 0b0011111111111100, //1
-                                 0b0011000000000000, //2
-                                 0b0011000000000000, //3
-                                 0b0011000000000000, //4
-                                 0b0011000000000000, //5
-                                 0b0011000000000000, //6
-                                 0b0011111111111000, //7
-                                 0b0011111111111100, //8
-                                 0b0011000000001100, //9
-                                 0b0011000000001100, //10
-                                 0b0011000000001100, //11
-                                 0b0011000000001100, //12
-                                 0b0011000000001100, //13
-                                 0b0011111111111100, //14
-                                 0b0001111111111000};//15
-
-const uint16_t teamNumberArray[16] = {0b0000100001111111, //0
-                                      0b0001100000000010, //1
-                                      0b0010100000000100, //2
-                                      0b0100100000001000, //3
-                                      0b0000100000010000, //4
-                                      0b0000100000100000, //5
-                                      0b1111111001000000, //6
-                                      0b0000000000000000, //7
-                                      0b0000000000000000, //8
-                                      0b1111111001111111, //9
-                                      0b0000001001000000, //10
-                                      0b0000001001000000, //11
-                                      0b1111111001111111, //12
-                                      0b0000001001000001, //13
-                                      0b0000001001000001, //14
-                                      0b1111111001111111};//15
 									 
 							                    			//   0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF
 const uint64_t longTeamNumberArray[64]  = {0b0000110000011111111111101111111110000111111111100000000000011000, //0
@@ -127,24 +37,7 @@ const uint64_t longTeamNumberArray[64]  = {0b00001100000111111111111011111111100
                     										   0b0000110000110000000000000000000111001100000000110000000100011000, //13
                     										   0b1111111110100000000000001111111111001111111111110000000011100000, //14
                     										   0b1111111110100000000000001111111110000111111111100000000000000000};//15
-  	
-                                //  0123456789ABCDEF 
-const uint16_t hatArray[16] =    {0b0000000000110000, //0
-                                  0b0000000011001100, //1
-                                  0b0000011100000010, //2
-                                  0b0001100000000010, //3
-                                  0b0010000100001010, //4
-                                  0b0100100010010010, //5
-                                  0b0100010010010100, //6
-                                  0b0100001010010100, //7
-                                  0b0011001001111000, //8
-                                  0b0000101110000100, //9
-                                  0b0000010000000100, //10
-                                  0b0000010001110100, //11
-                                  0b0000010110001000, //12
-                                  0b0000001000110000, //13
-                                  0b0000000111000000, //14
-                                  0b0000000000000000};//15
+
 void setup() {
     Serial.begin(115200); // begin serial communication with arduino
 
@@ -179,9 +72,11 @@ void loop() {
 
   //Decode command PWM and display commanded image - default is team number + logo
   if(cmdPWM <= (pulseLengthYellowCone + pulseLengthTolerance) && cmdPWM >= (pulseLengthYellowCone - pulseLengthTolerance)){
-    yellowCone();
+    yellowCone(false);
   } else if(cmdPWM <= (pulseLengthPurpleCube + pulseLengthTolerance) && cmdPWM >= (pulseLengthPurpleCube - pulseLengthTolerance)){
-    purpleCube();
+    purpleCube(false);
+  } else if(cmdPWM <= (pulseLengthGreenBlink + pulseLengthTolerance) && cmdPWM >= (pulseLengthGreenBlink - pulseLengthTolerance)){
+    greenBlink();
   } else {
     printLongArray(longTeamNumberArray);
     //printArray(hatArray);
@@ -191,7 +86,7 @@ void loop() {
 
 }
 
-void yellowCone()
+void yellowCone(boolean attention)
 {
     //Records if image is fading in or fading out; must be declared static to prevent it going out of scope when function exits
     static boolean yellowfade = true;
@@ -204,10 +99,14 @@ void yellowCone()
     }
     
     if (yellowfade==true){
-        fader+=10.0;
+        fader+=20.0;
     }
     else if(yellowfade==false){
-        fader-=10.0;
+        fader-=20.0;
+    }
+
+    if(!attention){
+          fader = 100.0;
     }
 
     uint8_t upperBound = 7;
@@ -233,7 +132,7 @@ void yellowCone()
 //**************************************************************
 // Function: Display a purple cube when in Cube Mode
 //**************************************************************
-void purpleCube() {
+void purpleCube(boolean attention) {
     static boolean purplefade;
     
     if(fader<=0){
@@ -244,11 +143,17 @@ void purpleCube() {
     }
     
     if (purplefade==true){ 
-      fader+=10.0;
+      fader+=20.0;
     }
     else if(purplefade==false){
-        fader-=10.0;
+        fader-=20.0;
     }
+
+    
+    if(!attention){
+          fader = 100.0;
+    }
+
 
     for (uint8_t i = 0; i<kMatrixWidth; i++){
         for (uint8_t j = 0; j<kMatrixWidth; j++){   
@@ -257,6 +162,24 @@ void purpleCube() {
     }
 
 }
+
+//**************************************************************
+// Function: Display a green blink
+//**************************************************************
+void greenBlink() {
+    static boolean greenBlinkState;
+    
+    greenBlinkState = !greenBlinkState;
+
+
+    for (uint8_t i = 0; i<kMatrixWidth; i++){
+        for (uint8_t j = 0; j<kMatrixWidth; j++){   
+            led[XY(i,j)] = CRGB(0,greenBlink?255:0,0);
+        }
+    }
+
+}
+
 
 int s = kMatrixWidth; // scroll idx
 //**************************************************************
@@ -408,8 +331,9 @@ uint16_t XY( uint8_t x, uint8_t y)
 
   //Perform rotation for display
   uint8_t tmp = x;
-  x = 15-y;
+  x = y;
   y = tmp;
+  y = 15-y;
   
     uint16_t i;
     if( y & 0x01) {
