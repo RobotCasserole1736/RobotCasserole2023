@@ -17,7 +17,7 @@ const long pulseLengthYellowCone = 1000; //pulse length in microseconds to comma
 const long pulseLengthYellowConeAttention = 750; //pulse length in microseconds to command yellow cone display
 const long pulseLengthPurpleCube = 1500; //pulse length in microseconds to command purple cube display
 const long pulseLengthPurpleCubeAttention = 1250; //pulse length in microseconds to command purple cube display
-const long pulseLengthGreenBlink = 500;  //pulse length in microseconds to command green blink
+const long pulseLengthGreenBlink = 2000;  //pulse length in microseconds to command green blink
 const long pulseLengthTolerance = 100; //command pulse length tolerance
 									 
 							                    			//   0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF
@@ -65,6 +65,8 @@ int cmdPWM =0;
 void loop() {
   //Read in command PWM from RoboRIO - value is pulse length in microseconds
 
+  Serial.println(cmdPWM);
+
   EVERY_N_MILLISECONDS(250)
   {
       cmdPWM = pulseIn(CMD_INPUT_PIN, HIGH, 50000);
@@ -88,6 +90,8 @@ void loop() {
 
 void yellowCone(boolean attention)
 {
+    Serial.print("See yellow Cone");
+  
     //Records if image is fading in or fading out; must be declared static to prevent it going out of scope when function exits
     static boolean yellowfade = true;
     
@@ -167,6 +171,9 @@ void purpleCube(boolean attention) {
 // Function: Display a green blink
 //**************************************************************
 void greenBlink() {
+
+    Serial.print("running green");
+  
     static boolean greenBlinkState;
     
     greenBlinkState = !greenBlinkState;

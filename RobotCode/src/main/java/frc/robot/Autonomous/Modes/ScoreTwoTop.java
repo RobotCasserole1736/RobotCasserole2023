@@ -35,6 +35,7 @@ public class ScoreTwoTop extends AutoMode {
         seq.addEvent(initDrive);
 
         //Intake cone
+
         var drivePickup = new AutoEventDriveTime(2.0, 0.25);
         drivePickup.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_LOW));
         drivePickup.addChildEvent(new AutoEventSetClawIntake());

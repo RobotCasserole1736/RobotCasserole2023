@@ -26,7 +26,10 @@ public class GamePieceDetector {
     Calibration coneAbsentThresh;
 
     // Boolean to track game piece presence
+    @Signal
     boolean clawHasGamePiece;
+
+    @Signal
     boolean clawHadGamePiece;
 
     public boolean ledShouldBlink;
@@ -93,7 +96,7 @@ public class GamePieceDetector {
         } else {
             ledShouldBlink = blinkDebouncer.calculate(false);
         }
-
+        GamepieceModeManager.getInstance().setBlinkMode(ledShouldBlink);
     } 
 
     public boolean newGamePiece(){

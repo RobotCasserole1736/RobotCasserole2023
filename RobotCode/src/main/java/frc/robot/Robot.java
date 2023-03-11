@@ -343,6 +343,8 @@ public class Robot extends TimedRobot {
     stt.mark("Telemetry");
     stt.end();
 
+    mm.ledUpdate();
+
     //Peter says this will help eliminate our OOM issues when glass connects
     // and Peter is smart so we do what he says.
     NetworkTableInstance.getDefault().flushLocal();

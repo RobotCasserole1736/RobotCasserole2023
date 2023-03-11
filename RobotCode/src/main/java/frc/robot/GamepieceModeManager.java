@@ -1,6 +1,7 @@
 package frc.robot;
 import edu.wpi.first.wpilibj.PWM;
 import frc.Constants;
+import frc.lib.Signal.Annotations.Signal;
 import frc.robot.Claw.ClawController;
 import frc.robot.Claw.GamePieceDetector;
 
@@ -12,6 +13,9 @@ public class GamepieceModeManager {
     private final double PWM_CONE = -1.0;
     private final double PWM_CUBE = 0.0;
     private final double PWM_BLINK = 1.0;
+
+    @Signal
+    boolean ledBlinkCmd = false;
 
     /* Singleton infratructure*/
     private static GamepieceModeManager inst = null;
@@ -38,14 +42,18 @@ public class GamepieceModeManager {
     public void setCurMode(GamepieceMode in){
         curMode = in;
 
-        if(ClawController.getInstance().gpd.ledShouldBlink){
+    }  
+
+    public void ledUpdate() {
+        
+        if(ledBlinkCmd){
             LEDPanelModeCtrl.setSpeed(PWM_BLINK);
         } else if (curMode==GamepieceMode.CONE) {
             LEDPanelModeCtrl.setSpeed(PWM_CONE);
         } else if (curMode==GamepieceMode.CUBE) {
             LEDPanelModeCtrl.setSpeed(PWM_CUBE);
         }
-    }  
+    }
 
     public GamepieceMode getCurMode(){
         return curMode;
@@ -65,5 +73,9 @@ public class GamepieceModeManager {
         } else {
             setCurMode(GamepieceMode.CONE);
         }
+    }
+
+    public void setBlinkMode(boolean in) {
+        ledBlinkCmd = in;
     }
 }
