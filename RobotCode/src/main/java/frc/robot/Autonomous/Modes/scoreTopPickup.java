@@ -31,7 +31,7 @@ public class scoreTopPickup extends AutoMode {
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
 
         //Drive to center
-        initDrive = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 0.5);
+        initDrive = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 0.75);
         seq.addEvent(initDrive);
  
         //Intake cone

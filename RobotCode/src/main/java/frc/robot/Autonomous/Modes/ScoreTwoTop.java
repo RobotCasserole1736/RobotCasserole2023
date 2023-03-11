@@ -15,7 +15,8 @@ import frc.robot.Autonomous.Events.AutoEventSetClawIntake;
 public class ScoreTwoTop extends AutoMode {
 
     //This needs to be saved off separately because it's used to supply the default initial pose.
-    AutoEventJSONTrajectory initDrive;
+    AutoEventJSONTrajectory initDrive1;
+    AutoEventJSONTrajectory initDrive2;
 
     public ScoreTwoTop(){
         super();
@@ -30,21 +31,20 @@ public class ScoreTwoTop extends AutoMode {
         seq.addEvent(new AutoEventSetClawEject());
 
         //Drive to center
-        initDrive = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 1.0);
-        initDrive.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
-        seq.addEvent(initDrive);
+        initDrive1 = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 0.5);
+        initDrive1.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
+        seq.addEvent(initDrive1);
 
         //Intake cone
-
         var drivePickup = new AutoEventDriveTime(2.0, 0.25);
         drivePickup.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_LOW));
         drivePickup.addChildEvent(new AutoEventSetClawIntake());
         seq.addEvent(drivePickup);
 
         //Drive to grid
-        initDrive = new AutoEventJSONTrajectory("Score two top pt 2", 1.0);
-        initDrive.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
-        seq.addEvent(initDrive);
+        initDrive2 = new AutoEventJSONTrajectory("Score two top pt 2", 0.3);
+        initDrive2.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
+        seq.addEvent(initDrive2);
 
         //Place cone upper
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
@@ -56,7 +56,7 @@ public class ScoreTwoTop extends AutoMode {
 
     @Override
     public Pose2d getInitialPose(){
-        return initDrive.getInitialPose();
+        return initDrive1.getInitialPose();
     }
     
     
