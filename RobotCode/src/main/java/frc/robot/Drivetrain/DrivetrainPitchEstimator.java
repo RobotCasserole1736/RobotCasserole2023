@@ -10,9 +10,13 @@ import frc.lib.Signal.Annotations.Signal;
 public class DrivetrainPitchEstimator {
 
     public enum TiltState{
-        LEVEL,
-        NOSE_UP,
-        NOSE_DOWN;
+        LEVEL(0),
+        NOSE_UP(1),
+        NOSE_DOWN(2);
+
+        public final int value;
+        private TiltState(int value) { this.value = value;}
+        public int toInt() {return this.value;}
     }
 
     /* Singleton infrastructure */
@@ -25,7 +29,7 @@ public class DrivetrainPitchEstimator {
     }
 
     double TILTED_THRESH_DEG = 10.0;
-    double LEVEL_THRESH_DEG = 5.0;
+    double LEVEL_THRESH_DEG = 7.5;
 
     @Signal
     double chassisPitchDeg = 0;
@@ -33,6 +37,7 @@ public class DrivetrainPitchEstimator {
     double chassisPitchDegRaw = 0;
     BuiltInAccelerometer accel;
 
+    @Signal
     TiltState curTilt = TiltState.LEVEL;
 
 
