@@ -101,9 +101,9 @@ public class Constants {
 
     // PWM Bank
     public static final int LED_MODE_PORT = 0;
-    public static final int LED_DECORATIVE_PORT = 1;
+    public static final int LED_STRIP_PORT = 1;
     static public final int CLAW_INTAKE = 2;
-    static public final int LED_STRIP_PORT = 3;
+    //static public final int UNUSED = 3;
     //static public final int UNUSED = 4;
     //static public final int UNUSED = 5;
     //static public final int UNUSED = 6;
