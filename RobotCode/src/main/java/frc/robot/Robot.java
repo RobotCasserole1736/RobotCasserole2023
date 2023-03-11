@@ -15,6 +15,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.lib.Calibration.CalWrangler;
+import frc.lib.Calibration.Calibration;
 import frc.lib.Faults.FaultWrangler;
 import frc.lib.LoadMon.RIOLoadMonitor;
 import frc.lib.LoadMon.SegmentTimeTracker;
@@ -29,6 +30,7 @@ import frc.robot.AutoDrive.AutoDrive.AutoDriveCmdState;
 import frc.robot.Autonomous.Autonomous;
 import frc.robot.Claw.ClawController;
 import frc.robot.Drivetrain.DrivetrainControl;
+import frc.robot.Drivetrain.DrivetrainPoseEstimator;
 import frc.robot.GamepieceModeManager.GamepieceMode;
 import frc.sim.RobotModel;
 
@@ -83,6 +85,15 @@ public class Robot extends TimedRobot {
   final double ANGULAR_P = 0.1;
   final double ANGULAR_D = 0.0;
   PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
+
+  DrivetrainPoseEstimator dpe = DrivetrainPoseEstimator.getInstance();
+  double startHeading = 0.0;
+  final double endHeading = 0.0;
+  double turnCmdFeedback = 0.0;
+  boolean turnAroundFlag = false;
+  double turnVelocity = 5.0;
+  Calibration kP = new Calibration("Turning kP", "deg/sec", 0.1);
+  PIDController turnAround_pid = new PIDController(kP.get(), 0, 0);
 
   // ... 
   // But before here
@@ -177,8 +188,6 @@ public class Robot extends TimedRobot {
 
     //ITS ALIVE
     FaultWrangler.getInstance().setHeartbeatActive(true);
-
-
   }
 
 
@@ -240,8 +249,33 @@ public class Robot extends TimedRobot {
       ad.setCmd(AutoDriveCmdState.MANUAL);
     }
 
-    ad.setManualCommands(di.getFwdRevCmd_mps(), di.getSideToSideCmd_mps(), di.getRotateCmd_rps(), !di.getRobotRelative(), di.getBracePositionCmd());
-    ad.update();
+    if(di.getTurnAroundCmd()){
+      if (turnAroundFlag){
+        startHeading = dpe.getEstPose().getRotation().getDegrees();
+        System.out.println(startHeading);
+        if(startHeading <= 180.0){
+          if (turnVelocity > 0){
+            turnVelocity = -turnVelocity;
+          }
+        } else {
+          if (turnVelocity < 0) {
+            turnVelocity = -turnVelocity;
+          }
+        }
+      }
+      var desiredPos = ;
+      if (Math.abs(dpe.getEstPose().getRotation().getDegrees()) > 5.0){
+        turnCmdFeedback = turnAround_pid.calculate(dpe.getEstPose().getRotation().getDegrees(), );
+        ad.setManualCommands(di.getFwdRevCmd_mps(), di.getSideToSideCmd_mps(), turnVelocity + turnCmdFeedback, true, di.getBracePositionCmd());
+        ad.update();
+      }
+      turnAroundFlag = false;
+    } else {
+      turnAroundFlag = true;
+      ad.setManualCommands(di.getFwdRevCmd_mps(), di.getSideToSideCmd_mps(), di.getRotateCmd_rps(), !di.getRobotRelative(), di.getBracePositionCmd());
+      ad.update();
+    }
+    
     stt.mark("Auto Drive Calculation");
 
     if(oi.switchToConeModeCmd){

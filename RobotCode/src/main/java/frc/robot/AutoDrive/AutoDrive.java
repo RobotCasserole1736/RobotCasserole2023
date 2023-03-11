@@ -27,8 +27,7 @@ public class AutoDrive {
 	public enum AutoDriveCmdState{
 		MANUAL(0), // operator has full control over drivetrain
 		DRIVE_TO_CENTER(1), // Driver wants robot to drive to the center of the field
-		DO_A_BARREL_ROLL(2), // Driver wants to do a defense avoidance spin-to-the-right move
-        TURN_AROUND(3); // Turning 180 degrees while traversing the field
+		DO_A_BARREL_ROLL(2); // Driver wants to do a defense avoidance spin-to-the-right move
 
 		public final int value;
 
@@ -87,8 +86,6 @@ public class AutoDrive {
     DrivetrainPoseEstimator dpe = DrivetrainPoseEstimator.getInstance();
     @Signal(units="V")
     double cmdFeedForward;
-    Calibration kP = new Calibration("Turning kP", "deg/sec", 0.1);
-    PIDController turnAround_pid = new PIDController(kP.get(), 0, 0);
 
     public AutoDrive(){
 
@@ -145,16 +142,6 @@ public class AutoDrive {
                 waypoints.endRot = Rotation2d.fromDegrees(0.0); //pointed downfield
             } else if(curCmd == AutoDriveCmdState.DO_A_BARREL_ROLL){
                 waypoints.endRot = waypoints.startRot.plus(Rotation2d.fromDegrees(180.0));
-            } else if(curCmd == AutoDriveCmdState.TURN_AROUND){
-                startHeading = dpe.getEstPose().getRotation().getDegrees(); // Need variable that is the actual rotation of robot
-                if(startHeading >= 180.0){
-                    endHeading = 360.0;
-                }
-                else{
-                    endHeading = 0.0;
-                }
-                cmdFeedBack = turnAround_pid.calculate(dpe.getEstPose().getRotation().getDegrees(), endHeading);
-                dt.setCmdFieldRelative(manualFwdRevCmd, manualStrafeCmd, cmdFeedBack, bracePosition);
             }
 
             // Start the dynamic generation
