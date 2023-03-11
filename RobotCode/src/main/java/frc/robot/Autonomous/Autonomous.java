@@ -93,10 +93,10 @@ public class Autonomous {
 
         mainModeList.add(new ScoreTwoTop());
         mainModeList.add(new DriveFwd(4.0));
-        mainModeList.add(new SteakAuto2023());
+        //mainModeList.add(new SteakAuto2023());
         mainModeList.add(new DoNothing());
         mainModeList.add(new leaveComTop());
-        mainModeList.add(new scoreBalance());
+        //mainModeList.add(new scoreBalance());
         mainModeList.add(new scoreTop());
         mainModeList.add(new scoreTopPickup());
         mainModeList.add(new ScoreLeaveBalance());

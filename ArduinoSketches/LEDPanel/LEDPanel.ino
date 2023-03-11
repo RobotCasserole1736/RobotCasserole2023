@@ -90,7 +90,6 @@ void loop() {
 
 void yellowCone(boolean attention)
 {
-    Serial.print("See yellow Cone");
   
     //Records if image is fading in or fading out; must be declared static to prevent it going out of scope when function exits
     static boolean yellowfade = true;
@@ -171,19 +170,18 @@ void purpleCube(boolean attention) {
 // Function: Display a green blink
 //**************************************************************
 void greenBlink() {
-
-    Serial.print("running green");
   
     static boolean greenBlinkState;
     
     greenBlinkState = !greenBlinkState;
 
-
     for (uint8_t i = 0; i<kMatrixWidth; i++){
         for (uint8_t j = 0; j<kMatrixWidth; j++){   
-            led[XY(i,j)] = CRGB(0,greenBlink?255:0,0);
+            led[XY(i,j)] = CRGB(greenBlinkState?50:0,0,0);
         }
     }
+
+    FastLED.delay(200);
 
 }
 
