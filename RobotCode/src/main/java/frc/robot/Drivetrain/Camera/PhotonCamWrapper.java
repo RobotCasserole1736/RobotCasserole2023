@@ -16,6 +16,8 @@ import frc.Constants;
 import frc.lib.Faults.Fault;
 import frc.lib.Signal.Annotations.Signal;
 import frc.robot.PoseTelemetry;
+import frc.robot.Drivetrain.DrivetrainPitchState;
+import frc.robot.Drivetrain.DrivetrainPitchState.TiltState;
 
 public class PhotonCamWrapper {
 
@@ -75,6 +77,7 @@ public class PhotonCamWrapper {
                 var amb = t.getPoseAmbiguity();
                 boolean targetCloseEnoughToCamera = false;
                 boolean lowEnoughAmbiguity = amb < 0.2 && amb >= 0.0; // less than 0.2, and not -1
+                boolean drivetrainIsLevel = DrivetrainPitchState.getInstance().getCurTilt() == TiltState.LEVEL; //if we're tipped up or down (IE on charge station) don't trust the vision pose
 
                 if(useFirst){
                     bestEst = botPoseEst1;
@@ -84,7 +87,7 @@ public class PhotonCamWrapper {
                     targetCloseEnoughToCamera = ctotgt2.getTranslation().getNorm() < 0.25 * Constants.FIELD_LENGTH_M ;
                 }
 
-                if(targetCloseEnoughToCamera && lowEnoughAmbiguity){
+                if(targetCloseEnoughToCamera && lowEnoughAmbiguity && drivetrainIsLevel){
                     // Target meets our filter criteria, add it.
                     observations.add(new CameraPoseObservation(observationTime, bestEst, 1.0)); 
                 }
