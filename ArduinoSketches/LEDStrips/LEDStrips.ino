@@ -10,6 +10,15 @@
 // Desired FPS for the strip
 #define FRAMES_PER_SECOND 120
 
+
+const long pulseLengthYellowCone = 1000; //pulse length in microseconds to command yellow cone display
+const long pulseLengthYellowConeAttention = 750; //pulse length in microseconds to command yellow cone display
+const long pulseLengthPurpleCube = 1500; //pulse length in microseconds to command purple cube display
+const long pulseLengthPurpleCubeAttention = 1250; //pulse length in microseconds to command purple cube display
+const long pulseLengthGreenBlink = 2000;  //pulse length in microseconds to command green blink
+const long pulseLengthTolerance = 100; //command pulse length tolerance
+		
+
 //Buffer containing the desired color of each LED
 CRGB led[NUM_LEDS];
 int pulseLen_us;
@@ -43,23 +52,14 @@ void loop()
   {
     pulseLen_us = pulseIn(CMD_INPUT_PIN, HIGH, 50000);
   }
-  
-  if (pulseLen_us == 0)
-  {
-    // No pulse recieved - robot must be disabled
-    CasseroleColorStripeChase_update();
-  }
-  else if ((pulseLen_us > 800) && (pulseLen_us <= 1200))
-  {
-    // Case - pulse length nominal 1.0 ms
-    ColorSparkle_update(255, 0, 200); 
-    //Purple color sparkle
-  }
-  else if ((pulseLen_us > 1200) && (pulseLen_us <= 1400))
-  {
-    // Case - pulse length nominal 1.3 ms
+
+    //Decode command PWM and display commanded image - default is team number + logo
+  if(pulseLen_us <= (pulseLengthYellowCone + pulseLengthTolerance) && pulseLen_us >= (pulseLengthYellowCone - pulseLengthTolerance)){
     ColorSparkle_update(255, 255, 0);
-    //yellow color sparkle
+  } else if(pulseLen_us <= (pulseLengthPurpleCube + pulseLengthTolerance) && pulseLen_us >= (pulseLengthPurpleCube - pulseLengthTolerance)){
+    ColorSparkle_update(255, 0, 200); 
+  } else if(pulseLen_us <= (pulseLengthGreenBlink + pulseLengthTolerance) && pulseLen_us >= (pulseLengthGreenBlink - pulseLengthTolerance)){
+    Green_Alert();
   } else {
     CasseroleColorStripeChase_update();
   }

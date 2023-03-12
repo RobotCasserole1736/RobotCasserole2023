@@ -2,8 +2,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.PWM;
 import frc.Constants;
 import frc.lib.Signal.Annotations.Signal;
-import frc.robot.Claw.ClawController;
-import frc.robot.Claw.GamePieceDetector;
 
 /**
  * Class to track what gamepiece mode we're in.
@@ -26,6 +24,7 @@ public class GamepieceModeManager {
 
     private GamepieceMode curMode;
     PWM LEDPanelModeCtrl;
+    PWM LEDStripsModeCtrl;
 
     public static synchronized GamepieceModeManager getInstance() {
         if (inst == null)
@@ -35,6 +34,7 @@ public class GamepieceModeManager {
 
     private GamepieceModeManager(){
         LEDPanelModeCtrl = new PWM(Constants.LED_MODE_PORT);
+        LEDStripsModeCtrl = new PWM(Constants.LED_STRIP_PORT);
 
         setCurMode(GamepieceMode.CONE); //pick a default
     }
@@ -48,10 +48,13 @@ public class GamepieceModeManager {
         
         if(ledBlinkCmd){
             LEDPanelModeCtrl.setSpeed(PWM_BLINK);
+            LEDStripsModeCtrl.setSpeed(PWM_BLINK);
         } else if (curMode==GamepieceMode.CONE) {
             LEDPanelModeCtrl.setSpeed(PWM_CONE);
+            LEDStripsModeCtrl.setSpeed(PWM_CONE);
         } else if (curMode==GamepieceMode.CUBE) {
             LEDPanelModeCtrl.setSpeed(PWM_CUBE);
+            LEDStripsModeCtrl.setSpeed(PWM_CUBE);
         }
     }
 
