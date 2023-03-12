@@ -1,7 +1,7 @@
 package frc.hardwareWrappers.IMU;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.hardwareWrappers.IMU.ADIS16470.ADIS16470;
+import frc.hardwareWrappers.IMU.ADIS16470.RealADIS16470;
 import frc.hardwareWrappers.IMU.ADXRS453.RealADXRS453;
 import frc.hardwareWrappers.IMU.NavX.RealNavx;
 import frc.lib.Signal.Annotations.Signal;
@@ -26,7 +26,7 @@ public class WrapperedGyro  {
             if(type == GyroType.ADXRS453){
                 gyro = new RealADXRS453();
             } else if(type == GyroType.ADIS16470){
-                gyro = new ADIS16470();
+                gyro = new RealADIS16470();
             } else if (type == GyroType.NAVX){
                 gyro = new RealNavx();
             }

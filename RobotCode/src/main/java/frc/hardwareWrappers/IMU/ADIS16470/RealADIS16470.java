@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import frc.hardwareWrappers.IMU.AbstractGyro;
 import frc.lib.Faults.Fault;
 
-public class ADIS16470 extends AbstractGyro {
+public class RealADIS16470 extends AbstractGyro {
 
     ADIS16470_IMU realGyro;
      
     Fault disconFault = new Fault("Gyro", "Disconnected");
 
-    public ADIS16470(){
+    public RealADIS16470(){
         realGyro = new ADIS16470_IMU();
         disconFault.set(!isConnected());
 
