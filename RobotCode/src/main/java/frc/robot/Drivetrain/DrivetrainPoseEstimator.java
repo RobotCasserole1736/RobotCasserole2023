@@ -16,8 +16,8 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 import frc.Constants;
-import frc.hardwareWrappers.Gyro.WrapperedGyro;
-import frc.hardwareWrappers.Gyro.WrapperedGyro.GyroType;
+import frc.hardwareWrappers.IMU.WrapperedGyro;
+import frc.hardwareWrappers.IMU.WrapperedGyro.GyroType;
 import frc.lib.Signal.Annotations.Signal;
 import frc.robot.PoseTelemetry;
 import frc.robot.Drivetrain.Camera.FieldTags;
@@ -62,7 +62,7 @@ public class DrivetrainPoseEstimator {
     // Measured in expected standard deviation (meters of position and degrees of rotation)
     Matrix<N3, N1>  visionMeasurementStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
 
-    DrivetrainPitchEstimator pe = DrivetrainPitchEstimator.getInstance();
+    DrivetrainPitchState pe = DrivetrainPitchState.getInstance();
 
     // Mostly for debug or dashboard purposes, plot
     // the robot's current speed on the field.
@@ -80,7 +80,7 @@ public class DrivetrainPoseEstimator {
         cams.add(new PhotonCamWrapper("FRONT_RIGHT_CAM", Constants.robotToFrontRightCameraTrans)); 
         //cams.add(new PhotonCamWrapper("REAR_CAM", Constants.robotToRearCameraTrans)); 
 
-        gyro = new WrapperedGyro(GyroType.ADXRS453);
+        gyro = new WrapperedGyro(GyroType.ADIS16470);
 
         //Temp default - will populate with real valeus in the resetPosition method
         SwerveModulePosition[] initialStates = {new SwerveModulePosition(),new SwerveModulePosition(),new SwerveModulePosition(),new SwerveModulePosition()};
@@ -169,6 +169,14 @@ public class DrivetrainPoseEstimator {
             }
         }
         return false;
+    }
+
+    /**
+     * 
+     * @return representation of the robot's heading as measured by the gyroscope
+     */
+    public double getChassisPitch_rad(){
+        return gyro.getPitch_rad();
     }
 
 

@@ -1,8 +1,5 @@
 package frc.robot;
 
-import org.opencv.core.Mat;
-
-import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.MjpegServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoException;
@@ -24,6 +21,7 @@ public class DriverCamera {
     }
 
     private DriverCamera() {
+
 
         MjpegServer mjpegServer1 = new MjpegServer("Driver Camera", 1181);
 

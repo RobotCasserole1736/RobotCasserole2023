@@ -1,4 +1,4 @@
-package frc.hardwareWrappers.Gyro;
+package frc.hardwareWrappers.IMU;
 
 import frc.Constants;
 import frc.hardwareWrappers.SimDeviceBanks;
@@ -25,12 +25,12 @@ public class SimGyro extends AbstractGyro {
     }
 
     @Override
-    public double getRate() {
+    public double getYawRate() {
         return rate;
     }
 
     @Override
-    public double getRawAngle() {
+    public double getRawYawAngle() {
         return angle;
     }
 
@@ -47,6 +47,18 @@ public class SimGyro extends AbstractGyro {
     public void simSetAngle(double newAngle_rad){
         rate = 0;
         angle = newAngle_rad;
+    }
+
+    @Override
+    public double getPitchRate() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double getRawPitchAngle() {
+        // TODO Auto-generated method stub
+        return 0;
     }   
     
 }

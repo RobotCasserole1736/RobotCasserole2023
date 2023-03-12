@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import frc.Constants;
 import frc.hardwareWrappers.SimDeviceBanks;
-import frc.hardwareWrappers.Gyro.SimGyro;
+import frc.hardwareWrappers.IMU.SimGyro;
 
 public class SimGyroSensorModel{
 

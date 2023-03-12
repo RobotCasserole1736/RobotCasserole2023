@@ -1,13 +1,9 @@
 package frc.robot.Drivetrain;
 
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.BuiltInAccelerometer;
-import edu.wpi.first.wpilibj.interfaces.Accelerometer.Range;
-import frc.Constants;
 import frc.lib.Signal.Annotations.Signal;
 
-public class DrivetrainPitchEstimator {
+public class DrivetrainPitchState {
 
     public enum TiltState{
         LEVEL,
@@ -16,10 +12,10 @@ public class DrivetrainPitchEstimator {
     }
 
     /* Singleton infrastructure */
-    private static DrivetrainPitchEstimator instance;
-    public static DrivetrainPitchEstimator getInstance() {
+    private static DrivetrainPitchState instance;
+    public static DrivetrainPitchState getInstance() {
         if (instance == null) {
-            instance = new DrivetrainPitchEstimator();
+            instance = new DrivetrainPitchState();
         }
         return instance;
     }
@@ -29,31 +25,17 @@ public class DrivetrainPitchEstimator {
 
     @Signal
     double chassisPitchDeg = 0;
-    @Signal
-    double chassisPitchDegRaw = 0;
-    BuiltInAccelerometer accel;
 
     TiltState curTilt = TiltState.LEVEL;
 
 
-
-    LinearFilter pitchFilter = LinearFilter.singlePoleIIR(0.1, Constants.Ts);
-
-
-    private DrivetrainPitchEstimator(){
-        accel = new BuiltInAccelerometer(Range.k2G);
+    private DrivetrainPitchState(){
 
     }
 
     public void update(){
 
-        var vertAccel = accel.getZ();
-        var latAccel = accel.getX();
-
-        chassisPitchDegRaw = Units.radiansToDegrees(Math.atan2(vertAccel, latAccel)) - 90;
-        
-
-        chassisPitchDeg = pitchFilter.calculate(chassisPitchDegRaw);
+        chassisPitchDeg = Units.radiansToDegrees(DrivetrainPoseEstimator.getInstance().getChassisPitch_rad());
 
         //Interpret the pitch into a three-state level, nose-up, or nose-down state with hystersis
         if(Math.abs(chassisPitchDeg) < LEVEL_THRESH_DEG){
@@ -64,7 +46,6 @@ public class DrivetrainPitchEstimator {
             curTilt = TiltState.NOSE_DOWN;
         } //else hold state
 
-       
     }
 
     public double getPitchDeg(){

@@ -1,10 +1,10 @@
-package frc.hardwareWrappers.Gyro.NavX;
+package frc.hardwareWrappers.IMU.NavX;
 
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI.Port;
-import frc.hardwareWrappers.Gyro.AbstractGyro;
+import frc.hardwareWrappers.IMU.AbstractGyro;
 
 public class RealNavx extends AbstractGyro {
 
@@ -30,18 +30,28 @@ public class RealNavx extends AbstractGyro {
     }
 
     @Override
-    public double getRate() {
+    public double getYawRate() {
         return Units.degreesToRadians(ahrs.getRate());
     }
 
     @Override
-    public double getRawAngle() {
+    public double getRawYawAngle() {
         return Units.degreesToRadians(ahrs.getAngle());
     }
 
     @Override
     public boolean isConnected() {
         return ahrs.isConnected();
+    }
+
+    @Override
+    public double getPitchRate() {
+        return 0; //TODO add support here
+    }
+
+    @Override
+    public double getRawPitchAngle() {
+        return 0; //TODO add support here
     }
     
 }

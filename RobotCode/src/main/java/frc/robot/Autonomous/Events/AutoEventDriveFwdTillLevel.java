@@ -24,8 +24,8 @@ import frc.lib.AutoSequencer.AutoEvent;
 import frc.robot.PoseTelemetry;
 import frc.robot.Claw.ClawController;
 import frc.robot.Drivetrain.DrivetrainControl;
-import frc.robot.Drivetrain.DrivetrainPitchEstimator;
-import frc.robot.Drivetrain.DrivetrainPitchEstimator.TiltState;
+import frc.robot.Drivetrain.DrivetrainPitchState;
+import frc.robot.Drivetrain.DrivetrainPitchState.TiltState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
@@ -45,7 +45,7 @@ public class AutoEventDriveFwdTillLevel extends AutoEvent {
     double speedCmdRateLimit = 0;
 
     DrivetrainControl dt_inst;
-    DrivetrainPitchEstimator pe = DrivetrainPitchEstimator.getInstance();
+    DrivetrainPitchState pe = DrivetrainPitchState.getInstance();
 
     boolean hasTiltedUp = false;
 
