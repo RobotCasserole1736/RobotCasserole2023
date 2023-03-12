@@ -19,10 +19,6 @@ public class GamePieceDetector {
     @Signal(units="in") // Not sure if this is necessary
     double gamepieceDistSensorMeas;
 
-    private final double PWM_HASPIECE = -1.0;
-    private final double PWM_NOPIECE = 0.0;
-    PWM LEDStripModeCtrl;
-
     GamepieceModeManager gpmm;
     // Thresholds for Cubes and Cones
     Calibration cubePresentThresh;
@@ -59,9 +55,6 @@ public class GamePieceDetector {
         // Initialize with no game piece
         clawHasGamePiece = false;
         clawHadGamePiece = false;
-
-        // Initialize LED Strip PWM signal
-        LEDStripModeCtrl = new PWM(Constants.LED_STRIP_PORT);
     }
 
     // Return true if either game piece is detected
@@ -81,7 +74,6 @@ public class GamePieceDetector {
         if (gpmm.isConeMode()) {
             if(gamepieceDistSensorMeas < conePresentThresh.get()){
                 clawHasGamePiece = true;
-                LEDStripModeCtrl.setSpeed(PWM_HASPIECE);
             } else if (gamepieceDistSensorMeas > coneAbsentThresh.get()){
                 clawHasGamePiece = false;
             } else {
@@ -90,7 +82,6 @@ public class GamePieceDetector {
         } else if (gpmm.isCubeMode()) {
             if(gamepieceDistSensorMeas < cubePresentThresh.get()){
                 clawHasGamePiece = true;
-                LEDStripModeCtrl.setSpeed(PWM_HASPIECE);
             } else if (gamepieceDistSensorMeas > cubeAbsentThresh.get()){
                 clawHasGamePiece = false;
             } else {
@@ -99,7 +90,6 @@ public class GamePieceDetector {
         }
         else {
             clawHasGamePiece = false;
-            LEDStripModeCtrl.setSpeed(PWM_NOPIECE);
         }
 
         if(clawHasGamePiece && !clawHadGamePiece) {
