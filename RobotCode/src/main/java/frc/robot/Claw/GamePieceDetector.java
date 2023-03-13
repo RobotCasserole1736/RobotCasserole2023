@@ -5,7 +5,6 @@ import com.playingwithfusion.TimeOfFlight;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.PWM;
 import frc.Constants;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Faults.Fault;
@@ -25,6 +24,8 @@ public class GamePieceDetector {
     Calibration conePresentThresh;
     Calibration cubeAbsentThresh;
     Calibration coneAbsentThresh;
+    Calibration somethingInIntake;
+    Debouncer somethingInIntakDebouncer;
 
     // Boolean to track game piece presence
     @Signal
@@ -32,6 +33,9 @@ public class GamePieceDetector {
 
     @Signal
     boolean clawHadGamePiece;
+
+    @Signal
+    boolean somethingIsPresent;
 
     public boolean ledShouldBlink;
     Debouncer blinkDebouncer = new Debouncer(1.0, DebounceType.kFalling);
@@ -51,6 +55,10 @@ public class GamePieceDetector {
         cubeAbsentThresh = new Calibration("Claw Cube Absent Threshold", "in", 9);
         conePresentThresh = new Calibration("Claw Cone Present Threshold", "in", 4);
         coneAbsentThresh = new Calibration("Claw Cone Absent Threshold", "in", 8);
+
+        somethingInIntake = new Calibration("Something in intake Threshold", "in", 9);
+        somethingInIntakDebouncer = new Debouncer(0.5, DebounceType.kFalling);
+
 
         // Initialize with no game piece
         clawHasGamePiece = false;
@@ -92,6 +100,8 @@ public class GamePieceDetector {
             clawHasGamePiece = false;
         }
 
+        somethingIsPresent = somethingInIntakDebouncer.calculate( gamepieceDistSensorMeas < somethingInIntake.get());
+
         if(clawHasGamePiece && !clawHadGamePiece) {
             ledShouldBlink = blinkDebouncer.calculate(true);
         } else {
@@ -106,6 +116,10 @@ public class GamePieceDetector {
 
     public boolean ledShouldBlink() {
         return ledShouldBlink;
+    }
+
+    public boolean getSomethingIsPresent(){
+        return somethingIsPresent;
     }
     
 }

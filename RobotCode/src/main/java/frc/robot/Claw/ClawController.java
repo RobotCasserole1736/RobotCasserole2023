@@ -69,7 +69,7 @@ public class ClawController {
             // Cone mode - claw closed unless releasing
             if(!gpd.hasGamepiece() && curGrabCmd){
                 // No gamepiece, but actively intaking
-                clawCloseCmd = false;
+                clawCloseCmd = gpd.getSomethingIsPresent();
                 wheelMotorSpdCmd = CONE_INTAKE_SPD;
             } else if (curReleaseCmd) {
                 // releasing (with or without gamepiece)
