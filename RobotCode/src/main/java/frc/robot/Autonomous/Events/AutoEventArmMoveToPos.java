@@ -15,7 +15,7 @@ public class AutoEventArmMoveToPos extends AutoEvent {
 	ArmNamedPosition posDes;
 	double startTime = 0;
 	final double MIN_DURATION_SEC = 0.5;
-	Debouncer doneMovingArmDebouncer = new Debouncer(0.2, DebounceType.kRising);
+	Debouncer doneMovingArmDebouncer = new Debouncer(0.1, DebounceType.kRising);
 	
 	public AutoEventArmMoveToPos(ArmNamedPosition posDes) {
 		this.posDes = posDes;

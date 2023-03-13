@@ -52,7 +52,7 @@ public class AutoEventDriveFwdTillLevel extends AutoEvent {
 
     boolean level = false;
 
-    Debouncer levelDebounce = new Debouncer(0.5, DebounceType.kRising);
+    Debouncer levelDebounce = new Debouncer(0, DebounceType.kRising);
 
     public AutoEventDriveFwdTillLevel(double max_duration, double speed_mps) {
 

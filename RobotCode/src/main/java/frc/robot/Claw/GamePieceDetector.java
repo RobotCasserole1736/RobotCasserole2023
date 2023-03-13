@@ -56,7 +56,7 @@ public class GamePieceDetector {
         conePresentThresh = new Calibration("Claw Cone Present Threshold", "in", 4);
         coneAbsentThresh = new Calibration("Claw Cone Absent Threshold", "in", 8);
 
-        somethingInIntake = new Calibration("Something in intake Threshold", "in", 9);
+        somethingInIntake = new Calibration("Something in intake Threshold", "in", 12);
         somethingInIntakDebouncer = new Debouncer(0.5, DebounceType.kFalling);
 
 

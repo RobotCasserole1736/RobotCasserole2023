@@ -32,7 +32,7 @@ public class ScoreTwoTop extends AutoMode {
         seq.addEvent(new AutoEventSetClawEject());
 
         //Drive to center
-        initDrive1 = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 0.5);
+        initDrive1 = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 0.7);
         initDrive1.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         seq.addEvent(initDrive1);
 
@@ -43,10 +43,10 @@ public class ScoreTwoTop extends AutoMode {
         seq.addEvent(drivePickup); */
 
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_LOW));
-        seq.addEvent(new AutoEventDriveAndIntake(2.5, 0.25));
+        seq.addEvent(new AutoEventDriveAndIntake(2.5, 0.50));
 
         //Drive to grid
-        initDrive2 = new AutoEventJSONTrajectory("Score two top pt 2", 0.3);
+        initDrive2 = new AutoEventJSONTrajectory("Score two top pt 2", 0.35);
         initDrive2.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         seq.addEvent(initDrive2);
 
