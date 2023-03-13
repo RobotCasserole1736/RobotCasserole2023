@@ -5,6 +5,7 @@ import frc.lib.AutoSequencer.AutoSequencer;
 import frc.lib.Autonomous.AutoMode;
 import frc.robot.Arm.ArmNamedPosition;
 import frc.robot.Autonomous.Events.AutoEventArmMoveToPos;
+import frc.robot.Autonomous.Events.AutoEventDriveAndIntake;
 import frc.robot.Autonomous.Events.AutoEventDriveTime;
 import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
@@ -36,10 +37,13 @@ public class ScoreTwoTop extends AutoMode {
         seq.addEvent(initDrive1);
 
         //Intake cone
-        var drivePickup = new AutoEventDriveTime(2.0, 0.25);
+        /*var drivePickup = new AutoEventDriveTime(2.5, 0.25);
         drivePickup.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_LOW));
         drivePickup.addChildEvent(new AutoEventSetClawIntake());
-        seq.addEvent(drivePickup);
+        seq.addEvent(drivePickup); */
+
+        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_LOW));
+        seq.addEvent(new AutoEventDriveAndIntake(2.5, 0.25));
 
         //Drive to grid
         initDrive2 = new AutoEventJSONTrajectory("Score two top pt 2", 0.3);

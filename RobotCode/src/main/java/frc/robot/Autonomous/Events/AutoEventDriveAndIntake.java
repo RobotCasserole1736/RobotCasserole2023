@@ -99,7 +99,10 @@ public class AutoEventDriveAndIntake extends AutoEvent {
 		boolean isDone =  maxTimeElapsed ||
 		      (minTimeElapsed && ClawController.getInstance().hasGamepiece());
         if(isDone){
+            ClawController.getInstance().setGrabCmd(false);
+            ClawController.getInstance().setReleaseCmd(false);
             dt_inst.stop();
+            
         }
         return isDone;
     }

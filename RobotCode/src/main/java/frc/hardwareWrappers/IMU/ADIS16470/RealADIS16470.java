@@ -40,7 +40,7 @@ public class RealADIS16470 extends AbstractGyro {
     @Override
     public double getRawYawAngle() {
         disconFault.set(!isConnected());
-        return Units.degreesToRadians(realGyro.getAngle());
+        return Units.degreesToRadians(realGyro.getAngle()) * -1;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class RealADIS16470 extends AbstractGyro {
         disconFault.set(!isConnected());
         // Multiply by 1.0 since the unit is mounted on the RIO such that positive X axis is 
         // toward the back of the robot.
-        return Units.degreesToRadians(realGyro.getYComplementaryAngle()) * -1.0;
+        return Units.degreesToRadians(realGyro.getXComplementaryAngle()) * -1.0;
     }
     
 }
