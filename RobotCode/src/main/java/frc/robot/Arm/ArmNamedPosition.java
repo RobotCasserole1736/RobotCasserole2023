@@ -5,7 +5,7 @@ public enum ArmNamedPosition {
     CUBE_LOW(1.10 ,0.10,false),
     CUBE_MID(0.9117 ,0.8366,false, 0.1),
     CUBE_HIGH(1.377 ,1.123,false, 0.1),
-    CONE_LOW(1.10 ,0.25,false),
+    CONE_LOW(1.10 ,0.22,false),
     CONE_MID(1.038 ,1.120,false, 0.1),
     CONE_HIGH(1.527 ,1.389,false, 0.1),
     SHELF(1.606 ,1.082,false),
