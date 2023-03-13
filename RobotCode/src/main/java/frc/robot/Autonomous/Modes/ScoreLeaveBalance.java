@@ -10,6 +10,7 @@ import frc.robot.Autonomous.Events.AutoEventDriveFwdTillLevel;
 import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
 import frc.robot.Autonomous.Events.AutoEventSetClawEject;
+import frc.robot.Autonomous.Events.DisableAprilTags;
 
 public class ScoreLeaveBalance extends AutoMode {
     
@@ -25,23 +26,29 @@ public class ScoreLeaveBalance extends AutoMode {
     @Override
     public void addStepsToSequencer(AutoSequencer seq) {
         
+        //disable April Tags
+        seq.addEvent(new DisableAprilTags());
+
         //Place cone
         seq.addEvent(new AutoEventSelectConeMode());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
         seq.addEvent(new AutoEventSetClawEject());
         
         //Drive to charging station
-        initDrive1 = new AutoEventJSONTrajectory("Score, Leave community, balance pt 1", 0.25);
+        initDrive1 = new AutoEventJSONTrajectory("Score, Leave community, balance pt 1", 0.4);
         initDrive1.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         seq.addEvent(initDrive1);
 
-        seq.addEvent(new AutoEventDriveFwdTillLevel(100, 1));
+        initDrive2 = new AutoEventJSONTrajectory("Score, Leave community, balance pt 2", 0.3);
+        seq.addEvent(initDrive2);
+
+        seq.addEvent(new AutoEventDriveFwdTillLevel(100, 0.5));
 
 
 
 
         //TODO - call auto balancing code here
-        seq.addEvent(new AutoEventBraceDrivetrain(10.0));
+        //seq.addEvent(new AutoEventBraceDrivetrain(10.0));
 
         
     }

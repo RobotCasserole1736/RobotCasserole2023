@@ -26,6 +26,7 @@ import frc.robot.Claw.ClawController;
 import frc.robot.Drivetrain.DrivetrainControl;
 import frc.robot.Drivetrain.DrivetrainPitchState;
 import frc.robot.Drivetrain.DrivetrainPitchState.TiltState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
@@ -49,6 +50,8 @@ public class AutoEventDriveFwdTillLevel extends AutoEvent {
 
     boolean hasTiltedUp = false;
 
+    boolean level = false;
+
     Debouncer levelDebounce = new Debouncer(0.5, DebounceType.kRising);
 
     public AutoEventDriveFwdTillLevel(double max_duration, double speed_mps) {
@@ -69,14 +72,25 @@ public class AutoEventDriveFwdTillLevel extends AutoEvent {
         double curTime = (Timer.getFPGATimestamp()-startTime);
 
         
-        if(pe.getCurTilt() == TiltState.NOSE_UP){
+        /*if(pe.getCurTilt() == TiltState.NOSE_UP){
             hasTiltedUp = true;
-        }
+        } */
 
         boolean debouncedLevelCondition = levelDebounce.calculate(pe.getCurTilt() == TiltState.LEVEL);
 
-        if(hasTiltedUp) {
-            if(debouncedLevelCondition){
+        if(debouncedLevelCondition){
+            level = true;
+        }
+
+        if(level){
+            dt_inst.setCmdRobotRelative(0.0, 0.0, 0.0, true);
+        } else {
+            dt_inst.setCmdRobotRelative(speed_mps, 0.0, 0.0, false);
+            PoseTelemetry.getInstance().setDesiredPose(dt_inst.getCurEstPose());
+        }
+
+        /*if(hasTiltedUp) {
+            if(debouncedLevelCondition || DriverStation.getMatchTime() <= 1){
                 dt_inst.setCmdRobotRelative(0.0, 0.0, 0.0, true);
 
             } if (pe.getCurTilt() == TiltState.NOSE_UP){
@@ -93,7 +107,7 @@ public class AutoEventDriveFwdTillLevel extends AutoEvent {
 
             //Populate desired pose from drivetrain - meh
             PoseTelemetry.getInstance().setDesiredPose(dt_inst.getCurEstPose());
-        }
+        }*/
 
     }
 

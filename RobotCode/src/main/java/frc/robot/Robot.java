@@ -29,6 +29,7 @@ import frc.robot.AutoDrive.AutoDrive.AutoDriveCmdState;
 import frc.robot.Autonomous.Autonomous;
 import frc.robot.Claw.ClawController;
 import frc.robot.Drivetrain.DrivetrainControl;
+import frc.robot.Drivetrain.DrivetrainPoseEstimator;
 import frc.robot.GamepieceModeManager.GamepieceMode;
 import frc.sim.RobotModel;
 
@@ -218,6 +219,7 @@ public class Robot extends TimedRobot {
   ///////////////////////////////////////////////////////////////////
   @Override
   public void teleopInit() {
+    DrivetrainPoseEstimator.getInstance().useApriltags(true);
   
   }
 

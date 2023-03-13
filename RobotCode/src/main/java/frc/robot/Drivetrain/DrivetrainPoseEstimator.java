@@ -69,6 +69,8 @@ public class DrivetrainPoseEstimator {
     @Signal(units = "ft/sec")
     double curSpeed = 0;
 
+    boolean useApriltags = true;
+
     private DrivetrainPoseEstimator(){
 
         // Invoke the fieldTags getInstance at least once
@@ -132,11 +134,13 @@ public class DrivetrainPoseEstimator {
 
         PoseTelemetry.getInstance().clearVisionPoses();
 
-        for(var cam : cams){
-            cam.update(getEstPose());
-            for(var obs : cam.getCurObservations()){
-                m_poseEstimator.addVisionMeasurement(obs.estFieldPose, obs.time, visionMeasurementStdDevs.times(1.0/obs.trustworthiness));
-                PoseTelemetry.getInstance().addVisionPose("Tmp", obs.estFieldPose);
+        if(useApriltags){
+            for(var cam : cams){
+                cam.update(getEstPose());
+                for(var obs : cam.getCurObservations()){
+                    m_poseEstimator.addVisionMeasurement(obs.estFieldPose, obs.time, visionMeasurementStdDevs.times(1.0/obs.trustworthiness));
+                    PoseTelemetry.getInstance().addVisionPose("Tmp", obs.estFieldPose);
+                }
             }
         }
 
@@ -171,6 +175,9 @@ public class DrivetrainPoseEstimator {
         return false;
     }
 
+    public void useApriltags(boolean use){
+        useApriltags = use;
+    }
     /**
      * 
      * @return representation of the robot's heading as measured by the gyroscope
