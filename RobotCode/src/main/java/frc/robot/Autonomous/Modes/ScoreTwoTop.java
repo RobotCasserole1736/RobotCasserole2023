@@ -12,6 +12,7 @@ import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
 import frc.robot.Autonomous.Events.AutoEventSelectCubeMode;
 import frc.robot.Autonomous.Events.AutoEventSetClawEject;
 import frc.robot.Autonomous.Events.AutoEventSetClawIntake;
+import frc.robot.Autonomous.Events.DisableAprilTags;
 
 public class ScoreTwoTop extends AutoMode {
 
@@ -25,14 +26,14 @@ public class ScoreTwoTop extends AutoMode {
 
     @Override
     public void addStepsToSequencer(AutoSequencer seq) {
-
+        
         //Place first cone upper
         seq.addEvent(new AutoEventSelectConeMode());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
         seq.addEvent(new AutoEventSetClawEject());
 
         //Drive to center
-        initDrive1 = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 0.7);
+        initDrive1 = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 0.5);
         initDrive1.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         seq.addEvent(initDrive1);
 

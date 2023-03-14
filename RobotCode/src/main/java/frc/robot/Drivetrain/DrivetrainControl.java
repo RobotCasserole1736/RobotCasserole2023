@@ -108,7 +108,7 @@ public class DrivetrainControl {
 
     private DrivetrainControl(){
 
-        moduleWheel_kP = new Calibration("Drivetrain Module Wheel kP", "", 0.00); //0.035 previously 
+        moduleWheel_kP = new Calibration("Drivetrain Module Wheel kP", "", 0.02); //0.035 previously 
         moduleWheel_kI = new Calibration("Drivetrain Module Wheel kI", "", 0.0);
         moduleWheel_kD = new Calibration("Drivetrain Module Wheel kD", "", 0.0);
         moduleWheel_kV = new Calibration("Drivetrain Module Wheel kV", "volts/radPerSec", 0.02);
