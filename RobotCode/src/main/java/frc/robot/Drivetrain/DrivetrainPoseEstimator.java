@@ -60,7 +60,7 @@ public class DrivetrainPoseEstimator {
 
     //Trustworthiness of the vision system
     // Measured in expected standard deviation (meters of position and degrees of rotation)
-    Matrix<N3, N1>  visionMeasurementStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
+    Matrix<N3, N1>  visionMeasurementStdDevs = VecBuilder.fill(0.9, 0.9, 0.009);
 
     DrivetrainPitchState pe = DrivetrainPitchState.getInstance();
 
