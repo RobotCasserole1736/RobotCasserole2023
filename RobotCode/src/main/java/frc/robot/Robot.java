@@ -200,6 +200,9 @@ public class Robot extends TimedRobot {
     // Ensure simulation resets to correct pose at the start of autonomous
     syncSimPoseToEstimate();
 
+    //Make sure drivetrian gains are up to date
+    DrivetrainControl.getInstance().calUpdate(true);
+
   }
 
   @Override
@@ -219,7 +222,12 @@ public class Robot extends TimedRobot {
   ///////////////////////////////////////////////////////////////////
   @Override
   public void teleopInit() {
+
+    // Make sure we re-enable apriltags
     DrivetrainPoseEstimator.getInstance().useApriltags(true);
+
+    //Make sure drivetrian gains are up to date
+    DrivetrainControl.getInstance().calUpdate(true);  
   
   }
 
