@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.IntegerPublisher;
 import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.IntegerTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.TimestampedInteger;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -19,9 +20,7 @@ import frc.robot.Autonomous.Modes.ScoreTwoTop;
 import frc.robot.Autonomous.Modes.Wait;
 import frc.robot.Autonomous.Modes.leaveComTop;
 import frc.robot.Autonomous.Modes.scoreTop;
-import frc.robot.Autonomous.Modes.scoreBalance;
 import frc.robot.Autonomous.Modes.scoreTopPickup;
-import frc.robot.Autonomous.Modes.SteakAuto2023;
 import frc.robot.Drivetrain.DrivetrainControl;
 
 
@@ -58,8 +57,8 @@ public class Autonomous {
     IntegerSubscriber desDelayModeSubscriber;
     IntegerSubscriber desMainModeSubscriber;
 
-    long desDelayMode = 0;
-    long desMainMode = 0;
+    TimestampedInteger desDelayMode = new TimestampedInteger(0, 0, 0);
+    TimestampedInteger desMainMode = new TimestampedInteger(0, 0, 0);
 
     public AutoModeList mainModeList = new AutoModeList("main");
     public AutoModeList delayModeList = new AutoModeList("delay");
@@ -126,13 +125,17 @@ public class Autonomous {
 
     /* This should be called periodically in Disabled, and once in auto init */
     public void sampleDashboardSelector(){
-        desDelayMode = desDelayModeSubscriber.get();
-        desMainMode  = desMainModeSubscriber.get();
-        curDelayMode = delayModeList.get((int)desDelayMode);
-        curMainMode = mainModeList.get((int)desMainMode);	
+        desDelayMode = desDelayModeSubscriber.getAtomic();
+        desMainMode  = desMainModeSubscriber.getAtomic();
+        curDelayMode = delayModeList.get((int)desDelayMode.value);
+        curMainMode = mainModeList.get((int)desMainMode.value);	
         var curAlliance = DriverStation.getAlliance();
 
-        if(curDelayMode != prevDelayMode || curMainMode != prevMainMode || curAlliance != prevAlliance){
+        var delayModeChanged = curDelayMode != prevDelayMode && desDelayMode.timestamp > 0;
+        var mainModeChanged = curMainMode != prevMainMode  && desMainMode.timestamp > 0;
+        var allianceChanged = curAlliance != prevAlliance;
+
+        if(delayModeChanged || mainModeChanged || allianceChanged){
             loadSequencer();
             prevDelayMode = curDelayMode;
             prevMainMode = curMainMode;
@@ -163,8 +166,8 @@ public class Autonomous {
         curDelayMode.addStepsToSequencer(seq);
         curMainMode.addStepsToSequencer(seq);
 
-        curDelayModePublisher.set(desDelayMode);
-        curMainModePublisher.set(desMainMode);
+        curDelayModePublisher.set(desDelayMode.value);
+        curMainModePublisher.set(desMainMode.value);
     
         DrivetrainControl.getInstance().setKnownPose(getStartPose());
         
