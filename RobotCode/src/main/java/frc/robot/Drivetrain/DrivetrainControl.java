@@ -349,10 +349,13 @@ public class DrivetrainControl {
            moduleAzmth_kP.isChanged() ||
            moduleAzmth_kI.isChanged() ||
            moduleAzmth_kD.isChanged() || force){
-            moduleFL.setClosedLoopGains(moduleWheel_kP.get(), moduleWheel_kI.get(), moduleWheel_kD.get(), moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
-            moduleFR.setClosedLoopGains(moduleWheel_kP.get(), moduleWheel_kI.get(), moduleWheel_kD.get(), moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
-            moduleBL.setClosedLoopGains(moduleWheel_kP.get(), moduleWheel_kI.get(), moduleWheel_kD.get(), moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
-            moduleBR.setClosedLoopGains(moduleWheel_kP.get(), moduleWheel_kI.get(), moduleWheel_kD.get(), moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
+            var wheel_kP = DriverStation.isAutonomous() ? moduleWheel_kP.get() : 0.0; // only use closed-loop in autonomous
+            var wheel_kI = DriverStation.isAutonomous() ? moduleWheel_kI.get() : 0.0; // only use closed-loop in autonomous
+            var wheel_kD = DriverStation.isAutonomous() ? moduleWheel_kD.get() : 0.0; // only use closed-loop in autonomous
+            moduleFL.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
+            moduleFR.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
+            moduleBL.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
+            moduleBR.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
             moduleWheel_kP.acknowledgeValUpdate();
             moduleWheel_kI.acknowledgeValUpdate();
             moduleWheel_kD.acknowledgeValUpdate();
