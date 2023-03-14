@@ -13,7 +13,7 @@ public class ArmSoftLimits {
 
 
     Double XPosLimits[] = {0.6, 0.48, 0.20, 0.20, 1.612, 1.612};
-    Double YPosLimits[] = {0.05, 0.8217, 1.116, 1.847, 1.847, 0.05};
+    Double YPosLimits[] = {0.05, 0.8217, 1.116, 2.347, 2.347, 0.05};
 
     boolean isLimited;
 
