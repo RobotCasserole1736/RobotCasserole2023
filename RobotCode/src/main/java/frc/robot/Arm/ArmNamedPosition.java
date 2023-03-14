@@ -7,11 +7,11 @@ public enum ArmNamedPosition {
     CUBE_HIGH(1.377 ,1.123,false, 0.1),
     CONE_LOW(1.10 ,0.22,false),
     CONE_MID(1.038 ,1.120,false, 0.1),
-    CONE_HIGH(1.527 ,1.389,false, 0.3),
-    SHELF(1.606 ,1.082,false),
+    CONE_HIGH(1.500 ,1.453,false, 0.2),
+    SHELF(1.53 ,1.172,false),
     FLOOR(1.10 ,0.10,false),
     FLOOR_TIPPED_CONE(0.6539 ,0.07,true, 0.1),
-    STOW(0.4100, 1.116 ,false),
+    STOW(0.2002, 1.127 ,false),
     ;
 
     public final double safeY;

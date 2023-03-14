@@ -88,8 +88,9 @@ public class Constants {
     static public final double ARM_END_EFF_MAX_VEL_MPS = Units.inchesToMeters(60.0);
     static public final double ARM_END_EFF_MAX_ACCEL_MPS2 = ARM_END_EFF_MAX_VEL_MPS * 1.5;
     static public final double ARM_BOOM_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(101.8);
-    static public final double ARM_STICK_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(-126.3 - 14.0);
-    static public final double ARM_STICK_MAX_ANGLE_DEG = (154.9);
+    //boom was 101.8 and stick was -126.3-14
+    static public final double ARM_STICK_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(170.7);
+    static public final double ARM_STICK_MAX_ANGLE_DEG = (163);
     static public final double ARM_STICK_MIN_ANGLE_DEG = (-155);
     static public final double ARM_BOOM_MAX_ANGLE_DEG = (60.00);
     static public final double ARM_BOOM_MIN_ANGLE_DEG = (-107.5);
