@@ -4,6 +4,8 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.PubSubOption;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 
 
 
@@ -13,6 +15,7 @@ public class Signal {
     String units;
     DoubleTopic nt4ValTopic;
     DoublePublisher nt4ValPublisher;
+    DoubleLogEntry logEntry;
 
     /**
      * Class which describes one line on a plot
@@ -25,9 +28,8 @@ public class Signal {
         units = units_in;
 
         NetworkTableInstance inst = NetworkTableInstance.getDefault();
-
-
-        nt4ValTopic   = inst.getDoubleTopic(this.getNT4ValueTopicName());
+        nt4ValTopic = inst.getDoubleTopic(this.getNT4ValueTopicName());
+        logEntry = new DoubleLogEntry(DataLogManager.getLog(), name_in);
 
 
         //The goal of a signal is to record the value of a variable every loop, for debugging down to loop-to-loop changes
@@ -50,7 +52,10 @@ public class Signal {
      * @param value_in
      */
     public void addSample(double time_in_sec, boolean value_in) {
-        this.addSample(time_in_sec, value_in ? 1.0 : 0.0);
+        double value = value_in? 1.0: 0.0;
+        long timestamp_us = Math.round(time_in_sec*1000000l);
+        nt4ValPublisher.set(value, timestamp_us);
+        logEntry.append(value, timestamp_us);
     }
 
     /**
@@ -61,7 +66,9 @@ public class Signal {
      * @param value_in
      */
     public void addSample(double time_in_sec, double value_in) {
-        nt4ValPublisher.set(value_in, Math.round(time_in_sec*1000000l));
+        long timestamp_us = Math.round(time_in_sec*1000000l);
+        nt4ValPublisher.set(value_in, timestamp_us);
+        logEntry.append(value_in, timestamp_us);
     }
 
     /**

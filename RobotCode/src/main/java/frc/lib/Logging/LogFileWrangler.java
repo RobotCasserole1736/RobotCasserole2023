@@ -46,6 +46,8 @@ public class LogFileWrangler {
         }
 
         DataLogManager.start(logFilePath.toString());
+        DataLogManager.logNetworkTables(false); //we'll do it ourselves
+
         DriverStation.startDataLog(DataLogManager.getLog());
     }
 
