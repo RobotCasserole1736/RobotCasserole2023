@@ -28,8 +28,8 @@ public class ArmTelemetry {
     /* Singleton infratructure */
     private static ArmTelemetry inst = null;
 
-    boolean ENABLE_TELEMETRY = Robot.isSimulation();
-    //boolean ENABLE_TELEMETRY = true;
+    //boolean ENABLE_TELEMETRY = Robot.isSimulation();
+    boolean ENABLE_TELEMETRY = true;
 
     public static synchronized ArmTelemetry getInstance() {
         if (inst == null)
