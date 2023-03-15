@@ -199,10 +199,14 @@ public class Robot extends TimedRobot {
     auto.startSequencer();
 
     // Ensure simulation resets to correct pose at the start of autonomous
+    //And that our pose in autonomous matches where we believe we actually started at
+    DrivetrainControl.getInstance().setKnownPose(auto.getStartPose());
     syncSimPoseToEstimate();
 
     //Make sure drivetrian gains are up to date
     DrivetrainControl.getInstance().calUpdate(true);
+
+
 
   }
 
