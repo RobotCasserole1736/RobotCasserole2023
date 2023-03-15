@@ -44,11 +44,12 @@ public class ScoreTwoTop extends AutoMode {
         //Drive to grid
         initDrive2 = new AutoEventJSONTrajectory("Score two top pt 2", 0.35);
         initDrive2.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
-        initDrive2.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_HIGH, 5));
+        //initDrive2.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_HIGH, 5));
+        //Does the above line work?!?!?!?!?!?!?!?!?
         seq.addEvent(initDrive2);
 
         //Place cone upper
-        //seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_HIGH));
+        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_HIGH));
         seq.addEvent(new AutoEventSetClawEject());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
 
