@@ -59,36 +59,23 @@ public class ReflexPreservingArmPath implements ArmPath {
         double threeQuarterX = start.x + dispX * 0.75;
 
         Pose2d pathStartPos;
-        final double directXLimit = Constants.WHEEL_BASE_HALF_LENGTH_M + Constants.BUMPER_THICKNESS_M*2;
-        boolean startingOutsideAndTranslating = start.x > directXLimit && Math.abs(start.x - end.get().x) > 0.01;
         boolean belowSafeY = end.safeY > start.y;
-        if(startingOutsideAndTranslating || belowSafeY){
-            // If we're outside frame perimiter and about to move horizontally, 
-            // ensure we start with upward motion to clear obstacles
-            if(belowSafeY){
-                interiorWaypoints.add(new Translation2d(oneQuarterX, end.safeY));
-            }
-            pathStartPos = start.toPoseToTop();
-        } else {
-            pathStartPos = start.toPoseToOther(end);
+        // If we're outside frame perimiter and about to move horizontally, 
+        // ensure we start with upward motion to clear obstacles
+        if(belowSafeY){
+            interiorWaypoints.add(new Translation2d(oneQuarterX, end.safeY));
         }
+        pathStartPos = start.toPoseToTop();
+
 
         Pose2d pathEndPos;
 
         if(end.safeY > 0){
             //If the end has a configured safe height, add in an additional waypoint to account for it
-            // TODO - handle safe Y better
             interiorWaypoints.add(new Translation2d(threeQuarterX, end.safeY));
-            pathEndPos = end.get().toPoseFromTop();
-        } else {
-            // If we end outside the frame perimiter, approach from top.
-            // Otherwise, just go straight to it.
-            if(end.get().x > Constants.WHEEL_BASE_HALF_LENGTH_M){
-                pathEndPos = end.get().toPoseFromTop();
-            } else {
-                pathEndPos = end.get().toPoseFromOther(start);
-            }
-        }
+        } 
+        pathEndPos = end.get().toPoseFromTop();
+
 
 
         var failed = true;
