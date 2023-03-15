@@ -13,7 +13,7 @@ public class ClawController {
     boolean curReleaseCmd;
     Solenoid clawSolenoid;
 
-    private final double CUBE_INTAKE_SPD = 0.55;
+    private final double CUBE_INTAKE_SPD = 0.5;
     private final double CUBE_HOLD_SPD = 0.2;
     private final double CUBE_EJECT_SPD = -0.35;
 

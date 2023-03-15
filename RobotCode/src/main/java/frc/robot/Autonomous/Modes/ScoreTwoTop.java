@@ -33,17 +33,12 @@ public class ScoreTwoTop extends AutoMode {
         seq.addEvent(new AutoEventSetClawEject());
 
         //Drive to center
-        initDrive1 = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 0.5);
+        initDrive1 = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup", 0.45);
         initDrive1.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         seq.addEvent(initDrive1);
 
-        //Intake cone
-        /*var drivePickup = new AutoEventDriveTime(2.5, 0.25);
-        drivePickup.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_LOW));
-        drivePickup.addChildEvent(new AutoEventSetClawIntake());
-        seq.addEvent(drivePickup); */
-
-        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_LOW));
+        seq.addEvent(new AutoEventSelectCubeMode());
+        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_LOW));
         seq.addEvent(new AutoEventDriveAndIntake(2.5, 0.50));
 
         //Drive to grid
@@ -52,7 +47,7 @@ public class ScoreTwoTop extends AutoMode {
         seq.addEvent(initDrive2);
 
         //Place cone upper
-        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
+        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_HIGH));
         seq.addEvent(new AutoEventSetClawEject());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
 
