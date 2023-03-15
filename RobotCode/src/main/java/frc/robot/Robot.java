@@ -110,6 +110,7 @@ public class Robot extends TimedRobot {
     stt.mark("LW Disable");
 
     // Start NT4 with logging
+    LogFileWrangler.getInstance();
     NetworkTableInstance.getDefault().startServer();
     stt.mark("NT4");
 
