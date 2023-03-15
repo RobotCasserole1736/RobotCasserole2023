@@ -14,11 +14,18 @@ public class AutoEventArmMoveToPos extends AutoEvent {
 	
 	ArmNamedPosition posDes;
 	double startTime = 0;
+	double delayTimeSec = 0.0;
 	final double MIN_DURATION_SEC = 0.5;
 	Debouncer doneMovingArmDebouncer = new Debouncer(0.1, DebounceType.kRising);
 	
 	public AutoEventArmMoveToPos(ArmNamedPosition posDes) {
 		this.posDes = posDes;
+		this.delayTimeSec = 0.0;
+	}
+
+	public AutoEventArmMoveToPos(ArmNamedPosition posDes, double delay_sec) {
+		this.posDes = posDes;
+		this.delayTimeSec = delay_sec;
 	}
 
 	@Override
@@ -28,8 +35,15 @@ public class AutoEventArmMoveToPos extends AutoEvent {
 
 	@Override
 	public void userUpdate() {
-		// Just set control request the desired position
-		ArmControl.getInstance().setOpCmds(0, 0, posDes, true, 0.0);
+		var curTime = Timer.getFPGATimestamp() - startTime;
+		if(curTime > delayTimeSec){
+			// Just set control request the desired position
+			ArmControl.getInstance().setOpCmds(0, 0, posDes, true, 0.0);
+		} else {
+			//before delay, hold
+			ArmControl.getInstance().setOpCmds(0, 0, posDes, false, 0.0);
+		}
+
 	}
 
 	@Override
@@ -49,6 +63,10 @@ public class AutoEventArmMoveToPos extends AutoEvent {
 		//        AND we've finished path planning
 		var curTime = Timer.getFPGATimestamp() - startTime;
 		boolean doneMovingDbnc = doneMovingArmDebouncer.calculate(!ArmControl.getInstance().isPathPlanning());
-		return (doneMovingDbnc && curTime > MIN_DURATION_SEC);
+		boolean isDone = (doneMovingDbnc && curTime > MIN_DURATION_SEC && curTime > delayTimeSec);
+		if(isDone){
+			this.userForceStop();
+		}
+		return isDone;
 	}
 }
