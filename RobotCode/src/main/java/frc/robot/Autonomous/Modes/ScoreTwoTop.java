@@ -39,15 +39,16 @@ public class ScoreTwoTop extends AutoMode {
 
         seq.addEvent(new AutoEventSelectCubeMode());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_LOW));
-        seq.addEvent(new AutoEventDriveAndIntake(2.5, 0.50));
+        seq.addEvent(new AutoEventDriveAndIntake(2.75, 0.50));
 
         //Drive to grid
         initDrive2 = new AutoEventJSONTrajectory("Score two top pt 2", 0.35);
         initDrive2.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
+        initDrive2.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_HIGH, 5));
         seq.addEvent(initDrive2);
 
         //Place cone upper
-        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_HIGH));
+        //seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_HIGH));
         seq.addEvent(new AutoEventSetClawEject());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
 
