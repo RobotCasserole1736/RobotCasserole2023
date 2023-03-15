@@ -29,7 +29,7 @@ public class ArmTelemetry {
     private static ArmTelemetry inst = null;
 
     //boolean ENABLE_TELEMETRY = Robot.isSimulation();
-    boolean ENABLE_TELEMETRY = true;
+    boolean ENABLE_TELEMETRY = false;
 
     public static synchronized ArmTelemetry getInstance() {
         if (inst == null)
