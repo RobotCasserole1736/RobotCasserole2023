@@ -18,8 +18,6 @@ public class GamepieceModeManager {
 
     boolean getAttention = false;
 
-    boolean intakeCommanded = false;
-
     /* Singleton infratructure*/
     private static GamepieceModeManager inst = null;
     public enum GamepieceMode{
@@ -52,7 +50,7 @@ public class GamepieceModeManager {
     public void ledUpdate() {
 
         double pwm = 0;
-        if(ledBlinkCmd && intakeCommanded){
+        if(ledBlinkCmd){
             pwm = PWM_BLINK;
         } else if (curMode==GamepieceMode.CONE) {
             pwm = PWM_CONE;
@@ -91,10 +89,6 @@ public class GamepieceModeManager {
 
     public void setBlinkMode(boolean in) {
         ledBlinkCmd = in;
-    }
-
-    public void setIntakeCommanded(boolean in){
-        intakeCommanded = in;
     }
 
     public void setGetAttention(boolean in){

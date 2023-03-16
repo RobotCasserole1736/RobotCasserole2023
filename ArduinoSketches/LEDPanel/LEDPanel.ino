@@ -202,6 +202,8 @@ void attentionGrab() {
         }
     }
 
+    FastLED.delay(100);
+
 }
 
 

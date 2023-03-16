@@ -37,8 +37,10 @@ public class GamePieceDetector {
     @Signal
     boolean somethingIsPresent;
 
+    boolean intakeCommanded = false;
+
     public boolean ledShouldBlink;
-    Debouncer blinkDebouncer = new Debouncer(2.0, DebounceType.kFalling);
+    Debouncer blinkDebouncer = new Debouncer(1.736, DebounceType.kFalling);
 
     public GamePieceDetector(){
         // Instantiating the Time of Flight Sensor  
@@ -102,7 +104,7 @@ public class GamePieceDetector {
 
         somethingIsPresent = somethingInIntakDebouncer.calculate( gamepieceDistSensorMeas < somethingInIntake.get());
 
-        if(clawHasGamePiece && !clawHadGamePiece) {
+        if(clawHasGamePiece && !clawHadGamePiece && intakeCommanded) {
             ledShouldBlink = blinkDebouncer.calculate(true);
         } else {
             ledShouldBlink = blinkDebouncer.calculate(false);
@@ -120,6 +122,10 @@ public class GamePieceDetector {
 
     public boolean getSomethingIsPresent(){
         return somethingIsPresent;
+    }
+
+    public void setIntakeCommanded(boolean in){
+        intakeCommanded = in;
     }
     
 }

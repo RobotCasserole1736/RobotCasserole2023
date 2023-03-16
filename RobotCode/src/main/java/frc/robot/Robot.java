@@ -28,6 +28,7 @@ import frc.robot.AutoDrive.AutoDrive;
 import frc.robot.AutoDrive.AutoDrive.AutoDriveCmdState;
 import frc.robot.Autonomous.Autonomous;
 import frc.robot.Claw.ClawController;
+import frc.robot.Claw.GamePieceDetector;
 import frc.robot.Drivetrain.DrivetrainControl;
 import frc.robot.Drivetrain.DrivetrainPoseEstimator;
 import frc.robot.GamepieceModeManager.GamepieceMode;
@@ -289,7 +290,7 @@ public class Robot extends TimedRobot {
     GamepieceModeManager.getInstance().setGetAttention(oi.attentionCmd);
 
     var grab = di.getGrab() || oi.grabCmd;
-    GamepieceModeManager.getInstance().setIntakeCommanded(grab);
+    cc.gpd.setIntakeCommanded(grab);
     cc.setGrabCmd(grab);
     cc.setReleaseCmd(di.getRelease() || oi.releaseCmd);
     stt.mark("Claw Control");
