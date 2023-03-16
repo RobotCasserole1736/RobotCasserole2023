@@ -1,6 +1,8 @@
 package frc.robot.Claw;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.Constants;
@@ -69,7 +71,7 @@ public class ClawController {
             // Cone mode - claw closed unless releasing
             if(!gpd.hasGamepiece() && curGrabCmd){
                 // No gamepiece, but actively intaking
-                clawCloseCmd = gpd.getSomethingIsPresent();
+                clawCloseCmd = gpd.getSomethingIsPresent() || DriverStation.isTeleop();
                 wheelMotorSpdCmd = CONE_INTAKE_SPD;
             } else if (curReleaseCmd) {
                 // releasing (with or without gamepiece)
