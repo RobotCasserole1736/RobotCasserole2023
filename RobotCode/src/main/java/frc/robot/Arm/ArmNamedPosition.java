@@ -3,12 +3,12 @@ package frc.robot.Arm;
 public enum ArmNamedPosition {
     //TODO - add actual numbers for the positions
     CUBE_LOW(1.10 ,0.23,false),
-    CUBE_MID(0.9117 ,0.8366,false, 0.1),
-    CUBE_HIGH(1.377 ,1.223,false, 0.1),
+    CUBE_MID(0.8788 ,0.8886,false, 0.1),
+    CUBE_HIGH(1.276 ,1.149,false, 0.1),
     CONE_LOW(1.084 ,0.2082,false),
-    CONE_MID(0.98 ,1.00,false, 0.2),
-    CONE_HIGH(1.519 ,1.45,false, 0.25),
-    SHELF(1.591 ,1.17,false),
+    CONE_MID(1.041 ,1.04,false, 0.2),
+    CONE_HIGH(1.528 ,1.381,false, 0.25),
+    SHELF(1.573 ,1.179,false),
     FLOOR(1.10 ,0.10,false),
     FLOOR_TIPPED_CONE(0.6539 ,0.07,true, 0.1),
     STOW(0.2002, 1.127 ,false),
