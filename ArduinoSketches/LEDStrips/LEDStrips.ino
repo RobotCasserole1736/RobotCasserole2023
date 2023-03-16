@@ -312,14 +312,14 @@ void Green_Alert(){
   }
   
   if (greenFade==true){
-    g+=20.0;
+    g+=40.0;
   }
   else if(greenFade==false){
-    g-=20.0;
+    g-=40.0;
   }
     
   for (int i = 0; i < NUM_LEDS; i++){
-    led[i] = CRGB(0,g,0);
+    led[i] = CRGB(0,0,g);
   }
 }
 

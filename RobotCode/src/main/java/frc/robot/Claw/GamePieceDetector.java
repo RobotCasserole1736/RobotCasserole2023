@@ -38,7 +38,7 @@ public class GamePieceDetector {
     boolean somethingIsPresent;
 
     public boolean ledShouldBlink;
-    Debouncer blinkDebouncer = new Debouncer(1.0, DebounceType.kFalling);
+    Debouncer blinkDebouncer = new Debouncer(2.0, DebounceType.kFalling);
 
     public GamePieceDetector(){
         // Instantiating the Time of Flight Sensor  
@@ -51,8 +51,8 @@ public class GamePieceDetector {
         gpmm = GamepieceModeManager.getInstance();
         
         // Thresholds for Cubes and Cones
-        cubePresentThresh = new Calibration("Claw Cube Present Threshold", "in", 5);
-        cubeAbsentThresh = new Calibration("Claw Cube Absent Threshold", "in", 9);
+        cubePresentThresh = new Calibration("Claw Cube Present Threshold", "in", 7);
+        cubeAbsentThresh = new Calibration("Claw Cube Absent Threshold", "in", 11);
         conePresentThresh = new Calibration("Claw Cone Present Threshold", "in", 4);
         coneAbsentThresh = new Calibration("Claw Cone Absent Threshold", "in", 8);
 
