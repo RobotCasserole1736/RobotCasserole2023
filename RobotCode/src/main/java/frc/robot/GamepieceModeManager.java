@@ -85,4 +85,8 @@ public class GamepieceModeManager {
     public void setBlinkMode(boolean in) {
         ledBlinkCmd = in;
     }
+
+    public void setIntakeCommanded(boolean in){
+        intakeCommanded = in;
+    }
 }

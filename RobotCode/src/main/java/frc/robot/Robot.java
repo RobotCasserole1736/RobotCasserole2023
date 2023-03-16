@@ -286,7 +286,9 @@ public class Robot extends TimedRobot {
     ac.setOpCmds(oi.curHorizontalCmd, oi.curVerticalCmd, curOpPos, oi.posCmdActive(), oi.armVertOffsetCmd);
     stt.mark("Arm Control");
 
-    cc.setGrabCmd(di.getGrab() || oi.grabCmd);
+    var grab = di.getGrab() || oi.grabCmd;
+    GamepieceModeManager.getInstance().setIntakeCommanded(grab);
+    cc.setGrabCmd(grab);
     cc.setReleaseCmd(di.getRelease() || oi.releaseCmd);
     stt.mark("Claw Control");
 
