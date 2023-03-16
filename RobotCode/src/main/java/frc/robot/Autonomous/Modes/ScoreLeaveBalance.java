@@ -5,7 +5,6 @@ import frc.lib.AutoSequencer.AutoSequencer;
 import frc.lib.Autonomous.AutoMode;
 import frc.robot.Arm.ArmNamedPosition;
 import frc.robot.Autonomous.Events.AutoEventArmMoveToPos;
-import frc.robot.Autonomous.Events.AutoEventBraceDrivetrain;
 import frc.robot.Autonomous.Events.AutoEventDriveFwdTillLevel;
 import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 import frc.robot.Autonomous.Events.AutoEventSelectConeMode;

@@ -13,11 +13,11 @@ import frc.robot.ArmTelemetry;
 
 public class ArmSim {
 
-    private final double ARM_STICK_MASS = Units.lbsToKilograms(5.0);
-    private final double ARM_BOOM_MASS = Units.lbsToKilograms(5.0);
-    private final double ARM_END_EFF_MASS = Units.lbsToKilograms(5.0);
+    private final double ARM_STICK_MASS = Units.lbsToKilograms(3.0);
+    private final double ARM_BOOM_MASS = Units.lbsToKilograms(3.0);
+    private final double ARM_END_EFF_MASS = Units.lbsToKilograms(3.0);
 
-    private final double KIN_ROT_COEF_FRIC = 5.0;
+    private final double KIN_ROT_COEF_FRIC = 1.0;
 
     SimSmartMotor boomMotorCtrl;
     SimSmartMotor stickMotorCtrl;
