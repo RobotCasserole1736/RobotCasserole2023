@@ -62,6 +62,10 @@ public class OperatorInput {
     @Signal
     boolean switchToCubeModeCmd = false;
 
+    //blinky blinky
+    @Signal
+    boolean attentionCmd = false;
+
     SlewRateLimiter horizCmdSlewRate = new SlewRateLimiter(MAX_MAN_VEL_MPS * 3);
     SlewRateLimiter vertCmdSlewRate = new SlewRateLimiter(MAX_MAN_VEL_MPS * 2);
     SlewRateLimiter horizOffsetSlewRate = new SlewRateLimiter(1.0);
@@ -102,6 +106,7 @@ public class OperatorInput {
             armShelfPosCmd = povUP();
 
             armVertOffsetTrig = ctrl.getRightTriggerAxis() > 0.5;
+            attentionCmd = ctrl.getLeftTriggerAxis() > 0.5;
 
             var horizCmdRaw = MathUtil.applyDeadband( ctrl.getRightY(),stickDb.get());
             if(armVertOffsetTrig == true) {
@@ -133,6 +138,7 @@ public class OperatorInput {
             armVertOffsetTrig = false;
             grabCmd = false;
             releaseCmd = false;
+            attentionCmd = false;
         }
 
         disconFault.set(!isConnected);

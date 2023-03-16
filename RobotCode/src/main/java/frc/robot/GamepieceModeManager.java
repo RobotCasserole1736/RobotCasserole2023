@@ -2,7 +2,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.PWM;
 import frc.Constants;
 import frc.lib.Signal.Annotations.Signal;
-import frc.robot.Claw.ClawController;
 
 /**
  * Class to track what gamepiece mode we're in.
@@ -10,11 +9,14 @@ import frc.robot.Claw.ClawController;
 public class GamepieceModeManager {
 
     private final double PWM_CONE = -1.0;
+    private final double PWM_ATTENTION = -0.5;
     private final double PWM_CUBE = 0.0;
     private final double PWM_BLINK = 1.0;
 
     @Signal
     boolean ledBlinkCmd = false;
+
+    boolean getAttention = false;
 
     boolean intakeCommanded = false;
 
@@ -49,17 +51,22 @@ public class GamepieceModeManager {
 
     public void ledUpdate() {
 
-        
+        double pwm = 0;
         if(ledBlinkCmd && intakeCommanded){
-            LEDPanelModeCtrl.setSpeed(PWM_BLINK);
-            LEDStripsModeCtrl.setSpeed(PWM_BLINK);
+            pwm = PWM_BLINK;
         } else if (curMode==GamepieceMode.CONE) {
-            LEDPanelModeCtrl.setSpeed(PWM_CONE);
-            LEDStripsModeCtrl.setSpeed(PWM_CONE);
+            pwm = PWM_CONE;
         } else if (curMode==GamepieceMode.CUBE) {
-            LEDPanelModeCtrl.setSpeed(PWM_CUBE);
-            LEDStripsModeCtrl.setSpeed(PWM_CUBE);
+            pwm = PWM_CUBE;
         }
+
+        if(getAttention){
+            LEDPanelModeCtrl.setSpeed(PWM_ATTENTION);
+        } else {
+            LEDPanelModeCtrl.setSpeed(pwm);
+        }
+
+        LEDStripsModeCtrl.setSpeed(pwm);
     }
 
     public GamepieceMode getCurMode(){
@@ -88,5 +95,9 @@ public class GamepieceModeManager {
 
     public void setIntakeCommanded(boolean in){
         intakeCommanded = in;
+    }
+
+    public void setGetAttention(boolean in){
+        getAttention = in;
     }
 }

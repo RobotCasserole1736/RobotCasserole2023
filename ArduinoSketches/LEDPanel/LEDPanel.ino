@@ -14,7 +14,7 @@ const uint8_t kMatrixWidth = 16;
 //const uint8_t kMatrixHeight = 16;
 uint8_t fader = BRIGHTNESS;
 const long pulseLengthYellowCone = 1000; //pulse length in microseconds to command yellow cone display
-const long pulseLengthYellowConeAttention = 750; //pulse length in microseconds to command yellow cone display
+const long pulseAttentionGrab = 1750; //pulse length in microseconds to command yellow cone display
 const long pulseLengthPurpleCube = 1500; //pulse length in microseconds to command purple cube display
 const long pulseLengthPurpleCubeAttention = 1250; //pulse length in microseconds to command purple cube display
 const long pulseLengthGreenBlink = 2000;  //pulse length in microseconds to command green blink
@@ -79,6 +79,8 @@ void loop() {
     purpleCube(false);
   } else if(cmdPWM <= (pulseLengthGreenBlink + pulseLengthTolerance) && cmdPWM >= (pulseLengthGreenBlink - pulseLengthTolerance)){
     greenBlink();
+  } else if(cmdPWM <= (pulseAttentionGrab + pulseLengthTolerance) && cmdPWM >= (pulseAttentionGrab - pulseLengthTolerance)){
+    attentionGrab();    
   } else {
     printLongArray(longTeamNumberArray);
     //printArray(hatArray);
@@ -184,6 +186,24 @@ void greenBlink() {
     FastLED.delay(200);
 
 }
+
+//**************************************************************
+// Function: Display an obnoxious blink
+//**************************************************************
+void attentionGrab() {
+  
+    static boolean greenBlinkState;
+    
+    greenBlinkState = !greenBlinkState;
+
+    for (uint8_t i = 0; i<kMatrixWidth; i++){
+        for (uint8_t j = 0; j<kMatrixWidth; j++){   
+            led[XY(i,j)] = CRGB(greenBlinkState?250:0,greenBlinkState?250,greenBlinkState?250);
+        }
+    }
+
+}
+
 
 
 int s = kMatrixWidth; // scroll idx
