@@ -198,7 +198,7 @@ void attentionGrab() {
 
     for (uint8_t i = 0; i<kMatrixWidth; i++){
         for (uint8_t j = 0; j<kMatrixWidth; j++){   
-            led[XY(i,j)] = CRGB(greenBlinkState?250:0,greenBlinkState?250,greenBlinkState?250);
+            led[XY(i,j)] = CRGB(greenBlinkState?250:0,greenBlinkState?250:0,greenBlinkState?250:0);
         }
     }
 
