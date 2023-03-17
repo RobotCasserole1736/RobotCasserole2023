@@ -19,6 +19,7 @@ import frc.robot.Autonomous.Modes.ScoreLeaveBalance;
 import frc.robot.Autonomous.Modes.ScoreTwoTop;
 import frc.robot.Autonomous.Modes.Wait;
 import frc.robot.Autonomous.Modes.leaveComTop;
+import frc.robot.Autonomous.Modes.scoreLeave;
 import frc.robot.Autonomous.Modes.scoreTop;
 import frc.robot.Autonomous.Modes.scoreTopPickup;
 import frc.robot.Drivetrain.DrivetrainControl;
@@ -94,6 +95,7 @@ public class Autonomous {
         mainModeList.add(new DriveFwd(4.0));
         //mainModeList.add(new SteakAuto2023());
         mainModeList.add(new DoNothing());
+        mainModeList.add(new scoreLeave());
         mainModeList.add(new leaveComTop());
         //mainModeList.add(new scoreBalance());
         mainModeList.add(new scoreTop());
