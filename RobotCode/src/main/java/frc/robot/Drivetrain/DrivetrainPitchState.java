@@ -24,8 +24,8 @@ public class DrivetrainPitchState {
         return instance;
     }
 
-    double TILTED_THRESH_DEG = 10.0;
-    double LEVEL_THRESH_DEG = 7.5;
+    double TILTED_THRESH_DEG = 15.0;
+    double LEVEL_THRESH_DEG = 10.0;
 
     @Signal
     double chassisPitchDeg = 0;
