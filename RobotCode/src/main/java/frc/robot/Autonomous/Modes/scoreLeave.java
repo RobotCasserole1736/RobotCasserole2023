@@ -5,6 +5,7 @@ import frc.lib.AutoSequencer.AutoSequencer;
 import frc.lib.Autonomous.AutoMode;
 import frc.robot.Arm.ArmNamedPosition;
 import frc.robot.Autonomous.Events.AutoEventArmMoveToPos;
+import frc.robot.Autonomous.Events.AutoEventBraceDrivetrain;
 import frc.robot.Autonomous.Events.AutoEventDriveTime;
 import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
@@ -34,6 +35,8 @@ public class scoreLeave extends AutoMode {
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
 
         seq.addEvent(new AutoEventDriveTime(4, -1));
+
+        seq.addEvent(new AutoEventBraceDrivetrain(4));
 
 
     }
