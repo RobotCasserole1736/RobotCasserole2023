@@ -25,7 +25,7 @@ import frc.lib.Webserver2.Webserver2;
 import frc.robot.Arm.ArmControl;
 import frc.robot.Arm.ArmNamedPosition;
 import frc.robot.AutoDrive.AutoDrive;
-import frc.robot.AutoDrive.AutoDrive.AutoDriveCmdState;
+import frc.robot.AutoDrive.AutoDrive.AutoDriveTargetPose;
 import frc.robot.Autonomous.Autonomous;
 import frc.robot.Claw.ClawController;
 import frc.robot.Claw.GamePieceDetector;
@@ -250,13 +250,36 @@ public class Robot extends TimedRobot {
     /////////////////////////////////////
     // Drivetrain Input Mapping
 
-    if(di.getSpinMoveCmd()){
-      ad.setCmd(AutoDriveCmdState.DO_A_BARREL_ROLL);
-    } else if (di.getDriveToCenterCmd()){
-      ad.setCmd(AutoDriveCmdState.DRIVE_TO_CENTER);
-    } else {
-      ad.setCmd(AutoDriveCmdState.MANUAL);
+    //Auto-drive mapping from command/modifier buttons
+    var adCmd = AutoDriveTargetPose.NONE; //none by default
+    boolean isBlue = DriverStation.getAlliance() == Alliance.Blue;
+    if(di.adLeft){
+      if(di.adLeftModifier){
+        adCmd = isBlue ? AutoDriveTargetPose.BLUE_1 : AutoDriveTargetPose.RED_1;
+      } else if (di.adRightModifier){
+        adCmd = isBlue ? AutoDriveTargetPose.BLUE_2 : AutoDriveTargetPose.RED_2;
+      } else {
+        adCmd = isBlue ? AutoDriveTargetPose.BLUE_3 : AutoDriveTargetPose.RED_3;
+      }
+    } else if (di.adCenter){
+      if(di.adLeftModifier){
+        adCmd = isBlue ? AutoDriveTargetPose.BLUE_4 : AutoDriveTargetPose.RED_4;
+      } else if (di.adRightModifier){
+        adCmd = isBlue ? AutoDriveTargetPose.BLUE_5 : AutoDriveTargetPose.RED_5;
+      } else {
+        adCmd = isBlue ? AutoDriveTargetPose.BLUE_6 : AutoDriveTargetPose.RED_6;
+      }
+    } else if (di.adLeft){
+      if(di.adLeftModifier){
+        adCmd = isBlue ? AutoDriveTargetPose.BLUE_7 : AutoDriveTargetPose.RED_7;
+      } else if (di.adRightModifier){
+        adCmd = isBlue ? AutoDriveTargetPose.BLUE_8 : AutoDriveTargetPose.RED_8;
+      } else {
+        adCmd = isBlue ? AutoDriveTargetPose.BLUE_9 : AutoDriveTargetPose.RED_9;
+      }
     }
+    ad.setCmd(adCmd);
+
 
     ad.setManualCommands(di.getFwdRevCmd_mps(), di.getSideToSideCmd_mps(), di.getRotateCmd_rps(), !di.getRobotRelative(), di.getBracePositionCmd());
     ad.update();
@@ -289,9 +312,8 @@ public class Robot extends TimedRobot {
 
     GamepieceModeManager.getInstance().setGetAttention(oi.attentionCmd);
 
-    var grab = di.getGrab() || oi.grabCmd;
-    cc.gpd.setIntakeCommanded(grab);
-    cc.setGrabCmd(grab);
+    cc.gpd.setIntakeCommanded(oi.grabCmd);
+    cc.setGrabCmd(oi.grabCmd);
     cc.setReleaseCmd(di.getRelease() || oi.releaseCmd);
     stt.mark("Claw Control");
 

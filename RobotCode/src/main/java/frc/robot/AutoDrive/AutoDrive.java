@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import frc.lib.Signal.Annotations.Signal;
 import frc.robot.Drivetrain.DrivetrainControl;
 
@@ -18,16 +17,39 @@ public class AutoDrive {
     // and run the trajectory as long as the operator commands it
 
     // Command State = what the operator wants the system to do.
-    // Add more actions here if desired.
-	public enum AutoDriveCmdState{
-		MANUAL(0), // operator has full control over drivetrain
-		DRIVE_TO_CENTER(1), // Driver wants robot to drive to the center of the field
-		DO_A_BARREL_ROLL(2); // Driver wants to do a defense avoidance spin-to-the-right move
+     // Numbering of scoring positions is left to right from the perspective of the driver standing behind the glass
+	public enum AutoDriveTargetPose{
+		NONE(0), // operator has full control over drivetrain
+		BLUE_9(9, new Translation2d(1.86, 0.50), true), 
+		BLUE_8(8, new Translation2d(1.86, 1.05), true), 
+		BLUE_7(7, new Translation2d(1.86, 1.65), true), 
+		BLUE_6(6, new Translation2d(1.86, 2.19), true), 
+		BLUE_5(5, new Translation2d(1.86, 2.27), true), 
+		BLUE_4(4, new Translation2d(1.86, 3.28), true), 
+		BLUE_3(3, new Translation2d(1.86, 3.90), true), 
+		BLUE_2(2, new Translation2d(1.86, 4.42), true), 
+		BLUE_1(1, new Translation2d(1.86, 4.96), true), 
+        RED_1(11, new Translation2d(14.65, 0.50), false), 
+		RED_2(12, new Translation2d(14.65, 1.05), false), 
+		RED_3(13, new Translation2d(14.65, 1.65), false), 
+		RED_4(14, new Translation2d(14.65, 2.19), false), 
+		RED_5(15, new Translation2d(14.65, 2.27), false), 
+		RED_6(16, new Translation2d(14.65, 3.28), false), 
+		RED_7(17, new Translation2d(14.65, 3.90), false), 
+		RED_8(18, new Translation2d(14.65, 4.42), false), 
+		RED_9(19, new Translation2d(14.65, 4.96), false);
 
 		public final int value;
+        public final Pose2d tgtPose;
 
-		private AutoDriveCmdState(int value) {
+		private AutoDriveTargetPose(int value) {
 			this.value = value;
+            this.tgtPose = null;
+		}
+
+		private AutoDriveTargetPose(int value, Translation2d tgt, boolean isBlue) {
+			this.value = value;
+            this.tgtPose = new Pose2d(tgt, Rotation2d.fromDegrees(isBlue? 180.0 : 0.0));
 		}
 
 		public int toInt() {
@@ -58,8 +80,8 @@ public class AutoDrive {
     boolean manualFieldRelativeCmd = false;
     boolean bracePosition = false;
 
-    AutoDriveCmdState curCmd = AutoDriveCmdState.MANUAL;
-    AutoDriveCmdState prevCmd = AutoDriveCmdState.MANUAL;
+    AutoDriveTargetPose curCmd = AutoDriveTargetPose.NONE;
+    AutoDriveTargetPose prevCmd = AutoDriveTargetPose.NONE;
 
     AutoDriveState curState = AutoDriveState.MANUAL;
     AutoDriveState prevState = AutoDriveState.MANUAL;
@@ -88,7 +110,7 @@ public class AutoDrive {
         this.bracePosition = bracePosition;
     }
 
-    public void setCmd(AutoDriveCmdState cmd){
+    public void setCmd(AutoDriveTargetPose cmd){
         curCmd = cmd;
     }
 
@@ -96,7 +118,7 @@ public class AutoDrive {
         DrivetrainControl dt = DrivetrainControl.getInstance();
 
         // Update state machine
-        if(curCmd == AutoDriveCmdState.MANUAL){
+        if(curCmd == AutoDriveTargetPose.NONE){
             //Manual always takes prescedence
             curState = AutoDriveState.MANUAL;
         } else if ( curCmd != prevCmd ){
@@ -115,23 +137,9 @@ public class AutoDrive {
             waypoints.startRot = dt.getCurEstPose().getRotation();
             waypoints.interiorWaypoints = new ArrayList<Translation2d>();
 
-            //Default - end where we started (safe)
-            waypoints.end = waypoints.start;
-            waypoints.endRot = waypoints.startRot;
-
             // Pick waypoint ends based on the command
-            if(curCmd == AutoDriveCmdState.DRIVE_TO_CENTER){
-                waypoints.end = new Pose2d( new Translation2d(Units.feetToMeters(54/2), Units.feetToMeters(27/2)), waypoints.startRot);
-            } else if(curCmd == AutoDriveCmdState.DO_A_BARREL_ROLL){
-                waypoints.end = waypoints.start.transformBy(new Transform2d( new Translation2d(3.0, 3.0), new Rotation2d()));
-            }
-
-            //Calcualte the end Heading based on how we want our path to end
-            if(curCmd == AutoDriveCmdState.DRIVE_TO_CENTER){
-                waypoints.endRot = Rotation2d.fromDegrees(0.0); //pointed downfield
-            } else if(curCmd == AutoDriveCmdState.DO_A_BARREL_ROLL){
-                waypoints.endRot = waypoints.startRot.plus(Rotation2d.fromDegrees(180.0));
-            }
+            waypoints.end = curCmd.tgtPose;
+            waypoints.endRot = waypoints.end.getRotation();
 
             // Start the dynamic generation
             curTraj = new DynamicSwerveTrajectoryGenerator();

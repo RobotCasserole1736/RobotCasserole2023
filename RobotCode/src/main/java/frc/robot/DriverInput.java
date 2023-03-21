@@ -61,18 +61,18 @@ public class DriverInput {
     @Signal(units="bool")
     boolean braceCmd;
 
-    // Auxilary intake/eject commands
-    @Signal(units="bool")
-    boolean clawEject;
-    @Signal(units="bool")
-    boolean clawIntake; 
-
 
     // Auto-drive commands
     @Signal(units="bool")
-    boolean spinMoveCmd;
+    public boolean adLeft;
     @Signal(units="bool")
-    boolean driveToCenterCmd;
+    public boolean adCenter;
+    @Signal(units="bool")
+    public boolean adRight;
+    @Signal(units="bool")
+    public boolean adLeftModifier;
+    @Signal(units="bool")
+    public boolean adRightModifier; 
 
     // Press-and-hold to reset odometry to be pointing downfield.
     @Signal(units="bool")
@@ -143,22 +143,14 @@ public class DriverInput {
             // Read in other drivetrain controls
             robotRelative = driverController.getRightBumper();
             braceCmd = driverController.getLeftBumper();
-            resetOdometry = resetOdoDbnc.calculate(driverController.getAButton());
+            resetOdometry = resetOdoDbnc.calculate(driverController.getPOV() == 180);
 
             // Read in Auto-drive commands
-            spinMoveCmd = driverController.getBButton();
-            driveToCenterCmd = driverController.getXButton();
-
-            // Read in claw intake/eject commands
-            clawEject = driverController.getRightTriggerAxis() > .75;
-            clawIntake = driverController.getLeftTriggerAxis() > .75;
-
-            //If both are pulled, make sure we don't do both at the same time
-            if(clawEject && clawIntake) {
-                clawEject = false;
-                clawIntake = false;
-            }
-
+            adLeft = driverController.getXButton();
+            adCenter = driverController.getAButton();
+            adRight = driverController.getBButton();
+            adLeftModifier = driverController.getRightTriggerAxis() > .75;
+            adRightModifier = driverController.getLeftTriggerAxis() > .75;
  
         } else {
             //Controller Unplugged Defaults
@@ -167,10 +159,11 @@ public class DriverInput {
             sideToSideSpdCmd = 0.0; 
             robotRelative = false;
             resetOdometry = false;
-            spinMoveCmd = false;
-            driveToCenterCmd = false;
-            clawEject = false;
-            clawIntake = false;
+            adLeft = false;
+            adCenter = false;
+            adRight = false;
+            adLeftModifier = false;
+            adRightModifier = false;
             braceCmd = false;
         }
 
@@ -236,19 +229,7 @@ public class DriverInput {
     }
 
     public boolean getRelease(){
-        return clawEject;
-    }
-
-    public boolean getGrab(){
-        return clawIntake;
-    }
-
-    public boolean getSpinMoveCmd(){
-        return spinMoveCmd;
-    }
-
-    public boolean getDriveToCenterCmd(){
-        return driveToCenterCmd;
+        return adLeftModifier;
     }
 
     public boolean getBracePositionCmd(){
