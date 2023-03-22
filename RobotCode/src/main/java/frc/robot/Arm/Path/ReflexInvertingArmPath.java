@@ -63,7 +63,7 @@ public class ReflexInvertingArmPath implements ArmPath {
         this.max_accel = max_accel_mps2; 
 
         TrajectoryConfig cfg = new TrajectoryConfig(max_vel_mps, max_accel_mps2);
-        cfg.addConstraint(new CentripetalAccelerationConstraint(max_accel_mps2/2));
+        cfg.addConstraint(new CentripetalAccelerationConstraint(max_accel_mps2 * Constants.ARM_PATH_CURVATURE_FACTOR));
 
         var reflexEndpoint = new ArmEndEffectorState(reflexEndPosX, reflexEndPosY);
 
