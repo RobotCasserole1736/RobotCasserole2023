@@ -3,6 +3,7 @@ package frc.robot.Arm;
 import java.util.ArrayList;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import frc.Constants;
 import frc.robot.ArmTelemetry;
 
@@ -11,9 +12,12 @@ public class ArmSoftLimits {
     private final double SMALL_DIFF = 0.01;
     private final double LARGE_DIFF = Double.MAX_VALUE;
 
+    private final double MAX_Y_M = Units.feetToMeters(6.0);// per the rules
+    private final double MAX_X_M = Constants.ARM_STICK_LENGTH + Constants.ARM_BOOM_LENGTH - 0.01; // per physics, with a margin
+    
     //clockwise from bottom nearest robot
-    Double XPosLimits[] = {0.6, 0.48, 0.20, 0.20, 1.812, 1.812};
-    Double YPosLimits[] = {0.05, 0.9217, 1.116, 2.347, 2.347, 0.05};
+    Double XPosLimits[] = {0.6, 0.48, 0.20, 0.20, MAX_X_M, MAX_X_M};
+    Double YPosLimits[] = {0.05, 0.9217, 1.116, MAX_Y_M, MAX_Y_M, 0.05};
 
     boolean isLimited;
 
