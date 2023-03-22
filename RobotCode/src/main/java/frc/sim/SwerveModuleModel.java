@@ -79,6 +79,8 @@ class SwerveModuleModel{
         prevModulePose = new Pose2d(initModulePose.getX(), initModulePose.getY(), initModulePose.getRotation());
         curModulePose = new Pose2d(initModulePose.getX(), initModulePose.getY(), initModulePose.getRotation());
         curAzmthAngle = Rotation2d.fromDegrees(0);
+        wheelMotor.reset();
+        azmthMotor.reset();
     }
 
     

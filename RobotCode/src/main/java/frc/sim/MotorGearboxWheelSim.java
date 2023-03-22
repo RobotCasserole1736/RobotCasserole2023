@@ -72,4 +72,9 @@ public class MotorGearboxWheelSim {
     public double getCurrent_A(){
         return motor.getCurrent_A();
     }
+
+    public void reset(){
+        wheelRotations_rad = 0;
+        prevWheelRotationalSpeed_radPerSec = 0;
+    }
 }

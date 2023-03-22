@@ -85,5 +85,9 @@ class SimpleMotorWithMassModel {
         return getAzmthShaftPosition_Rev() * gearing;
     }
 
+    public void reset(){
+        curDisplacement_Rev = 0;
+    }
+
 
 }
