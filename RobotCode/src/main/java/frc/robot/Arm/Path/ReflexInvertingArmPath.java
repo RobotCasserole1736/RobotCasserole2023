@@ -41,7 +41,7 @@ public class ReflexInvertingArmPath implements ArmPath {
     // All these constants are related to finding two points:
     // reflexEnd - the reflex point of "full extension" at some angle upward from the horizon
     final double reflexDist = (Constants.ARM_STICK_LENGTH + Constants.ARM_BOOM_LENGTH);
-    final double reflexAngleRad = Units.degreesToRadians(20.0);
+    final double reflexAngleRad = Units.degreesToRadians(10.0);
     final double reflexMidPointFrac = 0.90;
     final double reflexEndPosX = reflexDist * Math.cos(reflexAngleRad);
     final double reflexEndPosY = reflexDist * Math.sin(reflexAngleRad) + Constants.ARM_BOOM_MOUNT_HIEGHT;

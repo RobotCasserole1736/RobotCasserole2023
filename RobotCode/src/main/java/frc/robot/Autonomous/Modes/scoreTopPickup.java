@@ -8,9 +8,7 @@ import frc.robot.Autonomous.Events.AutoEventArmMoveToPos;
 import frc.robot.Autonomous.Events.AutoEventDriveAndIntake;
 import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
-import frc.robot.Autonomous.Events.AutoEventSelectCubeMode;
 import frc.robot.Autonomous.Events.AutoEventSetClawEject;
-import frc.robot.Autonomous.Events.AutoEventSetClawIntake;
 
 public class scoreTopPickup extends AutoMode {
 
