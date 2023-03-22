@@ -191,6 +191,7 @@ public class SimSmartMotor extends AbstractSimmableMotorController {
     @Override
     public void resetDistance() {
         curPos_rad = 0;
+        curVel_radpersec = 0;
     }
 
     @Override
