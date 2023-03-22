@@ -55,6 +55,8 @@ public class OperatorInput {
     boolean grabCmd = false;
     @Signal
     boolean releaseCmd = false;
+    @Signal
+    boolean yeetCmd = false;
 
     // Cone/Cube mode switch commands
     @Signal
@@ -108,6 +110,14 @@ public class OperatorInput {
             armVertOffsetTrig = ctrl.getRightTriggerAxis() > 0.5;
             attentionCmd = ctrl.getLeftTriggerAxis() > 0.5;
 
+            if ( ctrl.getRightTriggerAxis() > 0.5 &&  ctrl.getLeftTriggerAxis() > 0.5){
+                yeetCmd = true;
+                armVertOffsetTrig = false;
+                attentionCmd = false;
+            } else {
+                yeetCmd = false;
+            }
+
             var horizCmdRaw = MathUtil.applyDeadband( ctrl.getRightY(),stickDb.get());
             if(armVertOffsetTrig == true) {
                 // Use horizontal command as an offset, zero velocity
@@ -138,6 +148,7 @@ public class OperatorInput {
             armVertOffsetTrig = false;
             grabCmd = false;
             releaseCmd = false;
+            yeetCmd = false;
             attentionCmd = false;
         }
 
