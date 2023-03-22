@@ -21,7 +21,6 @@ class SwerveModuleModel{
 
     SimAbsoluteEncoder angleMotorEncoder;
 
-    double curLinearSpeed_mps = 0; //Positive = in curAngle_deg, Negative = opposite of curAngle_deg
     Rotation2d curAzmthAngle = Rotation2d.fromDegrees(0); //0 = toward front, 90 = toward left, 180 = toward back, 270 = toward right
 
     MotorGearboxWheelSim wheelMotor;
@@ -77,8 +76,8 @@ class SwerveModuleModel{
     }
 
     public void reset(Pose2d initModulePose){
-        prevModulePose = curModulePose = initModulePose;
-        curLinearSpeed_mps = 0;
+        prevModulePose = new Pose2d(initModulePose.getX(), initModulePose.getY(), initModulePose.getRotation());
+        curModulePose = new Pose2d(initModulePose.getX(), initModulePose.getY(), initModulePose.getRotation());
         curAzmthAngle = Rotation2d.fromDegrees(0);
     }
 

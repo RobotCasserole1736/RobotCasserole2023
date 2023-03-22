@@ -144,15 +144,11 @@ public class Autonomous {
             prevAlliance = curAlliance;
         }
 
-        if(RobotController.getUserButton()) {
-            DrivetrainControl.getInstance().setKnownPose(getStartPose());
-        }
     }
 
 
     public void startSequencer(){
         sampleDashboardSelector(); //ensure it gets called once more
-        DrivetrainControl.getInstance().setKnownPose(curMainMode.getInitialPose());
         if(curMainMode != null){
             seq.start();
         }

@@ -115,7 +115,9 @@ public class DrivetrainPoseEstimator {
      * 
      * @return the current best estimate of the robot's position on the field
      */
-    public Pose2d getEstPose(){ return curEstPose; }
+    public Pose2d getEstPose(){
+         return curEstPose; 
+    }
 
     public void update(){
 

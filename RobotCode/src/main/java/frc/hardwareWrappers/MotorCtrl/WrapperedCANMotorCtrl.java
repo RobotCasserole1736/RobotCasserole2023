@@ -18,8 +18,6 @@ public class WrapperedCANMotorCtrl {
     @Signal(units="V")
     private double appliedVoltage;
 
-    @Signal(units = "radpersec")
-    private double actVel;
 
     @Signal(units = "A")
     private double current;
@@ -27,8 +25,6 @@ public class WrapperedCANMotorCtrl {
     @Signal(units = "radpersec")
     private double desVel;
 
-    @Signal(units = "rad")
-    private double actPos;
 
     public WrapperedCANMotorCtrl(String prefix, int can_id, CANMotorCtrlType type){
 
@@ -52,8 +48,6 @@ public class WrapperedCANMotorCtrl {
     
 
     public void update(){
-        actVel = ctrl.getVelocity_radpersec();
-        actPos = ctrl.getPosition_rad();
         current = ctrl.getCurrent_A();
         appliedVoltage = ctrl.getAppliedVoltage_V();
     }
@@ -80,15 +74,16 @@ public class WrapperedCANMotorCtrl {
     }
 
     public double getVelocity_radpersec(){
-        return actVel;
+        return ctrl.getVelocity_radpersec();
     }
 
     public double getPosition_rad(){
-        return actPos;
+        return ctrl.getPosition_rad();
     }
 
     public void resetDistance(){
         ctrl.resetDistance();
+        update();
     }
 
     public void setBrakeMode(boolean brakeMode){
