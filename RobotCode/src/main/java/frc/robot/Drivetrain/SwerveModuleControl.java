@@ -144,9 +144,9 @@ class SwerveModuleControl {
         return desState;
     }
 
-    public void setClosedLoopGains(double wheel_kP, double wheel_kI, double wheel_kD, double wheel_kV, double wheel_kS, double azmth_kP, double azmth_kI, double azmth_kD){
+    public void setClosedLoopGains(double wheel_kP, double wheel_kI, double wheel_kD, double wheel_kA, double wheel_kV, double wheel_kS, double azmth_kP, double azmth_kI, double azmth_kD){
         wheelMotorCtrl.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD);
-        wheelMotorFF = new SimpleMotorFeedforward(wheel_kS, wheel_kV);
+        wheelMotorFF = new SimpleMotorFeedforward(wheel_kS, wheel_kV, wheel_kA);
         azmthCtrl.setGains(azmth_kP, azmth_kI, azmth_kD);
     }
 

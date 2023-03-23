@@ -46,6 +46,7 @@ public class DrivetrainControl {
     Calibration moduleWheel_kP;
     Calibration moduleWheel_kI;
     Calibration moduleWheel_kD;
+    Calibration moduleWheel_kA; // Feed-forward Accel Constat - IE, how many extra volts to get a certain amount of acceleration in rad/sec^2
     Calibration moduleWheel_kV; // Feed-forward Voltage Constat - IE, how many volts to get a certain amount of motor speed in radians per second?
     Calibration moduleWheel_kS; // Feed-forward Static Constnat - IE, how many volts to overcome static friction and get any motion at all?
     Calibration moduleAzmth_kP;
@@ -111,6 +112,7 @@ public class DrivetrainControl {
         moduleWheel_kP = new Calibration("Drivetrain Module Wheel kP", "", 0.02); //0.035 previously 
         moduleWheel_kI = new Calibration("Drivetrain Module Wheel kI", "", 0.0);
         moduleWheel_kD = new Calibration("Drivetrain Module Wheel kD", "", 0.0);
+        moduleWheel_kA = new Calibration("Drivetrain Module Wheel kA", "volts/radPerSecPerSec", 0.00);
         moduleWheel_kV = new Calibration("Drivetrain Module Wheel kV", "volts/radPerSec", 0.017);
         moduleWheel_kS = new Calibration("Drivetrain Module Wheel kS", "volts", 0.12);
         moduleAzmth_kP = new Calibration("Drivetrain Module Azmth kP", "", 0.008);
@@ -344,6 +346,7 @@ public class DrivetrainControl {
         if(moduleWheel_kP.isChanged() ||
            moduleWheel_kI.isChanged() ||
            moduleWheel_kD.isChanged() ||
+           moduleWheel_kA.isChanged() ||
            moduleWheel_kV.isChanged() ||
            moduleWheel_kS.isChanged() ||
            moduleAzmth_kP.isChanged() ||
@@ -352,13 +355,14 @@ public class DrivetrainControl {
             var wheel_kP = DriverStation.isAutonomous() ? moduleWheel_kP.get() : 0.0; // only use closed-loop in autonomous
             var wheel_kI = DriverStation.isAutonomous() ? moduleWheel_kI.get() : 0.0; // only use closed-loop in autonomous
             var wheel_kD = DriverStation.isAutonomous() ? moduleWheel_kD.get() : 0.0; // only use closed-loop in autonomous
-            moduleFL.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
-            moduleFR.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
-            moduleBL.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
-            moduleBR.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
+            moduleFL.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kA.get(), moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
+            moduleFR.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kA.get(), moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
+            moduleBL.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kA.get(), moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
+            moduleBR.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kA.get(), moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
             moduleWheel_kP.acknowledgeValUpdate();
             moduleWheel_kI.acknowledgeValUpdate();
             moduleWheel_kD.acknowledgeValUpdate();
+            moduleWheel_kA.acknowledgeValUpdate();
             moduleWheel_kV.acknowledgeValUpdate();
             moduleWheel_kS.acknowledgeValUpdate();
             moduleAzmth_kP.acknowledgeValUpdate();
