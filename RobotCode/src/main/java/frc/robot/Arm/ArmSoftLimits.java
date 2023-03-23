@@ -16,8 +16,8 @@ public class ArmSoftLimits {
     private final double MAX_X_M = Constants.ARM_STICK_LENGTH + Constants.ARM_BOOM_LENGTH - 0.01; // per physics, with a margin
     
     //clockwise from bottom nearest robot
-    Double XPosLimits[] = {0.6, 0.48, 0.20, 0.20, MAX_X_M, MAX_X_M};
-    Double YPosLimits[] = {0.05, 0.9217, 1.116, MAX_Y_M, MAX_Y_M, 0.05};
+    Double XPosLimits[] = {0.6, 0.48, 0.10, 0.10, MAX_X_M, MAX_X_M};
+    Double YPosLimits[] = {0.05, 0.9217, 1.016, MAX_Y_M, MAX_Y_M, 0.05};
 
     boolean isLimited;
 
