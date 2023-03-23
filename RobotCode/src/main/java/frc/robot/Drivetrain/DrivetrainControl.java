@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -217,6 +218,16 @@ public class DrivetrainControl {
         this.initAngleOnly = initAngleOnly;
         bracePosition = false;
     }
+
+    // Simple API to command the drivetrain to a particular pose. 
+    // Pose should be stationary, and make sure you start fairly close to it.
+    public void setCmdPose(Pose2d cmdPose){
+        desChSpd = hdc.calculate(pe.getEstPose(), new Trajectory.State(0.0, 0.0, 0.0, cmdPose, 0.0), cmdPose.getRotation(), Rotation2d.fromDegrees(0.0));
+        curDesPose = cmdPose;
+        this.initAngleOnly = false;
+        bracePosition = false;
+    }
+
 
 
     // Helper function to command the drivetrain to stop in place. Azimuths will still servo to the "stopped" cross position
