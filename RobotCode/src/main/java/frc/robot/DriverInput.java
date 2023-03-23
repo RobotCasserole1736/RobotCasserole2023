@@ -140,14 +140,14 @@ public class DriverInput {
             // Read in other drivetrain controls
             robotRelative = driverController.getRightBumper();
             braceCmd = driverController.getLeftBumper();
-            resetOdometry = resetOdoDbnc.calculate(driverController.getPOV() == 180);
+            resetOdometry = resetOdoDbnc.calculate(driverController.getAButton());
 
             // Read in Auto-drive commands
             adLeft = driverController.getXButton();
-            adCenter = driverController.getAButton();
+            adCenter = driverController.getYButton();
             adRight = driverController.getBButton();
-            adLeftModifier = driverController.getRightTriggerAxis() > .75;
-            adRightModifier = driverController.getLeftTriggerAxis() > .75;
+            adLeftModifier = driverController.getLeftTriggerAxis() > .75;
+            adRightModifier = driverController.getRightTriggerAxis() > .75;
  
         } else {
             //Controller Unplugged Defaults

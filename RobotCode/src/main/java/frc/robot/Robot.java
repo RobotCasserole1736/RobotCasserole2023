@@ -256,25 +256,25 @@ public class Robot extends TimedRobot {
       if(di.adLeftModifier){
         adCmd = isBlue ? AutoDriveTargetPose.BLUE_1 : AutoDriveTargetPose.RED_1;
       } else if (di.adRightModifier){
-        adCmd = isBlue ? AutoDriveTargetPose.BLUE_2 : AutoDriveTargetPose.RED_2;
+        adCmd = isBlue ? AutoDriveTargetPose.BLUE_7 : AutoDriveTargetPose.RED_7;
       } else {
-        adCmd = isBlue ? AutoDriveTargetPose.BLUE_3 : AutoDriveTargetPose.RED_3;
+        adCmd = isBlue ? AutoDriveTargetPose.BLUE_4 : AutoDriveTargetPose.RED_4;
       }
     } else if (di.adCenter){
       if(di.adLeftModifier){
-        adCmd = isBlue ? AutoDriveTargetPose.BLUE_4 : AutoDriveTargetPose.RED_4;
-      } else if (di.adRightModifier){
-        adCmd = isBlue ? AutoDriveTargetPose.BLUE_5 : AutoDriveTargetPose.RED_5;
-      } else {
-        adCmd = isBlue ? AutoDriveTargetPose.BLUE_6 : AutoDriveTargetPose.RED_6;
-      }
-    } else if (di.adLeft){
-      if(di.adLeftModifier){
-        adCmd = isBlue ? AutoDriveTargetPose.BLUE_7 : AutoDriveTargetPose.RED_7;
+        adCmd = isBlue ? AutoDriveTargetPose.BLUE_2 : AutoDriveTargetPose.RED_2;
       } else if (di.adRightModifier){
         adCmd = isBlue ? AutoDriveTargetPose.BLUE_8 : AutoDriveTargetPose.RED_8;
       } else {
+        adCmd = isBlue ? AutoDriveTargetPose.BLUE_5 : AutoDriveTargetPose.RED_5;
+      }
+    } else if (di.adRight){
+      if(di.adLeftModifier){
+        adCmd = isBlue ? AutoDriveTargetPose.BLUE_3 : AutoDriveTargetPose.RED_3;
+      } else if (di.adRightModifier){
         adCmd = isBlue ? AutoDriveTargetPose.BLUE_9 : AutoDriveTargetPose.RED_9;
+      } else {
+        adCmd = isBlue ? AutoDriveTargetPose.BLUE_6 : AutoDriveTargetPose.RED_6;
       }
     }
     ad.setCmd(adCmd);

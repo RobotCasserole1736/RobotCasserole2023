@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.lib.Signal.Annotations.Signal;
 import frc.robot.Drivetrain.DrivetrainControl;
@@ -24,7 +23,7 @@ public class AutoDrive {
 		BLUE_8(8, new Translation2d(1.86, 1.05), true), 
 		BLUE_7(7, new Translation2d(1.86, 1.65), true), 
 		BLUE_6(6, new Translation2d(1.86, 2.19), true), 
-		BLUE_5(5, new Translation2d(1.86, 2.27), true), 
+		BLUE_5(5, new Translation2d(1.86, 2.72), true), 
 		BLUE_4(4, new Translation2d(1.86, 3.28), true), 
 		BLUE_3(3, new Translation2d(1.86, 3.90), true), 
 		BLUE_2(2, new Translation2d(1.86, 4.42), true), 
@@ -33,7 +32,7 @@ public class AutoDrive {
 		RED_2(12, new Translation2d(14.65, 1.05), false), 
 		RED_3(13, new Translation2d(14.65, 1.65), false), 
 		RED_4(14, new Translation2d(14.65, 2.19), false), 
-		RED_5(15, new Translation2d(14.65, 2.27), false), 
+		RED_5(15, new Translation2d(14.65, 2.72), false), 
 		RED_6(16, new Translation2d(14.65, 3.28), false), 
 		RED_7(17, new Translation2d(14.65, 3.90), false), 
 		RED_8(18, new Translation2d(14.65, 4.42), false), 

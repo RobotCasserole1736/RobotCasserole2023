@@ -57,7 +57,7 @@ public class DynamicSwerveTrajectoryGenerator {
 
             //Time profile needs to advance from 0 up to trajlen_sec
             // Kinda hacky
-            timeProfile = new TrapezoidProfile(new Constraints(1.0, 1.0), new State(trajLen_s, 0));
+            timeProfile = new TrapezoidProfile(new Constraints(1.0,1.0), new State(trajLen_s, 0));
 
 
             trajGenFinished = true;
@@ -86,7 +86,7 @@ public class DynamicSwerveTrajectoryGenerator {
         //Hacky part 1. 
         // Abuse the a trapezoidal profile to convert a time into a fraction that goes from 0 to 1
         // at a reasonable rate.
-        var tmp = timeProfile.calculate(curTrajectoryTime_s);
+        var tmp = timeProfile.calculate(curTimeSec);
         double modTrajTime = tmp.position;
 
         var trajFrac = modTrajTime / trajLen_s;
@@ -118,11 +118,14 @@ public class DynamicSwerveTrajectoryGenerator {
         var vel_1 = pose_2.minus(pose_1).times(1.0 / (Constants.Ts)).getTranslation().getNorm();
 
         var accel_0 = (vel_1 - vel_0)/(Constants.Ts);
+
+        var trajRot = new Rotation2d(pose_2.getX() - pose_0.getX(), pose_2.getY() - pose_0.getY());
+        var trajPose = new Pose2d(pose_0.getTranslation(), trajRot);
         
         // Hacky part 3
         // Pretend all the previous math produces a trajectory state
         // which it really doesn't but uhhhh well yea.
-        Trajectory.State curState = new Trajectory.State(curTrajectoryTime_s, vel_0, accel_0, pose_0, 0.0);
+        Trajectory.State curState = new Trajectory.State(curTrajectoryTime_s, vel_0, accel_0, trajPose, 0.0);
 
         // Hacky part 4
         // Headings just interpolate like poses
