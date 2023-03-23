@@ -72,13 +72,13 @@ public class AutoEventDriveFwdTillLevel extends AutoEvent {
         double curTime = (Timer.getFPGATimestamp()-startTime);
 
         
-        /*if(pe.getCurTilt() == TiltState.NOSE_UP){
+        if(pe.getCurTilt() == TiltState.NOSE_UP){
             hasTiltedUp = true;
-        } */
+        }
 
         boolean debouncedLevelCondition = levelDebounce.calculate(pe.getCurTilt() == TiltState.LEVEL);
 
-        if(debouncedLevelCondition){
+        /*if(debouncedLevelCondition){
             level = true;
         }
 
@@ -87,9 +87,9 @@ public class AutoEventDriveFwdTillLevel extends AutoEvent {
         } else {
             dt_inst.setCmdRobotRelative(speed_mps, 0.0, 0.0, false);
             PoseTelemetry.getInstance().setDesiredPose(dt_inst.getCurEstPose());
-        }
+        } */
 
-        /*if(hasTiltedUp) {
+        if(hasTiltedUp) {
             if(debouncedLevelCondition || DriverStation.getMatchTime() <= 1){
                 dt_inst.setCmdRobotRelative(0.0, 0.0, 0.0, true);
 
@@ -107,7 +107,7 @@ public class AutoEventDriveFwdTillLevel extends AutoEvent {
 
             //Populate desired pose from drivetrain - meh
             PoseTelemetry.getInstance().setDesiredPose(dt_inst.getCurEstPose());
-        }*/
+        }
 
     }
 
