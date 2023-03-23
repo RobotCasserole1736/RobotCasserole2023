@@ -17,6 +17,7 @@ import frc.robot.Autonomous.Modes.DoNothing;
 import frc.robot.Autonomous.Modes.DriveFwd;
 import frc.robot.Autonomous.Modes.ScoreLeaveBalance;
 import frc.robot.Autonomous.Modes.ScoreTwoTop;
+import frc.robot.Autonomous.Modes.TestSCurvy;
 import frc.robot.Autonomous.Modes.Wait;
 import frc.robot.Autonomous.Modes.leaveComTop;
 import frc.robot.Autonomous.Modes.scoreLeave;
@@ -101,6 +102,7 @@ public class Autonomous {
         mainModeList.add(new scoreTop());
         mainModeList.add(new scoreTopPickup());
         mainModeList.add(new ScoreLeaveBalance());
+        mainModeList.add(new TestSCurvy());
        
         
 
