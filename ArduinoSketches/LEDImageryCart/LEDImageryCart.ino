@@ -1,6 +1,6 @@
 #include <FastLED.h>
 
-#define COLOR_SWITCH_PIN  25 // Subject to change
+#define COLOR_SWITCH_PIN  50 // Subject to change
 #define LED_STRIP_1_PIN   22 // Subject to change
 #define LED_STRIP_2_PIN   23 // Subject to change
 #define NUM_LEDS_STRIP_1  23 // Subject to change
@@ -35,7 +35,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  if (digitalRead(COLOR_SWITCH_PIN) == HIGH){
+  if (digitalRead(COLOR_SWITCH_PIN) == LOW){
     red();
   } else {
     blue();
