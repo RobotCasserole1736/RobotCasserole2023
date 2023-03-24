@@ -1,6 +1,7 @@
 package frc.robot.Arm;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import frc.Constants;
 import frc.hardwareWrappers.MotorCtrl.WrapperedCANMotorCtrl;
@@ -48,7 +49,6 @@ public class MotorControlBoom {
 
     @Signal
     boolean isAngleLimited;
-
 
 
     public MotorControlBoom(){

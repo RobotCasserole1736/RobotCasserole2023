@@ -74,13 +74,31 @@ public class ArmKinematics {
         var stickAngleDeg = Units.radiansToDegrees(cur.getSecond());
         var boomAnglularVel = 0.0;
         var stickAngularVel = 0.0;
+        var boomAngularAccel = 0.0;
+        var stickAngularAccel = 0.0;
         if(next != null && prev != null){
-            boomAnglularVel = Units.radiansToDegrees(next.getFirst() - prev.getFirst())/0.04;
-            stickAngularVel = Units.radiansToDegrees(next.getSecond() - prev.getSecond())/0.04;
+            // Average Vel
+            boomAnglularVel = toAngVelDegPerSec(next.getFirst(), prev.getFirst(), 0.04);
+            stickAngularVel = toAngVelDegPerSec(next.getSecond(), prev.getSecond(), 0.04);
+
+            // Average Accel
+            boomAngularAccel = toAngAccelDegPerSec2(next.getFirst(), cur.getFirst(), prev.getFirst(), 0.02);
+            stickAngularAccel = toAngAccelDegPerSec2(next.getSecond(), cur.getSecond(), prev.getSecond(), 0.02);
         }
         
-        return new ArmAngularState(boomAngleDeg, boomAnglularVel, stickAngleDeg, stickAngularVel);   
+        return new ArmAngularState(boomAngleDeg, boomAnglularVel, stickAngleDeg, stickAngularVel, boomAngularAccel, stickAngularAccel);   
     }
+
+    private static double toAngVelDegPerSec(double next, double first, double delta_time){
+        return Units.radiansToDegrees(next - first)/delta_time;
+    }
+
+    private static double toAngAccelDegPerSec2(double next, double cur, double prev, double delta_time){
+        var vel_f =  Units.radiansToDegrees(next - cur)/delta_time;
+        var vel_i =  Units.radiansToDegrees(cur - prev)/delta_time;
+        return (vel_f - vel_i) / delta_time;
+    }
+
 
     private static Pair<Double, Double> inverse_internal(double x, double y, boolean isReflex) {
         // from
