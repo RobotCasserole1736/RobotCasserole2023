@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.AllianceTransformUtils;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
+import pabeles.concurrency.IntOperatorTask.Max;
 
 /**
  * Generates commands to automatically turn the robot to the scoring position
@@ -35,7 +36,7 @@ public class TurnAssist {
     @Signal(units="deg")
     double actAngleDbg = 0;
 
-    Calibration kP = new Calibration("TA kP", "radPerSec per Rad err", 15.0);
+    Calibration kP = new Calibration("TA kP", "radPerSec per Rad err", 4.0);
 
     public double update(double manualTurnCmd_radpersec, boolean headedDownfield, boolean autoTurnRequested){
         Rotation2d curChassisRot = DrivetrainPoseEstimator.getInstance().getEstPose().getRotation();
@@ -51,21 +52,23 @@ public class TurnAssist {
                 turnStartAngle = curChassisRot;
             }
 
-            var err_rad = targetRot.minus(curChassisRot).getRadians();
+            var tgtErr_rad = targetRot.minus(curChassisRot).getRadians();
 
             double curTime = Timer.getFPGATimestamp() - turnStartTime;
             profileFrac = Math.min(1.0, curTime / (turnEndTime - turnStartTime));
 
             double cmdFF = 0.0;
             if(profileFrac < 1.0){
-                cmdFF = ROT_SPD_RADPERSSEC * Math.signum(err_rad);
+                cmdFF = ROT_SPD_RADPERSSEC * Math.signum(tgtErr_rad);
                 curDesAngle = turnStartAngle.interpolate(targetRot, profileFrac);
             } else {
-                cmdFF = kP.get() * err_rad;
+                cmdFF = 0.0;
                 curDesAngle = targetRot;
             }
 
-            curTurnCmd_radpersec = cmdFF; 
+            var desErr_rad = curDesAngle.minus(curChassisRot).getRadians();
+
+            curTurnCmd_radpersec = cmdFF + kP.get() * desErr_rad; 
 
         } else {
             //Manual mode - pass through manual command
