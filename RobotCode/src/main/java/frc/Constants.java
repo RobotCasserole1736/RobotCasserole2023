@@ -53,10 +53,10 @@ public class Constants {
     // 3 - Using a square, twist the modules by hand until they are aligned with the robot's chassis
     // 4 - Read out the encoder readings for each module, put them here
     // 5 - Redeploy code, verify that the  encoder readings are correct as each module is manually rotated
-    static public final double FL_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(143);
-    static public final double FR_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(105);
-    static public final double BL_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(-154);
-    static public final double BR_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(-4);
+    static public final double FL_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(143.6);
+    static public final double FR_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(106.2);
+    static public final double BL_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(162.2);
+    static public final double BR_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(-168.4);
 
     //////////////////////////////////////////////////////////////////
     // Vision Processing
@@ -86,7 +86,7 @@ public class Constants {
     static public final double ARM_BOOM_LENGTH = Units.inchesToMeters(30.25); //Center of boom pivot to center of stick pivot
     static public final double ARM_STICK_LENGTH = Units.inchesToMeters(18.25 + 15.0); //center of stick pivot to far edge of end effector
     static public final double ARM_BOOM_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(162.4);
-    static public final double ARM_STICK_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(170.7);
+    static public final double ARM_STICK_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(-130.3);
     static public final double ARM_STICK_MAX_ANGLE_DEG = (163);
     static public final double ARM_STICK_MIN_ANGLE_DEG = (-155);
     static public final double ARM_BOOM_MAX_ANGLE_DEG = (60.00);
