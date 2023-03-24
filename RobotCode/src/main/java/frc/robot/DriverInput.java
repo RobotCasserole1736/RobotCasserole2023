@@ -233,10 +233,6 @@ public class DriverInput {
         return resetOdometry;
     }
 
-    public boolean getRelease(){
-        return adLeftModifier;
-    }
-
     public boolean getBracePositionCmd(){
         return braceCmd;
     }
