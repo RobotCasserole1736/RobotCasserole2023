@@ -76,11 +76,8 @@ public class ReflexPreservingArmPath implements ArmPath {
             interiorWaypoints.add(new Translation2d(end.get().x, end.safeY));
         } 
 
-        if(end.get().x < Constants.WHEEL_BASE_HALF_LENGTH_M + 0.3){
-            pathEndPos = end.get().toPoseFromOther(start);
-        } else {
-            pathEndPos = end.get().toPoseFromTop();
-        }
+        pathEndPos = end.get().toPoseFromTop();
+
 
 
 
