@@ -61,7 +61,6 @@ public class AutoDrive {
 		MANUAL(0), // Passing driver commands through to the drivetrain
 		GENERATING_TRAJECTORY(1), //Driver commands still active, but a trajectory is being generated in the background
 		RUNNING_TRAJECTORY(2); //Trajectory is available, and is currently being run.
-
 		public final int value;
 
 		private AutoDriveState(int value) {
