@@ -46,7 +46,7 @@ public class TurnAssist {
                 //First loop - init
                 turnStartTime = Timer.getFPGATimestamp();
                 turnEndTime = turnStartTime + calcProfileDur(targetRot, curChassisRot, ROT_SPD_RADPERSSEC);
-                turnLeft = targetRot.minus(curChassisRot).getDegrees() < 0.0; //Should return -180 to 180
+                turnLeft = targetRot.minus(curChassisRot).getDegrees() > 0.0; //Should return -180 to 180
                 turnStartAngle = curChassisRot;
             }
 
@@ -74,6 +74,7 @@ public class TurnAssist {
         autoTurnRequestedPrev = autoTurnRequested;
 
         desAngleDbg = curDesAngle.getDegrees();
+        actAngleDbg = curChassisRot.getDegrees();
 
         return curTurnCmd_radpersec;
     }

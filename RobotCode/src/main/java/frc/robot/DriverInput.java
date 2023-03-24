@@ -148,13 +148,12 @@ public class DriverInput {
             resetOdometry = resetOdoDbnc.calculate(driverController.getAButton());
 
             // Read in Auto-drive commands
-            //adLeft = driverController.getXButton();
-            //adCenter = driverController.getYButton();
-            //adRight = driverController.getBButton();
+            adLeft = driverController.getXButton();
+            adCenter = driverController.getYButton();
+            adRight = driverController.getBButton();
             adLeftModifier = driverController.getLeftTriggerAxis() > .75;
             adRightModifier = driverController.getRightTriggerAxis() > .75;
-            //autoTurn = driverController.getRightStickButton();
-            autoTurn = driverController.getYButton() || driverController.getXButton() || driverController.getBButton();
+            autoTurn = driverController.getRightStickButton();
 
  
         } else {
