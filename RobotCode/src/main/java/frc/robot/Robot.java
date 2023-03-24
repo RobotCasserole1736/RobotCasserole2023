@@ -209,8 +209,6 @@ public class Robot extends TimedRobot {
     //Make sure drivetrian gains are up to date
     DrivetrainControl.getInstance().calUpdate(true);
 
-
-
   }
 
   @Override
@@ -283,7 +281,7 @@ public class Robot extends TimedRobot {
     ad.setCmd(adCmd);
 
 
-    double rotCmd = ta.update(di.getRotateCmd_rps(), di.autoTurn);
+    double rotCmd = ta.update(di.getRotateCmd_rps(), di.getFwdRevCmd_mps() > 0, di.autoTurn);
     ad.setManualCommands(di.getFwdRevCmd_mps(), di.getSideToSideCmd_mps(), rotCmd, !di.getRobotRelative(), di.getBracePositionCmd());
     ad.update();
     stt.mark("Auto Drive Calculation");
