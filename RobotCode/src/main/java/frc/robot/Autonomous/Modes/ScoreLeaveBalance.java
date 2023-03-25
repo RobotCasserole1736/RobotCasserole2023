@@ -34,14 +34,14 @@ public class ScoreLeaveBalance extends AutoMode {
         seq.addEvent(new AutoEventSetClawEject());
         
         //Drive to charging station
-        initDrive1 = new AutoEventJSONTrajectory("Score, Leave community, balance pt 1", 0.4);
+        initDrive1 = new AutoEventJSONTrajectory("Score, Leave community, balance pt 1", 0.32);
         initDrive1.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         seq.addEvent(initDrive1);
 
         initDrive2 = new AutoEventJSONTrajectory("Score, Leave community, balance pt 2", 0.5);
         seq.addEvent(initDrive2);
 
-        seq.addEvent(new AutoEventDriveFwdTillLevel(100, 0.35));
+        seq.addEvent(new AutoEventDriveFwdTillLevel(100, 0.3));
 
 
 
