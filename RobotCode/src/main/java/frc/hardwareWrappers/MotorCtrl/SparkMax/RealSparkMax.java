@@ -173,7 +173,19 @@ public class RealSparkMax extends AbstractSimmableMotorController {
     @Override
     public void resetDistance() {
         if(connected){
-            m_encoder.setPosition(0.0);
+
+            boolean success = false;
+            int retryCount = 0;
+
+            while(!success && retryCount++ < MAX_RETRIES){    
+                var err1 = m_encoder.setPosition(0.0);
+                success = (err1 == REVLibError.kOk);
+            }
+    
+            if(!success) {
+                DriverStation.reportError("Failed to reset distance for motor CAN ID " + Integer.toString(this.m_motor.getDeviceId()), false);
+            }
+    
         }
     }
 

@@ -50,11 +50,18 @@ public class AutoEventJSONTrajectory extends AutoEvent {
 
     boolean done = false;
 
+    double allowablePosErr_m;
+    double allowableRotErr_rad;
+
     PathPlannerTrajectory path;
 
     DrivetrainControl dt_inst;
 
     public AutoEventJSONTrajectory(String jsonFileName, double speedScalar) {
+        this(jsonFileName, speedScalar, 100000, 1000000);
+    }
+
+    public AutoEventJSONTrajectory(String jsonFileName, double speedScalar, double allowablePosErr_m, double allowableRotErr_rad) {
 
         dt_inst = DrivetrainControl.getInstance();
 
@@ -64,6 +71,9 @@ public class AutoEventJSONTrajectory extends AutoEvent {
                                     
         trajStartTime = MODULE_ANGLE_INIT_TIME_SEC;
         trajEndTime = MODULE_ANGLE_INIT_TIME_SEC + path.getTotalTimeSeconds();
+
+        this.allowablePosErr_m = allowablePosErr_m;
+        this.allowableRotErr_rad = allowableRotErr_rad;
     }
 
     /**
@@ -75,12 +85,7 @@ public class AutoEventJSONTrajectory extends AutoEvent {
     public void userUpdate() {
         double curTime = (Timer.getFPGATimestamp()-startTime);
 
-        if(curTime >= trajEndTime) {
-            //Trajectory finished, stop, we're done.
-            done = true;
-            dt_inst.stop();
-
-        } else if( curTime >= trajStartTime){
+        if( curTime >= trajStartTime){
             // Normal  trajectory
 
             // Extract current step
@@ -100,6 +105,18 @@ public class AutoEventJSONTrajectory extends AutoEvent {
 
             //Populate desired pose from path plan.
             PoseTelemetry.getInstance().setDesiredPose(curState.poseMeters);
+
+            if(curTime >= trajEndTime){
+                // Eval termination conditions
+                var curPose = DrivetrainControl.getInstance().getCurEstPose();
+                var errTrans = curState.poseMeters.getTranslation().minus(curPose.getTranslation()).getNorm();
+                var errRot = Math.abs(curHeading.minus(curPose.getRotation()).getRadians());
+                if(errTrans < allowablePosErr_m && errRot < allowableRotErr_rad){
+                    //Trajectory finished, stop, we're done.
+                    done = true;
+                    dt_inst.stop();
+                }
+            }
 
         } else {
             //Trajectory Init - just servo the swerve modules to the right positions without driving them.

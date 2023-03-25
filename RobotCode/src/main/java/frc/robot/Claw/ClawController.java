@@ -13,16 +13,16 @@ public class ClawController {
     Spark intakeWheelMotor;
     boolean curGrabCmd;
     boolean curReleaseCmd;
+    boolean curMiniYeetCmd;
     boolean curYeetCmd;
-    boolean curAutoYeetCmd;
 
     Solenoid clawSolenoid;
 
     private final double CUBE_INTAKE_SPD = 0.5;
     private final double CUBE_HOLD_SPD = 0.4;
     private final double CUBE_EJECT_SPD = -0.35;
-    private final double CUBE_YEET_SPD = -0.8;
-    private final double CUBE_AUTO_YEET_SPD = -1.0;
+    private final double CUBE_MINI_YEET_SPD = -0.9;
+    private final double CUBE_YEET_SPD = -1.0;
 
     private final double CONE_INTAKE_SPD = 0.70;
     private final double CONE_HOLD_SPD = 0.2;
@@ -62,12 +62,12 @@ public class ClawController {
         curReleaseCmd = release;
     }
 
-    public void setYeetCmd(boolean yeet) {
-        curYeetCmd = yeet;
+    public void setMiniYeetCmd(boolean miniYeet) {
+        curMiniYeetCmd = miniYeet;
     }
 
-    public void setAutoYeetCmd(boolean autoYeet) {
-        curAutoYeetCmd = autoYeet;
+    public void setFullYeetCmd(boolean Yeet) {
+        curYeetCmd = Yeet;
     }
 
     public void update() {
@@ -114,7 +114,9 @@ public class ClawController {
                 wheelMotorSpdCmd = CUBE_EJECT_SPD;
             } else if (curYeetCmd){
                 wheelMotorSpdCmd = CUBE_YEET_SPD;
-            }else if(gpd.hasGamepiece()){
+            } else if (curMiniYeetCmd){
+                wheelMotorSpdCmd = CUBE_MINI_YEET_SPD;
+            } else if(gpd.hasGamepiece()){
                 //Idle but with gamepiece
                 wheelMotorSpdCmd = CUBE_HOLD_SPD;
             } else {
