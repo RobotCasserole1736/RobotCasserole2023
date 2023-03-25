@@ -164,7 +164,6 @@ public class DrivetrainControl {
     public void setCmdFieldRelative(double fwdRevCmd, double strafeCmd, double rotateCmd, boolean braceCmd){
         fwdRevCmd *= (DriverStation.getAlliance() == Alliance.Red)? -1.0 : 1.0;
         strafeCmd *= (DriverStation.getAlliance() == Alliance.Red)? -1.0 : 1.0;
-        rotateCmd *= (DriverStation.getAlliance() == Alliance.Red)? -1.0 : 1.0;
         desChSpd = ChassisSpeeds.fromFieldRelativeSpeeds(fwdRevCmd, strafeCmd, rotateCmd, pe.getGyroHeading());
         curDesPose = pe.getEstPose();
         initAngleOnly = false;
