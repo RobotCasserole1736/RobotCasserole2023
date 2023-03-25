@@ -52,7 +52,9 @@ public class AutoEventClawMiniYeet extends AutoEvent {
 		boolean isFinished =  maxTimeElapsed ||
 		      (minTimeElapsed && !ClawController.getInstance().hasGamepiece());
 
-		ClawController.getInstance().setMiniYeetCmd(isFinished);
+		if(isFinished) {
+            ClawController.getInstance().setMiniYeetCmd(false);
+        }
 		return isFinished;
 	}
 

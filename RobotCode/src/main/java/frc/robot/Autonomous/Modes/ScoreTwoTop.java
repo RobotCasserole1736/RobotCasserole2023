@@ -11,6 +11,7 @@ import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
 import frc.robot.Autonomous.Events.AutoEventSelectCubeMode;
 import frc.robot.Autonomous.Events.AutoEventSetClawEject;
+import frc.robot.Autonomous.Events.AutoEventWait;
 import frc.robot.Autonomous.Events.AutoEventYeet;
 
 public class ScoreTwoTop extends AutoMode {
@@ -32,21 +33,22 @@ public class ScoreTwoTop extends AutoMode {
         seq.addEvent(new AutoEventSetClawEject());
 
         //Drive to center
-        initDrive1 = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup Copy", 0.55, 0.05, 0.05);
+        initDrive1 = new AutoEventJSONTrajectory("Score two top pt 1 and score, pickup Copy", 0.5, 0.05, 0.05);
         initDrive1.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         seq.addEvent(initDrive1);
 
         seq.addEvent(new AutoEventSelectCubeMode());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_LOW));
-        seq.addEvent(new AutoEventDriveAndIntake(2.00, 0.50));
+        seq.addEvent(new AutoEventDriveAndIntake(2.00, 0.49));
 
         //Drive to grid
-        initDrive2 = new AutoEventJSONTrajectory("Score two top pt 2", 0.35);
-        initDrive2.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
+        initDrive2 = new AutoEventJSONTrajectory("Score two top pt 2", 0.58);
+        initDrive2.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_HIGH));
         seq.addEvent(initDrive2);
 
         //Place cone upper
-        seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_HIGH));
+        //seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_HIGH));
+        seq.addEvent(new AutoEventWait(.25));
         seq.addEvent(new AutoEventClawMiniYeet());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
 
