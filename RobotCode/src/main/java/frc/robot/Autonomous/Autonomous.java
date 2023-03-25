@@ -100,11 +100,11 @@ public class Autonomous {
         mainModeList.add(new scoreLeave());
         mainModeList.add(new leaveComTop());
         //mainModeList.add(new scoreBalance());
-        mainModeList.add(new steakYeet2023());
+        //mainModeList.add(new steakYeet2023());
         mainModeList.add(new scoreTop());
         mainModeList.add(new scoreTopPickup());
         mainModeList.add(new ScoreLeaveBalance());
-        mainModeList.add(new TestSCurvy());
+        //mainModeList.add(new TestSCurvy());
        
         
 
