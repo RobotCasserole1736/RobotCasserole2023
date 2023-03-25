@@ -21,7 +21,7 @@ const long pulseLengthGreenBlink = 2000;  //pulse length in microseconds to comm
 const long pulseLengthTolerance = 100; //command pulse length tolerance
 									 
 							                    			//   0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF
-const uint64_t longTeamNumberArray[64]  = {0b0000110000011111111111101111111110000111111111100000000000000000, //0
+const uint64_t longTeamNumberArray[16]  = {0b0000110000011111111111101111111110000111111111100000000000000000, //0
                                            0b0001110000011111111111101111111111001111111111110000000000111100, //1
                                            0b0011110000000000000001100000000111001100000000000000001111000011, //2
                                            0b0110110000000000000011000000000011001100000000000001110000001001, //3
@@ -37,6 +37,26 @@ const uint64_t longTeamNumberArray[64]  = {0b00001100000111111111111011111111100
                                            0b0000110000110000000000000000000111001100000000110000001111110000, //13
                                            0b1111111110100000000000001111111111001111111111110000000000000000, //14
                                            0b1111111110100000000000001111111110000111111111100000000000000000};//15
+
+
+							                    //   0123456789ABCDEF
+const uint16_t thumbsUpArray[16]  = {0b0000000000110000, //0
+                                     0b0000000001101100, //1
+                                     0b0000000011001100, //2
+                                     0b0000000110011000, //3
+                                     0b0000000110110000, //4
+                                     0b1100111100011100, //5
+                                     0b1010100000000011, //6
+                                     0b1010100000000011, //7
+                                     0b1010100000011100, //8
+                                     0b1010100000000011, //9
+                                     0b1010100000000011, //10
+                                     0b1010100000011100, //11
+                                     0b1010110000000011, //12
+                                     0b1110011100000011, //13
+                                     0b0000000111111110, //14
+                                     0b0000000000000000};//15
+
 
 void setup() {
     Serial.begin(115200); // begin serial communication with arduino
@@ -177,11 +197,17 @@ void greenBlink() {
     
     greenBlinkState = !greenBlinkState;
 
-    for (uint8_t i = 0; i<kMatrixWidth; i++){
-        for (uint8_t j = 0; j<kMatrixWidth; j++){   
-            led[XY(i,j)] = CRGB(greenBlinkState?50:0,0,0);
-        }
+    if(greenBlinkState){
+      printArrayStatic(thumbsUpArray);
+    } else {
+      for (uint8_t i = 0; i<kMatrixWidth; i++){
+          for (uint8_t j = 0; j<kMatrixWidth; j++){   
+              led[XY(i,j)] = CRGB(50:0,0,0);
+          }
+      }
     }
+
+
 
     FastLED.delay(200);
 
@@ -192,18 +218,29 @@ void greenBlink() {
 //**************************************************************
 void attentionGrab() {
   
-    static boolean greenBlinkState;
+    static boolean blinkState;
     
-    greenBlinkState = !greenBlinkState;
+    blinkState = !blinkState;
 
     for (uint8_t i = 0; i<kMatrixWidth; i++){
         for (uint8_t j = 0; j<kMatrixWidth; j++){   
-            led[XY(i,j)] = CRGB(greenBlinkState?250:0,greenBlinkState?250:0,greenBlinkState?250:0);
+            led[XY(i,j)] = CRGB(blinkState?250:0,blinkState?250:0,blinkState?250:0);
         }
     }
 
     FastLED.delay(100);
 
+}
+
+void printArrayStatic(const uint16_t arr[]){
+  for (uint8_t i = 0; i < kMatrixWidth; i++){
+    uint16_t rowMask = 0x80 >> i;
+    for (uint8_t j = 0; j < kMatrixWidth; j++){
+      bool pixelOn = arr[j] & rowMask;
+      led[XY(i,j)] = CRGB(pixelOn?250:0,0, 0);
+
+    }
+  }
 }
 
 
