@@ -2,20 +2,17 @@ package frc.robot.Drivetrain;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.AllianceTransformUtils;
 import frc.lib.Calibration.Calibration;
 import frc.lib.Signal.Annotations.Signal;
-import pabeles.concurrency.IntOperatorTask.Max;
 
 /**
  * Generates commands to automatically turn the robot to the scoring position
  */
 public class TurnAssist {
 
-    final double ROT_SPD_RADPERSSEC = Units.degreesToRadians(180.0); //rotation rate
+    final double ROT_SPD_RADPERSSEC = Units.degreesToRadians(90.0); //rotation rate
 
     Rotation2d curDesAngle = Rotation2d.fromDegrees(0.0);
     boolean autoTurnRequestedPrev = false;
@@ -36,7 +33,7 @@ public class TurnAssist {
     @Signal(units="deg")
     double actAngleDbg = 0;
 
-    Calibration kP = new Calibration("TA kP", "radPerSec per Rad err", 4.0);
+    Calibration kP = new Calibration("TA kP", "radPerSec per Rad err", 2.0);
 
     public double update(double manualTurnCmd_radpersec, boolean headedDownfield, boolean autoTurnRequested){
         Rotation2d curChassisRot = DrivetrainPoseEstimator.getInstance().getEstPose().getRotation();

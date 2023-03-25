@@ -75,7 +75,6 @@ public class PhotonCamWrapper {
                 boolean useFirst = (err1 < err2); //Select the pose closest to our last pose estimate
                 var amb = t.getPoseAmbiguity();
                 boolean lowEnoughAmbiguity = amb < 0.2 && amb >= 0.0; // less than 0.2, and not -1
-                boolean drivetrainIsLevel = DrivetrainPitchState.getInstance().getCurTilt() == TiltState.LEVEL; //if we're tipped up or down (IE on charge station) don't trust the vision pose
 
                 boolean targetCloseEnoughToCamera = false;
                 boolean poseIsOnField = false;
@@ -83,7 +82,7 @@ public class PhotonCamWrapper {
 
                 if(useFirst){
                     bestEst = botPoseEst1;
-                    targetCloseEnoughToCamera = ctotgt1.getTranslation().getNorm() < 0.25 * Constants.FIELD_LENGTH_M ;
+                    targetCloseEnoughToCamera = ctotgt1.getTranslation().getNorm() < 0.5 * Constants.FIELD_LENGTH_M ;
                     poseIsOnField = poseIsOnField(botPoseEst1);
                     poseCloseEnoughToBot = botPoseEst1.minus(lastEstimate).getTranslation().getNorm() < Constants.FIELD_LENGTH_M;
                 } else {
@@ -93,7 +92,7 @@ public class PhotonCamWrapper {
                     poseCloseEnoughToBot = botPoseEst2.minus(lastEstimate).getTranslation().getNorm() < Constants.FIELD_LENGTH_M;
                 }
 
-                if(targetCloseEnoughToCamera && lowEnoughAmbiguity && drivetrainIsLevel && poseIsOnField && poseCloseEnoughToBot){
+                if(targetCloseEnoughToCamera && lowEnoughAmbiguity && poseIsOnField && poseCloseEnoughToBot){
                     // Target meets our filter criteria, add it.
                     observations.add(new CameraPoseObservation(observationTime, bestEst, 1.0)); 
                 }
