@@ -123,7 +123,7 @@ public class DrivetrainControl {
         hdc_translate_kP = new Calibration("Drivetrain HDC Translation kP", "", 0.75); 
         hdc_translate_kI = new Calibration("Drivetrain HDC Translation kI", "", 0.0); 
         hdc_translate_kD = new Calibration("Drivetrain HDC Translation kD", "", 0.0);
-        hdc_rotation_kP  = new Calibration("Drivetrain HDC Rotation kP", "", 6.5); 
+        hdc_rotation_kP  = new Calibration("Drivetrain HDC Rotation kP", "", 1.5); 
         hdc_rotation_kI  = new Calibration("Drivetrain HDC Rotation kI", "", 0.0); 
         hdc_rotation_kD  = new Calibration("Drivetrain HDC Rotation kD", "", 0.0);
 
@@ -164,6 +164,7 @@ public class DrivetrainControl {
     public void setCmdFieldRelative(double fwdRevCmd, double strafeCmd, double rotateCmd, boolean braceCmd){
         fwdRevCmd *= (DriverStation.getAlliance() == Alliance.Red)? -1.0 : 1.0;
         strafeCmd *= (DriverStation.getAlliance() == Alliance.Red)? -1.0 : 1.0;
+        rotateCmd *= (DriverStation.getAlliance() == Alliance.Red)? -1.0 : 1.0;
         desChSpd = ChassisSpeeds.fromFieldRelativeSpeeds(fwdRevCmd, strafeCmd, rotateCmd, pe.getGyroHeading());
         curDesPose = pe.getEstPose();
         initAngleOnly = false;
@@ -240,7 +241,6 @@ public class DrivetrainControl {
 
     // Main periodic step function for Teleop, Autonomous, and Disabled
     public void update(){
-
 
         desChSpdVx = desChSpd.vxMetersPerSecond;
         desChSpdVy = desChSpd.vyMetersPerSecond;
