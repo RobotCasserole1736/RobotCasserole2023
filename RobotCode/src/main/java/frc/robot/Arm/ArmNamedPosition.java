@@ -4,7 +4,8 @@ public enum ArmNamedPosition {
     //TODO - add actual numbers for the positions
     CUBE_LOW(1.10 ,0.23,false),
     CUBE_MID(0.8788 ,0.8886,false, 0.1),
-    CUBE_HIGH(1.276 ,1.149,false, 0.1),
+    //CUBE_HIGH(1.276 ,1.149,false, 0.1),
+    CUBE_HIGH(0.594, 1.13, false),
     CONE_LOW(1.084 ,0.2082,false),
     CONE_MID(1.041 ,1.04,false, 0.1),
     CONE_HIGH(1.458 ,1.45,false, 0.1),
@@ -12,6 +13,7 @@ public enum ArmNamedPosition {
     FLOOR(1.10 ,0.10,false),
     FLOOR_TIPPED_CONE(0.6539 ,0.07,true, 0.1),
     STOW(0.2002, 1.127 ,false),
+    CUBE_SHOOT_STATION(1.38, 1.343, false),
     ;
 
     public final double safeY;
