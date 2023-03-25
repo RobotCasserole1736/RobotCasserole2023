@@ -51,7 +51,9 @@ public class DynamicSwerveTrajectoryGenerator {
             Pose2d end = new Pose2d(waypoints.end.getTranslation(), trajEndRot);
             Transform2d trajDelta = new Transform2d(start, end);
 
-            trajDeltaRot = waypoints.endRot.minus(waypoints.startRot);
+            var tmpEnd = Rotation2d.fromDegrees(waypoints.endRot.getDegrees());
+            var tmpStart = Rotation2d.fromDegrees(waypoints.startRot.getDegrees());
+            trajDeltaRot = tmpEnd.minus(tmpStart);
 
             trajLen_s = trajDelta.getTranslation().getNorm() / TRAJ_SPEED_MPS;
 
