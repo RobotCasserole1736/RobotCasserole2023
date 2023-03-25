@@ -5,6 +5,7 @@ import frc.lib.AutoSequencer.AutoSequencer;
 import frc.lib.Autonomous.AutoMode;
 import frc.robot.Arm.ArmNamedPosition;
 import frc.robot.Autonomous.Events.AutoEventArmMoveToPos;
+import frc.robot.Autonomous.Events.AutoEventClawMiniYeet;
 import frc.robot.Autonomous.Events.AutoEventDriveAndIntake;
 import frc.robot.Autonomous.Events.AutoEventDriveTime;
 import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
@@ -50,7 +51,7 @@ public class ScoreTwoTop extends AutoMode {
 
         //Place cone upper
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_HIGH));
-        seq.addEvent(new AutoEventSetClawEject());
+        seq.addEvent(new AutoEventClawMiniYeet());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
 
 

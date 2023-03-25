@@ -5,7 +5,7 @@ import frc.lib.AutoSequencer.AutoSequencer;
 import frc.lib.Autonomous.AutoMode;
 import frc.robot.Arm.ArmNamedPosition;
 import frc.robot.Autonomous.Events.AutoEventArmMoveToPos;
-import frc.robot.Autonomous.Events.AutoEventClawYeet;
+import frc.robot.Autonomous.Events.AutoEventFullPowerYeet;
 import frc.robot.Autonomous.Events.AutoEventDriveAndIntake;
 import frc.robot.Autonomous.Events.AutoEventDriveTime;
 import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
@@ -50,7 +50,7 @@ public class steakYeet2023 extends AutoMode {
 
         //Shoot cube
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));
-        seq.addEvent(new AutoEventClawYeet());
+        seq.addEvent(new AutoEventFullPowerYeet());
 
         //Drive on charging station
         initDrive3 = new AutoEventJSONTrajectory("Steak pt 3", 0.4);

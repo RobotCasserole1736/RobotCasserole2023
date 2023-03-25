@@ -8,14 +8,14 @@ import frc.robot.Arm.ArmNamedPosition;
 /**
  * Selects Cone mode and returns immedeately
  */
-public class AutoEventClawYeet extends AutoEvent {
+public class AutoEventFullPowerYeet extends AutoEvent {
 	
 	ArmNamedPosition posDes;
 	double startTime = 0;
 	final double MIN_DURATION_SEC = 0.25;
 	final double MAX_DURATION_SEC = 2.0;
 	
-	public AutoEventClawYeet() {
+	public AutoEventFullPowerYeet() {
 
 	}
 
