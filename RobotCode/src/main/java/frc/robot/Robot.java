@@ -316,7 +316,7 @@ public class Robot extends TimedRobot {
     cc.gpd.setIntakeCommanded(oi.grabCmd);
     cc.setGrabCmd(oi.grabCmd);
     cc.setReleaseCmd(oi.releaseCmd);
-    cc.setYeetCmd(oi.yeetCmd);
+    cc.setMiniYeetCmd(oi.yeetCmd);
     stt.mark("Claw Control");
 
 

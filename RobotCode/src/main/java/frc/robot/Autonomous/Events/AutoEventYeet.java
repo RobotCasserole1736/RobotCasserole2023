@@ -8,14 +8,14 @@ import frc.robot.Arm.ArmNamedPosition;
 /**
  * Selects Cone mode and returns immedeately
  */
-public class AutoEventFullPowerYeet extends AutoEvent {
+public class AutoEventYeet extends AutoEvent {
 	
 	ArmNamedPosition posDes;
 	double startTime = 0;
 	final double MIN_DURATION_SEC = 0.25;
 	final double MAX_DURATION_SEC = 2.0;
 	
-	public AutoEventFullPowerYeet() {
+	public AutoEventYeet() {
 
 	}
 
@@ -28,14 +28,14 @@ public class AutoEventFullPowerYeet extends AutoEvent {
 	public void userUpdate() {
 		// Just set control request the desired position
 		ClawController.getInstance().setGrabCmd(false);
-		ClawController.getInstance().setAutoYeetCmd(true);
+		ClawController.getInstance().setFullYeetCmd(true);
 	}
 
 	@Override
 	public void userForceStop() {
 		// Force arm into safe state
 		ClawController.getInstance().setGrabCmd(false);
-		ClawController.getInstance().setAutoYeetCmd(false);
+		ClawController.getInstance().setFullYeetCmd(false);
 	}
 
 	@Override

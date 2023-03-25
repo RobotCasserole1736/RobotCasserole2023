@@ -28,14 +28,14 @@ public class AutoEventClawMiniYeet extends AutoEvent {
 	public void userUpdate() {
 		// Just set control request the desired position
 		ClawController.getInstance().setGrabCmd(false);
-		ClawController.getInstance().setYeetCmd(true);
+		ClawController.getInstance().setMiniYeetCmd(true);
 	}
 
 	@Override
 	public void userForceStop() {
 		// Force arm into safe state
 		ClawController.getInstance().setGrabCmd(false);
-		ClawController.getInstance().setYeetCmd(false);
+		ClawController.getInstance().setMiniYeetCmd(false);
 	}
 
 	@Override
@@ -49,8 +49,11 @@ public class AutoEventClawMiniYeet extends AutoEvent {
 		var curTime = Timer.getFPGATimestamp() - startTime;
 		boolean minTimeElapsed = curTime > MIN_DURATION_SEC;
 		boolean maxTimeElapsed = curTime > MAX_DURATION_SEC;
-		return maxTimeElapsed ||
+		boolean isFinished =  maxTimeElapsed ||
 		      (minTimeElapsed && !ClawController.getInstance().hasGamepiece());
+
+		ClawController.getInstance().setMiniYeetCmd(isFinished);
+		return isFinished;
 	}
 
 }
