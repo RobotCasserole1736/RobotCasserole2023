@@ -202,7 +202,7 @@ void greenBlink() {
     } else {
       for (uint8_t i = 0; i<kMatrixWidth; i++){
           for (uint8_t j = 0; j<kMatrixWidth; j++){   
-              led[XY(i,j)] = CRGB(50:0,0,0);
+              led[XY(i,j)] = CRGB(0,0,0);
           }
       }
     }
