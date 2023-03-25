@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.Constants;
 import frc.lib.Calibration.Calibration;
@@ -59,6 +60,10 @@ public class DriverInput {
     // Command the wheels to assume a brace position
     @Signal(units="bool")
     boolean braceCmd;
+
+    // True if the drive wants auto turn, false otherwise
+    @Signal(units="bool")
+    public boolean autoTurn;
 
 
     // Auto-drive commands
@@ -148,6 +153,8 @@ public class DriverInput {
             adRight = driverController.getBButton();
             adLeftModifier = driverController.getLeftTriggerAxis() > .75;
             adRightModifier = driverController.getRightTriggerAxis() > .75;
+            autoTurn = driverController.getRightStickButton();
+
  
         } else {
             //Controller Unplugged Defaults
@@ -162,9 +169,10 @@ public class DriverInput {
             adLeftModifier = false;
             adRightModifier = false;
             braceCmd = false;
+            autoTurn = false;
         }
 
-        disconFault.set(!isConnected);
+        disconFault.set(!isConnected && DriverStation.isDSAttached());
 
         
         //Slew rate limiters don't have the ability to change the slew rate on the fly,
@@ -223,10 +231,6 @@ public class DriverInput {
      */
     public boolean getOdoResetCmd(){
         return resetOdometry;
-    }
-
-    public boolean getRelease(){
-        return adLeftModifier;
     }
 
     public boolean getBracePositionCmd(){

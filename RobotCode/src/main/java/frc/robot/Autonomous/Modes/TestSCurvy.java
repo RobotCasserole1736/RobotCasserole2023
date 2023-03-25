@@ -25,7 +25,7 @@ public class TestSCurvy extends AutoMode {
 
         seq.addEvent(new DisableAprilTags());
         
-        initDrive = new AutoEventJSONTrajectory("Tune_test_3x3", 0.5);
+        initDrive = new AutoEventJSONTrajectory("Tune_test_3x3", 0.75);
         seq.addEvent(initDrive);
       
     }

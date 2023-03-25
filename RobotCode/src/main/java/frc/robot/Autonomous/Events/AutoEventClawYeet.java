@@ -28,14 +28,14 @@ public class AutoEventClawYeet extends AutoEvent {
 	public void userUpdate() {
 		// Just set control request the desired position
 		ClawController.getInstance().setGrabCmd(false);
-		ClawController.getInstance().setYeetCmd(true);
+		ClawController.getInstance().setAutoYeetCmd(true);
 	}
 
 	@Override
 	public void userForceStop() {
 		// Force arm into safe state
 		ClawController.getInstance().setGrabCmd(false);
-		ClawController.getInstance().setYeetCmd(false);
+		ClawController.getInstance().setAutoYeetCmd(false);
 	}
 
 	@Override

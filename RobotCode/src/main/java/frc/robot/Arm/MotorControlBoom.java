@@ -46,6 +46,9 @@ public class MotorControlBoom {
     double desAngVelDegPerSec;
     @Signal(units="degpersec")
     double actAngVelDegPerSec;
+    
+    @Signal(units="degpersec2")
+    double desAngAccelDegPerSec;
 
     @Signal
     boolean isAngleLimited;
@@ -69,18 +72,21 @@ public class MotorControlBoom {
         motorCtrl.setBrakeMode(isBrakeMode);
     }
 
-    public void setCmd(ArmAngularState testDesState){
-        desAngleDeg = testDesState.boomAngleDeg;
-        desAngVelDegPerSec = testDesState.boomAnglularVel;
+    public void setCmd(ArmAngularState desState){
+        desAngleDeg = desState.boomAngleDeg;
+        desAngVelDegPerSec = desState.boomAnglularVel;
+        desAngAccelDegPerSec = desState.boomAnglularAccel;
 
         //Apply command limits
         if(desAngleDeg > Constants.ARM_BOOM_MAX_ANGLE_DEG){
             desAngleDeg = Constants.ARM_BOOM_MAX_ANGLE_DEG;
             desAngVelDegPerSec = 0.0;
+            desAngAccelDegPerSec = 0.0;
             isAngleLimited = true;
         } else if (desAngleDeg < Constants.ARM_BOOM_MIN_ANGLE_DEG){
             desAngleDeg = Constants.ARM_BOOM_MIN_ANGLE_DEG;
             desAngVelDegPerSec = 0.0;
+            desAngAccelDegPerSec = 0.0;
             isAngleLimited = true;
         } else {
             isAngleLimited = false;

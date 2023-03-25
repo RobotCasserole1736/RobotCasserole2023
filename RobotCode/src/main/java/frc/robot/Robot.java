@@ -31,6 +31,7 @@ import frc.robot.Claw.ClawController;
 import frc.robot.Claw.GamePieceDetector;
 import frc.robot.Drivetrain.DrivetrainControl;
 import frc.robot.Drivetrain.DrivetrainPoseEstimator;
+import frc.robot.Drivetrain.TurnAssist;
 import frc.robot.GamepieceModeManager.GamepieceMode;
 import frc.sim.RobotModel;
 
@@ -59,6 +60,7 @@ public class Robot extends TimedRobot {
   ArmControl ac;
   ClawController cc;
   DriverCamera dc;
+  TurnAssist ta;
 
   GamepieceModeManager mm;
 
@@ -144,6 +146,7 @@ public class Robot extends TimedRobot {
     stt.mark("Driver IO");
 
     dt = DrivetrainControl.getInstance();
+    ta = new TurnAssist();
     ad = new AutoDrive();
     stt.mark("Drivetrain Control");
 
@@ -205,8 +208,6 @@ public class Robot extends TimedRobot {
 
     //Make sure drivetrian gains are up to date
     DrivetrainControl.getInstance().calUpdate(true);
-
-
 
   }
 
@@ -280,7 +281,8 @@ public class Robot extends TimedRobot {
     ad.setCmd(adCmd);
 
 
-    ad.setManualCommands(di.getFwdRevCmd_mps(), di.getSideToSideCmd_mps(), di.getRotateCmd_rps(), !di.getRobotRelative(), di.getBracePositionCmd());
+    double rotCmd = ta.update(di.getRotateCmd_rps(), di.getFwdRevCmd_mps() > 0, di.autoTurn);
+    ad.setManualCommands(di.getFwdRevCmd_mps(), di.getSideToSideCmd_mps(), rotCmd, !di.getRobotRelative(), di.getBracePositionCmd());
     ad.update();
     stt.mark("Auto Drive Calculation");
 
@@ -313,7 +315,7 @@ public class Robot extends TimedRobot {
 
     cc.gpd.setIntakeCommanded(oi.grabCmd);
     cc.setGrabCmd(oi.grabCmd);
-    cc.setReleaseCmd(di.getRelease() || oi.releaseCmd);
+    cc.setReleaseCmd(oi.releaseCmd);
     cc.setYeetCmd(oi.yeetCmd);
     stt.mark("Claw Control");
 

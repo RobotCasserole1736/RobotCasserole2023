@@ -110,20 +110,20 @@ public class DrivetrainControl {
 
     private DrivetrainControl(){
 
-        moduleWheel_kP = new Calibration("Drivetrain Module Wheel kP", "", 0.02); //0.035 previously 
+        moduleWheel_kP = new Calibration("Drivetrain Module Wheel kP", "", 0.08); 
         moduleWheel_kI = new Calibration("Drivetrain Module Wheel kI", "", 0.0);
         moduleWheel_kD = new Calibration("Drivetrain Module Wheel kD", "", 0.0);
         moduleWheel_kA = new Calibration("Drivetrain Module Wheel kA", "volts/radPerSecPerSec", 0.00);
-        moduleWheel_kV = new Calibration("Drivetrain Module Wheel kV", "volts/radPerSec", 0.017);
-        moduleWheel_kS = new Calibration("Drivetrain Module Wheel kS", "volts", 0.12);
+        moduleWheel_kV = new Calibration("Drivetrain Module Wheel kV", "volts/radPerSec", 0.02);
+        moduleWheel_kS = new Calibration("Drivetrain Module Wheel kS", "volts", 0.15);
         moduleAzmth_kP = new Calibration("Drivetrain Module Azmth kP", "", 0.008);
         moduleAzmth_kI = new Calibration("Drivetrain Module Azmth kI", "", 0.0);
         moduleAzmth_kD = new Calibration("Drivetrain Module Azmth kD", "", 0.00001);
 
-        hdc_translate_kP = new Calibration("Drivetrain HDC Translation kP", "", 4.0); 
-        hdc_translate_kI = new Calibration("Drivetrain HDC Translation kI", "", 2.0); 
+        hdc_translate_kP = new Calibration("Drivetrain HDC Translation kP", "", 0.75); 
+        hdc_translate_kI = new Calibration("Drivetrain HDC Translation kI", "", 0.0); 
         hdc_translate_kD = new Calibration("Drivetrain HDC Translation kD", "", 0.0);
-        hdc_rotation_kP  = new Calibration("Drivetrain HDC Rotation kP", "", 6.5); 
+        hdc_rotation_kP  = new Calibration("Drivetrain HDC Rotation kP", "", 1.5); 
         hdc_rotation_kI  = new Calibration("Drivetrain HDC Rotation kI", "", 0.0); 
         hdc_rotation_kD  = new Calibration("Drivetrain HDC Rotation kD", "", 0.0);
 
@@ -240,7 +240,6 @@ public class DrivetrainControl {
 
     // Main periodic step function for Teleop, Autonomous, and Disabled
     public void update(){
-
 
         desChSpdVx = desChSpd.vxMetersPerSecond;
         desChSpdVy = desChSpd.vyMetersPerSecond;
@@ -363,9 +362,9 @@ public class DrivetrainControl {
            moduleAzmth_kP.isChanged() ||
            moduleAzmth_kI.isChanged() ||
            moduleAzmth_kD.isChanged() || force){
-            var wheel_kP = DriverStation.isAutonomous() ? moduleWheel_kP.get() : 0.0; // only use closed-loop in autonomous
-            var wheel_kI = DriverStation.isAutonomous() ? moduleWheel_kI.get() : 0.0; // only use closed-loop in autonomous
-            var wheel_kD = DriverStation.isAutonomous() ? moduleWheel_kD.get() : 0.0; // only use closed-loop in autonomous
+            var wheel_kP = !DriverStation.isTeleop() ? moduleWheel_kP.get() : 0.0; // only use closed-loop in autonomous
+            var wheel_kI = !DriverStation.isTeleop() ? moduleWheel_kI.get() : 0.0; // only use closed-loop in autonomous
+            var wheel_kD = !DriverStation.isTeleop() ? moduleWheel_kD.get() : 0.0; // only use closed-loop in autonomous
             moduleFL.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kA.get(), moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
             moduleFR.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kA.get(), moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
             moduleBL.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kA.get(), moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());

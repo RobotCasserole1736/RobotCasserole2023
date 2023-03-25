@@ -2,7 +2,6 @@ package frc.robot.Arm;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.Constants;
 
 public class ArmKinematics {
