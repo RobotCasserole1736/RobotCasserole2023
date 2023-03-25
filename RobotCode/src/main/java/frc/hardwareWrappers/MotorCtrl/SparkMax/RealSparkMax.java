@@ -183,7 +183,7 @@ public class RealSparkMax extends AbstractSimmableMotorController {
             }
     
             if(!success) {
-                DriverStation.reportError("Failed to reset coast/brake mode for motor CAN ID " + Integer.toString(this.m_motor.getDeviceId()), false);
+                DriverStation.reportError("Failed to reset distance for motor CAN ID " + Integer.toString(this.m_motor.getDeviceId()), false);
             }
     
         }
