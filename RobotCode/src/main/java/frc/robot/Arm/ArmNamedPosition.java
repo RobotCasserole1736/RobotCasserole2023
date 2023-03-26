@@ -8,7 +8,7 @@ public enum ArmNamedPosition {
     CONE_LOW(1.084 ,0.2082,false),
     CONE_MID(1.041 ,1.04,false, 0.1),
     CONE_HIGH(1.458 ,1.45,false, 0.1),
-    SHELF(1.51 ,1.15,true),
+    SHELF(1.55 ,1.15,true),
     FLOOR(1.10 ,0.10,false),
     FLOOR_TIPPED_CONE(0.6539 ,0.07,true, 0.1),
     STOW(0.2002, 1.127 ,false),
