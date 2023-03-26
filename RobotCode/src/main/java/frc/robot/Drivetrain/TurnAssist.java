@@ -12,7 +12,7 @@ import frc.lib.Signal.Annotations.Signal;
  */
 public class TurnAssist {
 
-    final double ROT_SPD_RADPERSSEC = Units.degreesToRadians(90.0); //rotation rate
+    final double ROT_SPD_RADPERSSEC = Units.degreesToRadians(120.0); //rotation rate
 
     Rotation2d curDesAngle = Rotation2d.fromDegrees(0.0);
     boolean autoTurnRequestedPrev = false;
