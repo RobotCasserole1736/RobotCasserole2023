@@ -13,7 +13,7 @@ public class AutoEventSetClawEject extends AutoEvent {
 	ArmNamedPosition posDes;
 	double startTime = 0;
 	final double MIN_DURATION_SEC = 0.15;
-	final double MAX_DURATION_SEC = 2.0;
+	final double MAX_DURATION_SEC = 0.8;
 	
 	public AutoEventSetClawEject() {
 
