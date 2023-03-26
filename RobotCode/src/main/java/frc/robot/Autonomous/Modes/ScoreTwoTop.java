@@ -11,6 +11,7 @@ import frc.robot.Autonomous.Events.AutoEventJSONTrajectory;
 import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
 import frc.robot.Autonomous.Events.AutoEventSelectCubeMode;
 import frc.robot.Autonomous.Events.AutoEventSetClawEject;
+import frc.robot.Autonomous.Events.AutoEventSetClawIntake;
 import frc.robot.Autonomous.Events.AutoEventWait;
 import frc.robot.Autonomous.Events.AutoEventYeet;
 import frc.robot.Autonomous.Events.DisableAprilTags;
@@ -42,20 +43,21 @@ public class ScoreTwoTop extends AutoMode {
         initDrive1.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         seq.addEvent(initDrive1);
 
-        /*initDrive2 = new AutoEventJSONTrajectory("Score Two Top 1.5", 0.3, 0.05, 0.05);
-        initDrive2.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_LOW));
-        seq.addEvent(initDrive2); */
-    
         seq.addEvent(new AutoEventSelectCubeMode());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_LOW));
-        seq.addEvent(new AutoEventDriveAndIntake(2.5, 0.49));
+
+        initDrive2 = new AutoEventJSONTrajectory("Score Two Top Copy 1.5", 0.49);
+        initDrive2.addChildEvent(new AutoEventSetClawIntake());
+        seq.addEvent(initDrive2);
+    
+        //seq.addEvent(new AutoEventDriveAndIntake(2.5, 0.49));
 
         seq.addEvent(new EnableAprilTags());
 
         //Drive to grid
-        initDrive2 = new AutoEventJSONTrajectory("Score two top pt 2", 0.48);
-        initDrive2.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_HIGH));
-        seq.addEvent(initDrive2);
+        initDrive3 = new AutoEventJSONTrajectory("Score two top pt 2", 0.48);
+        initDrive3.addChildEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_HIGH));
+        seq.addEvent(initDrive3);
 
         //Place cone upper
         //seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_HIGH));
