@@ -49,7 +49,10 @@ public class AutoEventSetClawIntake extends AutoEvent {
 		var curTime = Timer.getFPGATimestamp() - startTime;
 		boolean minTimeElapsed = curTime > MIN_DURATION_SEC;
 		boolean maxTimeElapsed = curTime > MAX_DURATION_SEC;
-		return maxTimeElapsed ||
+		boolean isFinished =  maxTimeElapsed ||
 		      (minTimeElapsed && ClawController.getInstance().hasGamepiece());
+
+		ClawController.getInstance().setGrabCmd(isFinished);
+		return isFinished;
 	}
 }
