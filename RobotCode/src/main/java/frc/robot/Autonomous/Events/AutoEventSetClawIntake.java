@@ -52,7 +52,7 @@ public class AutoEventSetClawIntake extends AutoEvent {
 		boolean isFinished =  maxTimeElapsed ||
 		      (minTimeElapsed && ClawController.getInstance().hasGamepiece());
 
-		ClawController.getInstance().setGrabCmd(isFinished);
+		ClawController.getInstance().setGrabCmd(!isFinished);
 		return isFinished;
 	}
 }
