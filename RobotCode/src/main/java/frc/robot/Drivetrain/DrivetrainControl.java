@@ -152,7 +152,7 @@ public class DrivetrainControl {
         wheelFG = new FunctionGenerator("dt_wheel", "m/s");
 
         // Make sure we've init'ed all PID calibration values once
-        calUpdate(true);
+        setWheelsClosedLoop(true);
 
     }
 
@@ -169,6 +169,7 @@ public class DrivetrainControl {
         initAngleOnly = false;
         bracePosition = braceCmd;
         hdc_rotate.reset(pe.getGyroHeading().getRadians());
+        setWheelsClosedLoop(false);
     }
 
     // Commands the robot to travel at a certain speed relative to the field.
@@ -187,6 +188,7 @@ public class DrivetrainControl {
         initAngleOnly = false;
         bracePosition = braceCmd;
         hdc_rotate.reset(pe.getGyroHeading().getRadians());
+        setWheelsClosedLoop(false);
     }
 
     // Commands the robot to travel at a certain speed relative to itself.
@@ -199,6 +201,7 @@ public class DrivetrainControl {
         initAngleOnly = false;
         bracePosition = braceCmd;
         hdc_rotate.reset(pe.getGyroHeading().getRadians());
+        setWheelsClosedLoop(false);
     }
 
     // Autonomous-centric way to command the drivetrain via a Trajectory.
@@ -219,6 +222,7 @@ public class DrivetrainControl {
         curDesPose = new Pose2d(cmd.desTrajState.poseMeters.getTranslation(), cmd.desAngle);
         this.initAngleOnly = initAngleOnly;
         bracePosition = false;
+        setWheelsClosedLoop(true);
     }
 
     // Simple API to command the drivetrain to a particular pose. 
@@ -228,6 +232,7 @@ public class DrivetrainControl {
         curDesPose = cmdPose;
         this.initAngleOnly = false;
         bracePosition = false;
+        setWheelsClosedLoop(true);
     }
 
 
@@ -284,6 +289,7 @@ public class DrivetrainControl {
 
         double azmthCmd = azmthFG.getValue();
         double wheelCmd = wheelFG.getValue();
+        setWheelsClosedLoop(true);
         desModState = new SwerveModuleState[4];
         desModState[0] = new SwerveModuleState(wheelCmd, Rotation2d.fromDegrees(azmthCmd));
         desModState[1] = new SwerveModuleState(wheelCmd, Rotation2d.fromDegrees(azmthCmd));
@@ -344,6 +350,15 @@ public class DrivetrainControl {
         return retArr;
     }
 
+
+    private boolean closedLoopWheel = false;
+    public void setWheelsClosedLoop(boolean cl_in){
+        if(cl_in != closedLoopWheel){
+            closedLoopWheel = cl_in;
+            calUpdate(true);
+        }
+    }
+
     // Pass the current calibration values downard into child classes.
     // Should generally only be called during disabled, since we don't usually
     // want to change PID gains while running.
@@ -362,9 +377,9 @@ public class DrivetrainControl {
            moduleAzmth_kP.isChanged() ||
            moduleAzmth_kI.isChanged() ||
            moduleAzmth_kD.isChanged() || force){
-            var wheel_kP = !DriverStation.isTeleop() ? moduleWheel_kP.get() : 0.0; // only use closed-loop in autonomous
-            var wheel_kI = !DriverStation.isTeleop() ? moduleWheel_kI.get() : 0.0; // only use closed-loop in autonomous
-            var wheel_kD = !DriverStation.isTeleop() ? moduleWheel_kD.get() : 0.0; // only use closed-loop in autonomous
+            var wheel_kP = closedLoopWheel ? moduleWheel_kP.get() : 0.0; // only use closed-loop in autonomous
+            var wheel_kI = closedLoopWheel ? moduleWheel_kI.get() : 0.0; // only use closed-loop in autonomous
+            var wheel_kD = closedLoopWheel ? moduleWheel_kD.get() : 0.0; // only use closed-loop in autonomous
             moduleFL.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kA.get(), moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
             moduleFR.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kA.get(), moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
             moduleBL.setClosedLoopGains(wheel_kP, wheel_kI, wheel_kD, moduleWheel_kA.get(), moduleWheel_kV.get(), moduleWheel_kS.get(), moduleAzmth_kP.get(), moduleAzmth_kI.get(), moduleAzmth_kD.get());
