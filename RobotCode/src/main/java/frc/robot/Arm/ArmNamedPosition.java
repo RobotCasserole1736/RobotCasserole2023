@@ -10,7 +10,7 @@ public enum ArmNamedPosition {
     CONE_HIGH(1.458 ,1.45,false, 0.1),
     SHELF(1.55 ,1.15,true),
     FLOOR(1.10 ,0.10,false),
-    FLOOR_TIPPED_CONE(0.6539 ,0.07,true, 0.1),
+    FLOOR_TIPPED_CONE(0.6539 ,0.07,true),
     STOW(0.2002, 1.127 ,false),
     CUBE_SHOOT_STATION(1.38, 1.343, false),
     ;
