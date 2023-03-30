@@ -41,7 +41,7 @@ public class ScoreLeaveBalance extends AutoMode {
         initDrive2 = new AutoEventJSONTrajectory("Score, Leave community, balance pt 2", 0.5);
         seq.addEvent(initDrive2);
 
-        seq.addEvent(new AutoEventDriveFwdTillLevel(100, 0.3));
+        seq.addEvent(new AutoEventDriveFwdTillLevel(100, 0.35));
 
 
 
