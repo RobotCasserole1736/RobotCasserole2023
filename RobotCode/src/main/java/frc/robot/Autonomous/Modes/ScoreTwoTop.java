@@ -48,7 +48,7 @@ public class ScoreTwoTop extends AutoMode {
     
         seq.addEvent(new AutoEventSelectCubeMode());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CUBE_LOW));
-        seq.addEvent(new AutoEventDriveAndIntake(2.5, 0.52));
+        seq.addEvent(new AutoEventDriveAndIntake(2.3, 0.55));
 
         seq.addEvent(new EnableAprilTags());
 
