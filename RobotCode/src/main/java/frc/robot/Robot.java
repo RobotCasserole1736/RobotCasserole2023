@@ -83,6 +83,8 @@ public class Robot extends TimedRobot {
   double mainLoopDuration;
   @Signal(units = "sec")
   double mainLoopPeriod;
+  @Signal(units = "sec")
+  double matchTimeLog;
 
   final double ANGULAR_P = 0.1;
   final double ANGULAR_D = 0.0;
@@ -372,6 +374,9 @@ public class Robot extends TimedRobot {
     } else {
       ac.update();
     }
+
+    matchTimeLog = DriverStation.getMatchTime();
+
     stt.mark("Arm Controller");
 
     cc.update();
