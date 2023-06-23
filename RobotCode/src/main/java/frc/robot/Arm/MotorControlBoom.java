@@ -15,12 +15,12 @@ public class MotorControlBoom {
     WrapperedCANMotorCtrl motorCtrl = new WrapperedCANMotorCtrl("Boom", Constants.ARM_BOOM_MOTOR_CANID, CANMotorCtrlType.SPARK_MAX);
 
     //Feed Forward
-    Calibration kF = new Calibration("Arm Boom kF", "V/degpersec", 0.12);
-    Calibration kG = new Calibration("Arm Boom kG", "V/cos(deg)", 0.5);
-    Calibration kS = new Calibration("Arm Boom kS", "V", 0.01);
+    Calibration kF = new Calibration("Arm Boom kF", "V/degpersec", 0.05);
+    Calibration kG = new Calibration("Arm Boom kG", "V/cos(deg)", 0.3);
+    Calibration kS = new Calibration("Arm Boom kS", "V", 0.05);
 
     //Feedback
-    Calibration kP = new Calibration("Arm Boom kP", "V/deg", 0.1);
+    Calibration kP = new Calibration("Arm Boom kP", "V/deg", 0.2);
     Calibration kI = new Calibration("Arm Boom kI", "V*sec/deg", 0.0);
     Calibration kD = new Calibration("Arm Boom kD", "V/degpersec", 0.00);
 
