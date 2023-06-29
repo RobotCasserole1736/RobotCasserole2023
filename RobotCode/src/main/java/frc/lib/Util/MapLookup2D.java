@@ -61,6 +61,9 @@ public class MapLookup2D {
      * @return Value of the map function at req_x_val
      */
     public double lookupVal(double req_x_val) {
+        if(Double.isNaN(req_x_val)){
+            return req_x_val;
+        }
         if (xAxis.size() == 0) {
             // Case, no array defined yet. Just return zero.
             return 0;
@@ -152,7 +155,38 @@ public class MapLookup2D {
         System.out.println(test_map.lookupVal(11));
         System.out.println(test_map.lookupVal(100));
 
+        System.out.println("Testcase 5");
+
+        test_map = new MapLookup2D();
+        test_map.insertNewPoint(0.0, 1.0);
+        test_map.insertNewPoint(1.0, 1.0);
+        test_map.insertNewPoint(3.0, 0.5);
+        test_map.insertNewPoint(5.0, 0.1);
+        test_map.insertNewPoint(9.0, 0.1);
+        System.out.println(test_map.lookupVal(-1.0));
+        System.out.println(test_map.lookupVal(0.0));
+        System.out.println(test_map.lookupVal(0.5));
+        System.out.println(test_map.lookupVal(1.0));
+        System.out.println(test_map.lookupVal(2.0));
+        System.out.println(test_map.lookupVal(3.0));
+        System.out.println(test_map.lookupVal(4.0));
+        System.out.println(test_map.lookupVal(5.0));
+        System.out.println(test_map.lookupVal(7.0));
+        System.out.println(test_map.lookupVal(9.0));
+        System.out.println(test_map.lookupVal(15.0));
+        double reallyLargeVal = Double.MAX_VALUE;
+        System.out.println(test_map.lookupVal(reallyLargeVal));
+        double reallySmallVal = Double.MIN_VALUE;
+        System.out.println(test_map.lookupVal(reallySmallVal));
+        System.out.println("NAN");
+        System.out.println(test_map.lookupVal(Double.NaN));
+        System.out.println("Infinite");
+        System.out.println(test_map.lookupVal(Double.POSITIVE_INFINITY));
+        System.out.println(test_map.lookupVal(Double.NEGATIVE_INFINITY));
+
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+
+        
 
 
     }
