@@ -43,10 +43,10 @@ public class Constants {
     // 3 - Using a square, twist the modules by hand until they are aligned with the robot's chassis
     // 4 - Read out the encoder readings for each module, put them here
     // 5 - Redeploy code, verify that hte encoder readings are correct as each module is manually rotated
-    static public final double FL_ENCODER_MOUNT_OFFSET_RAD = -2.157;
-    static public final double FR_ENCODER_MOUNT_OFFSET_RAD = -1.575;
-    static public final double BL_ENCODER_MOUNT_OFFSET_RAD = -2.180;
-    static public final double BR_ENCODER_MOUNT_OFFSET_RAD = -0.803;
+    static public final double FL_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(149.3);
+    static public final double FR_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(-48.28);
+    static public final double BL_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(-125.6);
+    static public final double BR_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(109.8);
 
     // Location of vision cameras relative to robot center - currently front and back
     static public final Transform3d robotToFrontCameraTrans = new Transform3d(new Translation3d(WHEEL_BASE_HALF_WIDTH_M, 0, 1.0), new Rotation3d(0.0,0.0,0.0));
