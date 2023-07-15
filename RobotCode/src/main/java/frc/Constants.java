@@ -80,12 +80,12 @@ public class Constants {
     //////////////////////////////////////////////////////////////////
     // Arm Physical
     //////////////////////////////////////////////////////////////////
-    static public final double ARM_BOOM_GEAR_RATIO = 333.33; //gear ratio from motor shaft to boom shaft. Numbers greater than zero indicate a reduction in speed.
+    static public final double ARM_BOOM_GEAR_RATIO = 1598.4; //gear ratio from motor shaft to boom shaft. Numbers greater than zero indicate a reduction in speed.
     static public final double ARM_STICK_GEAR_RATIO = 274.28; //gear ratio from motor shaft to stick shaft Numbers greater than zero indicate a reduction in speed.
     static public final double ARM_BOOM_MOUNT_HIEGHT = Units.inchesToMeters(40); // Ground to center of boom pivot shaft
     static public final double ARM_BOOM_LENGTH = Units.inchesToMeters(30.25); //Center of boom pivot to center of stick pivot
     static public final double ARM_STICK_LENGTH = Units.inchesToMeters(18.25 + 15.0); //center of stick pivot to far edge of end effector
-    static public final double ARM_BOOM_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(174.4003);
+    static public final double ARM_BOOM_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(-155.5);
     //was 162.4
     static public final double ARM_STICK_ENCODER_MOUNT_OFFSET_RAD = Units.degreesToRadians(-130.3);
     static public final double ARM_STICK_MAX_ANGLE_DEG = (163);

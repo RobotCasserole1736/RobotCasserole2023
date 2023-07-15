@@ -77,6 +77,8 @@ public class DriverInput {
     public boolean adLeftModifier;
     @Signal(units="bool")
     public boolean adRightModifier; 
+    @Signal (units = "bool")
+    boolean boostSpeed;
 
     // Press-and-hold to reset odometry to be pointing downfield.
     @Signal(units="bool")
@@ -119,11 +121,23 @@ public class DriverInput {
 
         if(isConnected){
             
-            //Read in raw -1 to 1 commands from the joysticks, re-orient
-            curFwdRevCmd = -1.0 * driverController.getLeftY();
-            curRotCmd = -1.0 * driverController.getRightX();
-            curSideToSideCmd = -1.0 * driverController.getLeftX();
+            
+            adLeftModifier = driverController.getLeftTriggerAxis() > .75;
+            adRightModifier = driverController.getRightTriggerAxis() > .75;
+            boostSpeed = adLeftModifier && adRightModifier;
 
+            //Read in raw -1 to 1 commands from the joysticks, re-orient
+            if(boostSpeed) {
+                curFwdRevCmd = -1.0 * driverController.getLeftY();
+                curRotCmd = -1.0 * driverController.getRightX();
+                curSideToSideCmd = -1.0 * driverController.getLeftX();
+            } else {
+                curFwdRevCmd = -.5 * driverController.getLeftY();
+            curRotCmd = -.5 * driverController.getRightX();
+            curSideToSideCmd = -.5 * driverController.getLeftX();
+
+            }
+            
             //Apply a deadband, then a scale factor to make the robot easier to drive in certain directions
             curFwdRevCmd = MathUtil.applyDeadband( curFwdRevCmd,stickDeadband.get()) * translateCmdScalar.get(); 
             curRotCmd = MathUtil.applyDeadband( curRotCmd,stickDeadband.get())  * rotateCmdScalar.get();
@@ -171,6 +185,7 @@ public class DriverInput {
             adRight = false;
             adLeftModifier = false;
             adRightModifier = false;
+            boostSpeed= false;
             braceCmd = false;
             autoTurn = false;
         }
