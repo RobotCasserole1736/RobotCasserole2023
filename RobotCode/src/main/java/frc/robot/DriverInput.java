@@ -77,14 +77,15 @@ public class DriverInput {
 
     public void update(){
 
+        double SPEED_SCALE_FACTOR = 0.25;
         isConnected = driverController.isConnected();
 
         if(isConnected){
 
             
-            curFwdRevCmd = -1.0 * driverController.getLeftY();
-            curRotCmd = -1.0 * driverController.getRightX();
-            curSideToSideCmd = -1.0 * driverController.getLeftX();
+            curFwdRevCmd = -1.0 * driverController.getLeftY() * SPEED_SCALE_FACTOR;
+            curRotCmd = -1.0 * driverController.getRightX() * SPEED_SCALE_FACTOR;
+            curSideToSideCmd = -1.0 * driverController.getLeftX() * SPEED_SCALE_FACTOR;
 
             curFwdRevCmd = MathUtil.applyDeadband( curFwdRevCmd,stickDeadband.get()) * translateCmdScalar.get(); 
             curRotCmd = MathUtil.applyDeadband( curRotCmd,stickDeadband.get())  * rotateCmdScalar.get();
