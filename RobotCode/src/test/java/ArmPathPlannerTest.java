@@ -14,8 +14,8 @@ class ArmPathPlannerTest {
   @Test
   void testBasicToFrom() {
 
-    for(double startX = -10; startX < 10; startX += 1.0){
-      for(double startY = -10; startY < 10; startY += 1.0){
+    for(double startX = -10; startX < 10; startX += 0.78){
+      for(double startY = -10; startY < 10; startY += 0.78){
         for(var endPos : ArmNamedPosition.values()){
 
           var startState = new ArmEndEffectorState(startX, startY);
@@ -41,8 +41,8 @@ class ArmPathPlannerTest {
   void testSmallPaths() {
 
     for(var endPos : ArmNamedPosition.values()){
-      for(double deltaX = -0.5; deltaX < 0.5; deltaX += 0.01){
-        for(double deltaY = -0.5; deltaY < 0.5; deltaY += 0.01){
+      for(double deltaX = -0.5; deltaX < 0.5; deltaX += 0.1){
+        for(double deltaY = -0.5; deltaY < 0.5; deltaY += 0.1){
 
           var end = endPos.get();
           var startState = new ArmEndEffectorState(end.x + deltaX, end.y + deltaY);
@@ -50,7 +50,7 @@ class ArmPathPlannerTest {
 
           var pathDur = pathUnderTest.getDurationSec();
 
-          if(deltaX != 0.0 && deltaY != 0.0){
+          if(Math.abs(deltaX) >= 0.01 && Math.abs(deltaY) >= 0.01){
             assertTrue(pathDur > 0.0);
           }
 

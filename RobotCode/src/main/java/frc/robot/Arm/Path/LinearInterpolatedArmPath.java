@@ -46,7 +46,9 @@ public class LinearInterpolatedArmPath implements ArmPath {
      * @return
      */
     public ArmEndEffectorState sample(double time_sec){
-        if(time_sec < totalDuration){
+        if(time_sec < 0.0){
+            return start;
+        } else if(time_sec < totalDuration){
             var frac = (time_sec)/(totalDuration);
             return start.interpolateTo(end, frac, this.linearVel);
         } else {
