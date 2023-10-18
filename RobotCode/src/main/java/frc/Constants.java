@@ -85,7 +85,7 @@ public class Constants {
     static public final double ARM_BOOM_MOUNT_HIEGHT = Units.inchesToMeters(40); // Ground to center of boom pivot shaft
     static public final double ARM_BOOM_LENGTH = Units.inchesToMeters(30.25); //Center of boom pivot to center of stick pivot
     static public final double ARM_STICK_LENGTH = Units.inchesToMeters(18.25 + 15.0); //center of stick pivot to far edge of end effector
-    static public final double ARM_BOOM_ENCODER_MOUNT_OFFSET_RAD = -3.052;
+    static public final double ARM_BOOM_ENCODER_MOUNT_OFFSET_RAD = -1.225;
     //was 162.4
     static public final double ARM_STICK_ENCODER_MOUNT_OFFSET_RAD = -2.228;
     static public final double ARM_STICK_MAX_ANGLE_DEG = (163);
