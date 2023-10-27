@@ -357,10 +357,11 @@ uint16_t XY( uint8_t x, uint8_t y)
 {
 
   //Perform rotation for display
-  uint8_t tmp = x;
-  x = y;
-  y = tmp;
-  y = 15-y;
+  // 10/26/2023 - based on how we re-glued the led panel in, this is no longer needed, it just works out.
+  //uint8_t tmp = x;
+  //x = y;
+  //y = tmp;
+  //y = 15-y;
   
     uint16_t i;
     if( y & 0x01) {
