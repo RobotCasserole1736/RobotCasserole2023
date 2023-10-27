@@ -12,6 +12,7 @@ import frc.robot.Autonomous.Events.AutoEventSelectConeMode;
 import frc.robot.Autonomous.Events.AutoEventSelectCubeMode;
 import frc.robot.Autonomous.Events.AutoEventSetClawEject;
 import frc.robot.Autonomous.Events.AutoEventSetClawIntake;
+import frc.robot.Autonomous.Events.DisableAprilTags;
 
 public class scoreBalance extends AutoMode {
 
@@ -25,6 +26,9 @@ public class scoreBalance extends AutoMode {
     @Override
     public void addStepsToSequencer(AutoSequencer seq) {
         
+        //disable April Tags
+        seq.addEvent(new DisableAprilTags());
+
         //Place cone
         seq.addEvent(new AutoEventSelectConeMode());
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.CONE_HIGH));

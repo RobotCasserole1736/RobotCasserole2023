@@ -20,6 +20,7 @@ import frc.robot.Autonomous.Modes.ScoreTwoTop;
 import frc.robot.Autonomous.Modes.TestSCurvy;
 import frc.robot.Autonomous.Modes.Wait;
 import frc.robot.Autonomous.Modes.leaveComTop;
+import frc.robot.Autonomous.Modes.scoreBalance;
 import frc.robot.Autonomous.Modes.scoreLeave;
 import frc.robot.Autonomous.Modes.scoreTop;
 import frc.robot.Autonomous.Modes.scoreTopPickup;
@@ -98,12 +99,12 @@ public class Autonomous {
         //mainModeList.add(new SteakAuto2023());
         mainModeList.add(new DoNothing());
         mainModeList.add(new scoreLeave());
-        mainModeList.add(new leaveComTop());
-        //mainModeList.add(new scoreBalance());
+        //mainModeList.add(new leaveComTop());
+        mainModeList.add(new scoreBalance());
         //mainModeList.add(new steakYeet2023());
         mainModeList.add(new scoreTop());
-        mainModeList.add(new scoreTopPickup());
-        mainModeList.add(new ScoreLeaveBalance());
+        //mainModeList.add(new scoreTopPickup());
+        //mainModeList.add(new ScoreLeaveBalance());
         //mainModeList.add(new TestSCurvy());
        
         
