@@ -19,7 +19,7 @@ public class MotorControlStick {
     Calibration kS = new Calibration("Arm Stick kS", "V", 0.15); 
 
     //Feedback
-    Calibration kP = new Calibration("Arm Stick kP", "V/deg", 0.35);
+    Calibration kP = new Calibration("Arm Stick kP", "V/deg", 0.4);
     Calibration kI = new Calibration("Arm Stick kI", "V*sec/deg", 0.0);
     Calibration kD = new Calibration("Arm Stick kD", "V/degpersec", 0.0);
 
