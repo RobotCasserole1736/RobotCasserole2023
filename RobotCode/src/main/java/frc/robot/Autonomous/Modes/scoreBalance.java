@@ -36,7 +36,7 @@ public class scoreBalance extends AutoMode {
         seq.addEvent(new AutoEventArmMoveToPos(ArmNamedPosition.STOW));
         
         //Drive to charge station
-        initDrive = new AutoEventJSONTrajectory("Score, balance", 0.37);
+        initDrive = new AutoEventJSONTrajectory("Score, balance", 0.30);
         seq.addEvent(initDrive);
 
         seq.addEvent(new AutoEventBraceDrivetrain(10.0));
