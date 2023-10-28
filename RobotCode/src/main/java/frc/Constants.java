@@ -93,10 +93,10 @@ public class Constants {
     static public final double ARM_BOOM_MAX_ANGLE_DEG = (60.00);
     static public final double ARM_BOOM_MIN_ANGLE_DEG = (-107.5);
 
-    static public final double ARM_END_EFF_MAX_VEL_MPS = Units.inchesToMeters(80.0);
+    static public final double ARM_END_EFF_MAX_VEL_MPS = Units.inchesToMeters(75.0);
     static public final double ARM_END_EFF_MAX_ACCEL_MPS2 = ARM_END_EFF_MAX_VEL_MPS * 1.5;
     static public final double ARM_PATH_CURVATURE_FACTOR = 0.4; //Bigger allows tighter arcs
-    static public final double ARM_PATH_Y_HEIGHT_X_OFFSET = 0.25; //smaller puts the safe y points closer to the start/end
+    static public final double ARM_PATH_Y_HEIGHT_X_OFFSET = 0.30; //smaller puts the safe y points closer to the start/end
 
     
 
